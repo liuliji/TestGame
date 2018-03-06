@@ -232,7 +232,7 @@ var RoomData = cc.Class({
         this.lastCardType = 0;// 底牌类型
         this.multipleNum = 0;//二人斗地主 特殊底牌翻倍
     },
-    
+
 
 });
 module.exports = RoomData;
