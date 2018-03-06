@@ -106,6 +106,9 @@
       },
       {
         "__id__": 17
+      },
+      {
+        "__id__": 18
       }
     ],
     "_prefab": null,
@@ -624,5 +627,37 @@
       "__id__": 9
     },
     "text": "Hello, World!"
+  },
+  {
+    "__type__": "592d7wboKpLv5q+VQeeSRMs",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true,
+    "windowAry": [],
+    "allWindows": [],
+    "showWindows": [],
+    "UI_Normal": null,
+    "UI_Fixed": null,
+    "UI_Popup": null,
+    "UI_Tips": null,
+    "showLable": null,
+    "_MessageBox": {
+      "__uuid__": "c8641130-65ad-424e-9163-35024d824e5a"
+    },
+    "_Await": {
+      "__uuid__": "ba27e468-33bc-45f4-b6f2-7585bbe85b63"
+    },
+    "_Tips": {
+      "__uuid__": "4331efeb-4efa-4af2-ad09-85c987d95921"
+    },
+    "_Revolve": {
+      "__uuid__": "5d8f3c5f-40fc-4b9c-8a1f-30c24170d21a"
+    },
+    "_Init": false,
+    "_InitCallback": [],
+    "isEmitEvent": true
   }
 ]
