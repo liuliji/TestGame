@@ -24,7 +24,7 @@
  *        this.state=new State();
  *        this.state.setStateBindFunction(0,
  *              function(){//当前状态回调函数
- *                       let array=this.state.getArguments(arguments);//获取参数数组
+ *                       let array=arguments;//获取参数数组
  *                       if(array){
  *                           let str='';
  *                           for(let i=0,count=array.length;i<count;i++){
@@ -34,7 +34,7 @@
  *                       }
  *               }.bind(this),
  *              function () {//当前状态弹出回调函数
- *                       let array=this.state.getArguments(arguments);
+ *                       let array=arguments;
  *                       if(array){
  *                           let str='';
  *                           for(let i=0,count=array.length;i<count;i++){
@@ -53,17 +53,13 @@
  *        this.state=null;
  */
 function State() {
-    //状态
-    this._state = {
-        //当前状态
-        state: null,
-        //上一次状态
-        lastState: null,
-        //当前状态绑定的对象
-        stateBindObject: null,
+    this._state = {//状态
+        state: null,//当前状态
+        lastState: null,//上一次状态
+        stateBindObject: null,//当前状态绑定的对象
     }
-    //状态参数参数
-    this._arguments = {
+
+    this._arguments = { //状态参数参数
         stateArgument: null,
         lastStateArgument: null,
     }
@@ -216,22 +212,28 @@ State.prototype.setStateBindFunction = function (state, stateMenthod = undefined
  * @param lastStateKey 上一个状态(key)
  */
 State.prototype.runStateBindObject = function (stateKey, lastStateKey) {
+    if (this.debugLog) {
+        console.log('--执行状态函数-->' + '当前状态:' + stateKey + '\t上一个状态:' + lastStateKey);
+    }
     if (!this._state.stateBindObject) {
-        console.log('--没有可执行函数-->' + '当前状态:' + stateKey + '\t上一个状态:' + lastStateKey);
         return;
     }
 
     let statekey = this.modifyKey(stateKey);
-    let stateObject = this._state.stateBindObject.get(statekey);
+    var stateObject = this._state.stateBindObject.get(statekey);
     if (stateObject) {
         if (stateObject.stateMenthod !== undefined) {
             if (this._arguments.stateArgument[statekey]) {
-                if(false){
+                if(true){
                     var args = [];
-                    for(var i = 0, len = this._arguments.stateArgument[statekey].length; i < len; i++) {
-                        args.push('this._arguments.stateArgument[' + i + ']');
+                    var len = this._arguments.stateArgument[statekey].length;
+                    for(var i = 0; i < len; i++) {
+                        args.push('this._arguments.stateArgument['+statekey+']['+i+']');
                     }
                     eval('stateObject.stateMenthod(' + args +')');
+                    // this._arguments.stateArgument.splice(statekey,1);
+                    // let a=1;
+                    // let b=2;
                 }else{
                     stateObject.stateMenthod(this._arguments.stateArgument[statekey]);
                 }
@@ -241,18 +243,21 @@ State.prototype.runStateBindObject = function (stateKey, lastStateKey) {
         }
     }
     let laststatekey = this.modifyKey(lastStateKey);
-    let lastStateObject = this._state.stateBindObject.get(laststatekey);
+    var lastStateObject = this._state.stateBindObject.get(laststatekey);
     if (lastStateObject) {
         if (lastStateObject.lastMenthod !== undefined) {
-            if (this._arguments.stateArgument[lastStateKey]) {
-                if(false){
+            if (this._arguments.lastStateArgument[laststatekey]) {
+                if(true){
                     var args = [];
-                    for(var i = 0, len = this._arguments.lastStateArgument[statekey].length; i < len; i++) {
-                        args.push('this._arguments.lastStateArgument[' + i + ']');
+                    var len = this._arguments.lastStateArgument[laststatekey].length;
+                    for(var i = 0; i < len; i++) {
+                        args.push('this._arguments.lastStateArgument['+laststatekey+']['+i+']');
                     }
                     eval('lastStateObject.lastMenthod(' + args +')');
+                    // this._arguments.lastStateArgument.splice(laststatekey,1);
+                    // let b=2;
                 }else {
-                    lastStateObject.lastMenthod(this._arguments.lastStateArgument[lastStateKey]);
+                    lastStateObject.lastMenthod(this._arguments.lastStateArgument[laststatekey]);
                 }
             } else {
                 lastStateObject.lastMenthod();
@@ -455,7 +460,7 @@ State.prototype.setStateArguments = function (valueArgument) {//参数修整
                             this._arguments.lastStateArgument[newTempIndex] = new Array();
                         }
                     }
-                    this._arguments.lastStateArgument[newTempIndex][iLastState] = valueArgument[i]
+                    this._arguments.lastStateArgument[newTempIndex][iLastState] = valueArgument[i];
                     iLastState++;
                 }
             }
