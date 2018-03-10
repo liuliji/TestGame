@@ -23,7 +23,7 @@ module.exports = cc.Class({
          * 如果socket已经存在，就将channel置空，同时，断开当前的socket连接，
          * 重新建立连接
          */
-        if (this.socket){
+        if (this.socket) {
             this.chan.leave();
             this.chan = null;
             // 如果有，就断开连接，重新创建新的连接
@@ -39,16 +39,16 @@ module.exports = cc.Class({
         /**
          * 设置socket的事件监听
          */
-        this.socket.onError( () => console.log("there was an error with the connection!") )
-        this.socket.onClose( () => console.log("the connection dropped") )
+        this.socket.onError(() => console.log("there was an error with the connection!"))
+        this.socket.onClose(() => console.log("the connection dropped"))
 
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
         this.chan = this.socket.channel('data');
-        this.chan.onmessage("new_msg",this.onMessage.bind(this));// 监听new_msg消息
-        this.chan.onError( () => console.log("there was an error!") )
-        this.chan.onClose( () => console.log("the channel has gone away gracefully") )
+        this.chan.onmessage("new_msg", this.onMessage.bind(this));// 监听new_msg消息
+        this.chan.onError(() => console.log("there was an error!"))
+        this.chan.onClose(() => console.log("the channel has gone away gracefully"))
         // this.chan.onError(this.onConnectError.bind(this));
         // this.chan.onClose(this.onDisconnected.bind(this));
 
@@ -56,30 +56,33 @@ module.exports = cc.Class({
 
     /*****************************socket事件监听开始***************************/
     // 创建连接成功
-    onConnectSuccess: function(event){
+    onConnectSuccess: function (event) {
         console.log('connect Success: ' + JSON.stringify(event));
     },
     // 创建连接失败
-    onConnectError: function(event){
+    onConnectError: function (event) {
         console.log('connect failed: ' + JSON.stringify(event));
     },
     // 断开连接
-    onDisconnected: function(event){
+    onDisconnected: function (event) {
         console.log('connect disconnected: ' + JSON.stringify(event));
     },
     // 收到消息
-    onMessage: function(msg){
+    onMessage: function (msg) {
         console.log('onMessage: ' + JSON.stringify(msg));
-        App.UIManager.emit('wsCallback',msg);
+        App.UIManager.emit('wsCallback', msg);
     },
 
 
     send: function (data) {
-        if (this.chan){
+        if (this.chan) {
             /**
              * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
              */
-            this.chan.push('c2s_msg',data,1000);
+            this.chan.push('c2s_msg', data, 1000)
+                .receive("ok", (message) => console.log("created message", message))
+                .receive("error", (reasons) => console.log("create failed", reasons))
+                .after(10000, () => console.log("Networking issue. Still waiting..."))
         } else {
             Log.debug('当前socket的channel为空');
         }
