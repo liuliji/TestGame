@@ -33,7 +33,7 @@ module.exports = cc.Class({
         /**
          * 创建socket连接，并发起连接请求
          */
-        this.socket = new Socket("ws://localhost:4000/socket/websocket", {});
+        this.socket = new Socket("ws://192.168.99.244:4000/socket/websocket", {});
         this.socket.connect();
 
         /**
@@ -45,7 +45,7 @@ module.exports = cc.Class({
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
-        this.chan = this.socket.chan('room:lobby');
+        this.chan = this.socket.channel('room:lobby');
         this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
         this.chan.onError(() => console.log("there was an error!"));
         this.chan.onClose(() => console.log("the channel has gone away gracefully"));
@@ -74,7 +74,7 @@ module.exports = cc.Class({
     // 收到消息
     onMessage: function (msg) {
         console.log('onMessage: ' + JSON.stringify(msg));
-        // App.UIManager.emit('wsCallback', msg);
+        App.UIManager.emit('wsCallback', JSON.stringify(msg));
     },
 
 
