@@ -88,6 +88,10 @@ var enViewType = {
     ChoosePassagewayUI: 40004, // 选择 支付方式
 
     PyWbPlayerInfoUI: 50001, //
+
+
+    // 测试页面
+    TestUI: 60001,
 };
 
 

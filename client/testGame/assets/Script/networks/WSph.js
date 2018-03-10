@@ -69,6 +69,7 @@ module.exports = cc.Class({
     // 收到消息
     onMessage: function(msg){
         console.log('onMessage: ' + JSON.stringify(msg));
+        App.UIManager.emit('wsCallback',msg);
     },
 
 
