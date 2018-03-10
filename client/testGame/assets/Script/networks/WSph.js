@@ -45,6 +45,7 @@ module.exports = cc.Class({
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
+        debugger;
         this.chan = this.socket.channel('data');
         this.chan.onmessage("new_msg", this.onMessage.bind(this));// 监听new_msg消息
         this.chan.onError(() => console.log("there was an error!"))
