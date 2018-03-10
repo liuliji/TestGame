@@ -3,6 +3,8 @@ var BaseClass = require('BaseClass');
 
 var Socket = require('phoenix').Socket;// 使用phoenix的socket
 
+var App = require('App');
+
 
 module.exports = cc.Class({
     extends: BaseClass,
@@ -73,8 +75,8 @@ module.exports = cc.Class({
     },
     // 收到消息
     onMessage: function (msg) {
-        console.log('onMessage: ' + msg);
-        App.UIManager.emit('wsCallback', msg);
+        console.log('onMessage: ' + JSON.stringify(msg));
+        App.UIManager.emit('wsCallback', JSON.stringify(msg));
     },
 
 
@@ -86,7 +88,7 @@ module.exports = cc.Class({
             this.chan.push("new_msg", {uid: "666"}, 1000)
                 .receive("ok", (message) => console.log("created message", message))
                 .receive("error", (reasons) => console.log("create failed", reasons))
-                .after(10000, () => console.log("Networking issue. Still waiting..."))
+                .receive("timeout", () => console.log("Networking issue. Still waiting..."));
         } else {
             Log.debug('当前socket的channel为空');
         }
@@ -94,6 +96,5 @@ module.exports = cc.Class({
 
 
     /*****************************socket事件监听结束***************************/
-
 
 });
