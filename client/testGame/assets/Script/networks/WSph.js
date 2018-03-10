@@ -45,11 +45,16 @@ module.exports = cc.Class({
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
-        this.chan = this.socket.channel('data');
-        this.chan.onmessage("new_msg", this.onMessage.bind(this));// 监听new_msg消息
+        this.chan = this.socket.chan('room:lobby');
+        this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
         this.chan.onError(() => console.log("there was an error!"));
         this.chan.onClose(() => console.log("the channel has gone away gracefully"));
-        // this.chan.onClose(this.onDisconnected.bind(this));
+        this.chan.onClose(this.onDisconnected.bind(this));
+        
+        this.chan.join()
+        .receive("ok", ({messages}) => console.log("catching up", messages) )
+        .receive("error", ({reason}) => console.log("failed join", reason) )
+        .receive("timeout", () => console.log("Networking issue. Still waiting...") );
 
     },
 
@@ -69,7 +74,7 @@ module.exports = cc.Class({
     // 收到消息
     onMessage: function (msg) {
         console.log('onMessage: ' + JSON.stringify(msg));
-        App.UIManager.emit('wsCallback', msg);
+        // App.UIManager.emit('wsCallback', msg);
     },
 
 
@@ -78,7 +83,7 @@ module.exports = cc.Class({
             /**
              * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
              */
-            this.chan.push('c2s_msg', data, 1000)
+            this.chan.push("new_msg", {uid: "666"}, 1000)
                 .receive("ok", (message) => console.log("created message", message))
                 .receive("error", (reasons) => console.log("create failed", reasons))
                 .after(10000, () => console.log("Networking issue. Still waiting..."))
