@@ -24,6 +24,7 @@ module.exports = cc.Class({
          * 重新建立连接
          */
         if (this.socket){
+            this.chan.leave();
             this.chan = null;
             // 如果有，就断开连接，重新创建新的连接
             this.socket.disconnect();
@@ -38,13 +39,13 @@ module.exports = cc.Class({
         /**
          * 设置socket的事件监听
          */
-        socket.onError( () => console.log("there was an error with the connection!") )
-        socket.onClose( () => console.log("the connection dropped") )
+        this.socket.onError( () => console.log("there was an error with the connection!") )
+        this.socket.onClose( () => console.log("the connection dropped") )
 
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
-        this.chan = socket.channel('data');
+        this.chan = this.socket.channel('data');
         this.chan.onmessage("new_msg",this.onMessage.bind(this));// 监听new_msg消息
         this.chan.onError( () => console.log("there was an error!") )
         this.chan.onClose( () => console.log("the channel has gone away gracefully") )
