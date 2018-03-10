@@ -33,7 +33,7 @@ module.exports = cc.Class({
         /**
          * 创建socket连接，并发起连接请求
          */
-        this.socket = new Socket("ws://192.168.99.244:4000/socket/websocket", {});
+        this.socket = new Socket("ws://192.168.99.244:4000/socket", {});
         this.socket.connect();
 
         /**
@@ -73,8 +73,8 @@ module.exports = cc.Class({
     },
     // 收到消息
     onMessage: function (msg) {
-        console.log('onMessage: ' + JSON.stringify(msg));
-        App.UIManager.emit('wsCallback', JSON.stringify(msg));
+        console.log('onMessage: ' + msg);
+        App.UIManager.emit('wsCallback', msg);
     },
 
 
