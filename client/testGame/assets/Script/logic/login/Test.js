@@ -44,6 +44,17 @@ cc.Class({
         this.socket.connect('');
     },
 
+    // 发送消息
+    onSendMsg: function () {
+        if (!this.socket){
+            Log.debug('当前还没有进行socket连接，所以无法给服务器发送消息');
+            this.socket = new WSph();
+            this.socket.connect();
+            return;
+        }
+        this.socket.send('这是客户端给服务器发送的消息的内容，服务器能收到吗？？？');
+    },
+
 
     // 网络消息回调
     onWebsocketCallback: function (event) {

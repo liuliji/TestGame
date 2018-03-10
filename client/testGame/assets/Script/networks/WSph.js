@@ -73,6 +73,18 @@ module.exports = cc.Class({
     },
 
 
+    send: function (data) {
+        if (this.chan){
+            /**
+             * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
+             */
+            this.chan.push('c2s_msg',data,1000);
+        } else {
+            Log.debug('当前socket的channel为空');
+        }
+    }
+
+
     /*****************************socket事件监听结束***************************/
 
 
