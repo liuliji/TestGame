@@ -4,6 +4,7 @@ var BaseClass = require('BaseClass');
 var Socket = require('phoenix').Socket;// 使用phoenix的socket
 
 var App = require('App');
+var ProtoCfg = require('ProtoCfg');
 
 
 module.exports = cc.Class({
@@ -52,12 +53,50 @@ module.exports = cc.Class({
         this.chan.onError(() => console.log("there was an error!"));
         this.chan.onClose(() => console.log("the channel has gone away gracefully"));
         this.chan.onClose(this.onDisconnected.bind(this));
+
+        // 创建了socket之后，注册事件回调
+        this.registerEvent();
         
         this.chan.join()
         .receive("ok", ({messages}) => console.log("catching up", messages) )
         .receive("error", ({reason}) => console.log("failed join", reason) )
         .receive("timeout", () => console.log("Networking issue. Still waiting...") );
 
+    },
+
+    /**
+     * 注册事件回调
+     */
+    registerEvent: function () {
+        debugger;
+        // 首先取出所有的收包的消息对应的文件
+        if (App){
+
+        }
+        var recvs = ProtoCfg.recv;
+        var handles = ProtoCfg.handle;
+        if (this.chan){
+            // 依次获取每个文件
+            for (let handleObj in recvs){
+                debugger;
+                var handleClass;
+                for (let handle in handles){
+                    debugger;
+                }
+                if (handleClass){
+                    // 取出每个文件对应的方法的结构体
+                    var handleEvents = recvs[handleObj];
+                    // 取出每个方法，并绑定回调
+                    for (let value in handleEvents){
+                        var eventName = handleEvents[value]['id'];
+                        var func = handleEvents[value]['function'];
+                        this.chan.on(eventName,handleClass[func].bind(handleClass));
+                        debugger;
+                    }
+                }
+
+            }
+        }
     },
 
     /*****************************socket事件监听开始***************************/
