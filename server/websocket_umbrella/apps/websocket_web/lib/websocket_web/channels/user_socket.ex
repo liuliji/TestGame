@@ -11,7 +11,8 @@ defmodule WebsocketWeb.UserSocket do
 
   ## Channels
   #  Phoenix.Socket.channel/2 方法定义了channel和topic的映射关系
-  channel "room:*", WebsocketWeb.RoomChannel
+  channel "room:_hall", WebsocketWeb.HallRoomChannel
+  channel "room:*", WebsocketWeb.RoomsChannel
 
   ## Transports
   # phx 支持websocket和longpoll两种传输方式
@@ -29,10 +30,21 @@ defmodule WebsocketWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
-    Logger.debug "params:#{inspect _params} connect to socket:#{inspect socket}"
-    {:ok, socket}
+  def connect(%{"user_id" => user_id}=params, socket) do
+    Logger.debug "params:#{inspect params} connect to socket:#{inspect socket}"
+    case String.length user_id do
+      0 ->
+        {:error, %{reason: "invalid user_id"}}
+      _ ->
+        {:ok, assign(socket, :user_id, user_id)}
+    end  
   end
+
+  def connect(_params, socket) do
+    Logger.debug "params:#{inspect _params} connect to socket:#{inspect _params}"
+    {:error, %{reason: "invalid user_id"}}
+  end
+
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
@@ -45,8 +57,7 @@ defmodule WebsocketWeb.UserSocket do
   #
   # Returning `nil` makes this socket anonymous(匿名).
   # id 通常被用来标志一个socket链接，上面展示了通常用法。
-  def id(_socket) do
-    Logger.debug "id:#{inspect _socket}"
-    nil
+  def id(socket) do
+    "user_socket:#{socket.assigns.user_id}"
   end
 end

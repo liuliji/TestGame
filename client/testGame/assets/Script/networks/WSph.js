@@ -35,7 +35,7 @@ module.exports = cc.Class({
         /**
          * 创建socket连接，并发起连接请求
          */
-        this.socket = new Socket("ws://192.168.99.244:4000/socket", {});
+        this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_id: "123"}});
         this.socket.connect();
 
         /**

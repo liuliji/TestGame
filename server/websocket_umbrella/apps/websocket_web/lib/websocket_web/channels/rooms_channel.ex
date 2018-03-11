@@ -1,4 +1,4 @@
-defmodule WebsocketWeb.RoomChannel do
+defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
 
@@ -6,16 +6,15 @@ defmodule WebsocketWeb.RoomChannel do
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
-    def join("room:lobby", _message, socket) do
-        Logger.debug "join channel room:lobby"
-        Logger.debug "msg:#{inspect _message}"
-        Logger.debug "socket: #{inspect socket}"
-        {:ok, socket}
-    end
-
-    def join("room:" <> _private_room_id, _params, _socket) do
-        Logger.debug "join unnamed room"
-        {:error, %{reason: "unauthorized"}}
+    def join("room:" <> private_room_id, _params, socket) do
+        case Websocket.RoomManager.room_exist?(%{room_id: private_room_id}) do
+            true ->
+                Logger.debug "#{socket.id} join room #{private_room_id}"
+                {:ok, socket}
+            false ->
+                Logger.debug "#{socket.id} join doesn't exist room #{private_room_id}"
+                {:error, %{reason: "room not exist"}}
+        end
     end
     ## -----------------Callbacks end -------------------
 
@@ -67,7 +66,7 @@ defmodule WebsocketWeb.RoomChannel do
     # others, like {:stop, {:error, msg}, socket} 退出会被日志记录，并且会被重启(在 transient mode)， linked process 也会以同样的原因退出除非被 trapped。
     #
 
-    def termiate(reason, socket) do
+    def terminate(reason, socket) do
         Logger.info "client live socket:#{inspect socket.id}. reason:#{inspect reason}"
         :ok
     end

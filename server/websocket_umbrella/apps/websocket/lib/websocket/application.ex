@@ -1,4 +1,5 @@
 defmodule Websocket.Application do
+  require Logger
   @moduledoc """
   The Websocket Application Service.
 
@@ -11,9 +12,10 @@ defmodule Websocket.Application do
 
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
+    Logger.debug "start #{__MODULE__}"
 
     Supervisor.start_link([
-      
+      supervisor(Websocket.RoomManager, []),
     ], strategy: :one_for_one, name: Websocket.Supervisor)
   end
 end
