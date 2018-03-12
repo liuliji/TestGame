@@ -42,7 +42,7 @@ module.exports = cc.Class({
         /**
          * 设置socket的事件监听
          */
-        this.socket.onError(() => console.log("there was an error with the connection!"));
+        this.socket.onError((msg) => console.log(JSON.stringify(msg)));
         this.socket.onClose(() => console.log("the connection dropped"));
 
         /**
