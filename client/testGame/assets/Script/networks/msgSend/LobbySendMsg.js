@@ -6,25 +6,25 @@
  * Use      : 大厅发送消息
  ************************************************************************/
 
-cc.Class({
-    extends: cc.Class,
+/**
+ * 创建房间
+ * @param info 房间信息
+ */
+function oncreateRoom(info) {
 
-    properties: {
+}
 
-    },
+/**
+ * 加入房间
+ * @param roomId 房间ID
+ */
+function onEnterRoom(roomId) {
 
-    /**
-     * 创建房间
-     */
-    oncreateRoom: function () {
+}
 
-    },
+module.exports = {
+    'oncreateRoom': oncreateRoom,// 创建房间
+    'onEnterRoom': onEnterRoom,// 加入房间
+}
 
-    /**
-     * 进入房间
-     */
-    onEnterRoom: function () {
 
-    }
-
-});

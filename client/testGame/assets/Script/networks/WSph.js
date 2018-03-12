@@ -68,7 +68,7 @@ module.exports = cc.Class({
      * 注册事件回调
      */
     registerEvent: function () {
-        debugger;
+        // debugger;
         // 首先取出所有的收包的消息对应的文件
         if (App){
 
@@ -78,20 +78,37 @@ module.exports = cc.Class({
         if (this.chan){
             // 依次获取每个文件
             for (let handleObj in recvs){
-                debugger;
-                var handleClass;
-                for (let handle in handles){
-                    debugger;
+                // debugger;
+                var handleFuncs = new Array();
+                for (let id in handles){// 将所有的回调方法都放到handleFunc里面
+                    for (let key in handles[id]){
+                        handleFuncs.push(handles[id][key]);
+                    }
                 }
-                if (handleClass){
+                // debugger;
+                // 有处理函数，才进行事件监听
+                if (handleFuncs && handleFuncs.length > 0){
                     // 取出每个文件对应的方法的结构体
                     var handleEvents = recvs[handleObj];
+                    // debugger;
                     // 取出每个方法，并绑定回调
-                    for (let value in handleEvents){
-                        var eventName = handleEvents[value]['id'];
-                        var func = handleEvents[value]['function'];
-                        this.chan.on(eventName,handleClass[func].bind(handleClass));
-                        debugger;
+                    for (let i = handleEvents.length - 1; i >= 0; i --){
+                        var eventName = handleEvents[i]['id'];
+                        var funcName = handleEvents[i]['function'];
+                        for (let j = handleFuncs.length - 1; j >= 0; j --){
+                            let func = handleFuncs[j];
+                            /**
+                             * 找到方法后，就直接注册，然后从数组中删除该方法，
+                             * 并跳出循环，进行下次的循环，这样能够尽量减少循环的次数
+                             */
+                            if (func && func.name == funcName){
+                                this.chan.on(eventName,handleFuncs[funcName]);
+                                handleFuncs.splice(j,1);
+                                break;
+                            }
+                        }
+
+                        // debugger;
                     }
                 }
 

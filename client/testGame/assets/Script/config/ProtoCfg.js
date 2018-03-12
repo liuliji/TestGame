@@ -1,6 +1,5 @@
 module.exports = {
-    'handle':[
-        require('LobbySendMsg'),
+    'handle':[// 网络回包处理的方法类
         require('LobbyRecvMsg'),
     ],
     'send': {
