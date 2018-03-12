@@ -1,0 +1,109 @@
+{
+    "intro":{
+        "url_type":["connect", "join", "send", "rece"],
+        "intro_url_type":"接口分为四种，connect:建立socket请求，join:加入channel，send:向服务端发消息，rece:接收服务端消息"
+    },
+
+    "/socket":{
+        "type":"connect",
+        "intro":"建立socket连接。成功之后需要加入大厅房间(room:_hall 接口)",
+        "params":{
+            "user_id":"123"
+        },
+        "intro_params":{
+            "user_id":"用户唯一标识id"
+        },
+        "return":[
+            {
+                "state":"ok"
+            },
+            {
+                "state":"error",
+                "body":{"reason":"invalid user_id"}
+            }
+        ]
+    },
+
+    "room:_hall":{
+        "type":"join",
+        "intro":"加入大厅房间",
+        "return":[
+            {
+                "state":"ok"
+            }
+        ]
+    },
+
+    "create_room":{
+        "type":"send",
+        "intro":"创建房间",
+        "params":{
+            "room_id":"111"
+        },
+        "intro_params":{
+            "room_id":"房间唯一标识"
+        },
+        "return":[
+            {
+                "state":"ok"
+            },
+            {
+                "state":"error",
+                "body":{"reason":"msg"}
+            }
+        ]
+    },
+
+    "delete_room":{
+        "type":"send",
+        "intro":"删除房间",
+        "params":{
+            "room_id":"111"
+        },
+        "intro_params":{
+            "room_id":"房间唯一标识"
+        },
+        "return":[
+            {
+                "state":"ok"
+            }
+        ]
+    },
+
+    "bc:talk":{
+        "type":"send",
+        "intro":"在房间说话",
+        "params":{
+            "content":"msg"
+        },
+        "intro_params":{
+            "content":"说话的内容"
+        },
+        "return":[
+            {
+                "state":"ok"
+            },
+            {
+                "state":"error",
+                "body":{"reason":"msg"}
+            }
+        ]
+    },
+
+    "talk":{
+        "type":"rece",
+        "intro":"有人在房间说话",
+        "params":{
+            "content":"msg"
+        },
+        "intro_params":{
+            "content":"说话的内容"
+        },
+        "return":[
+            {
+                "state":"ok"
+            }
+        ]
+    }
+
+}
