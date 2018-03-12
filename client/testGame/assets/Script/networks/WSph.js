@@ -36,19 +36,18 @@ module.exports = cc.Class({
         /**
          * 创建socket连接，并发起连接请求
          */
-        this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_id: "123"}});
-        this.socket.connect();
+        this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_id: ""}});
 
         /**
          * 设置socket的事件监听
          */
-        this.socket.onError((msg) => console.log(JSON.stringify(msg)));
+        this.socket.onError((msg) => console.log("connect error!!! wyj -> "+JSON.stringify(msg)));
         this.socket.onClose(() => console.log("the connection dropped"));
-
+        this.socket.connect();
         /**
          * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
          */
-        this.chan = this.socket.channel('room:lobby');
+        this.chan = this.socket.channel('room:_hall');
         this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
         this.chan.onError(() => console.log("there was an error!"));
         this.chan.onClose(() => console.log("the channel has gone away gracefully"));
