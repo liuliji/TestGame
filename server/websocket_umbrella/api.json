@@ -1,7 +1,7 @@
 {
     "intro":{
-        "url_type":["connect", "join", "send", "rece"],
-        "intro_url_type":"接口分为四种，connect:建立socket请求，join:加入channel，send:向服务端发消息，rece:接收服务端消息"
+        "url_type":["connect", "join", "C2S", "S2C"],
+        "intro_url_type":"接口分为四种，connect:建立socket请求，join:加入channel，C2S:向服务端发消息，S2C:接收服务端消息"
     },
 
     "/socket":{
@@ -35,13 +35,15 @@
     },
 
     "create_room":{
-        "type":"send",
+        "type":"C2S",
         "intro":"创建房间",
         "params":{
-            "room_id":"111"
+            "room_id":"111",
+            "title":"大家来玩啊"
         },
         "intro_params":{
-            "room_id":"房间唯一标识"
+            "room_id":"房间唯一标识",
+            "title":"房间的名字"
         },
         "return":[
             {
@@ -55,7 +57,7 @@
     },
 
     "delete_room":{
-        "type":"send",
+        "type":"C2S",
         "intro":"删除房间",
         "params":{
             "room_id":"111"
@@ -71,7 +73,7 @@
     },
 
     "bc:talk":{
-        "type":"send",
+        "type":"C2S",
         "intro":"在房间说话",
         "params":{
             "content":"msg"
@@ -91,7 +93,7 @@
     },
 
     "talk":{
-        "type":"rece",
+        "type":"S2C",
         "intro":"有人在房间说话",
         "params":{
             "content":"msg"
