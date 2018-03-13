@@ -2,6 +2,10 @@ defmodule Websocket.RoomManager do
     use Agent, export: __MODULE__
     require Logger
 
+    defmodule Room do
+        defs
+    end
+
     def start_link() do
         Logger.debug "#{__MODULE__} started."
         Agent.start_link(fn -> MapSet.new end, name: __MODULE__)

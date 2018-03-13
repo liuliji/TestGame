@@ -1,6 +1,7 @@
 defmodule WebsocketWeb.UserSocket do
   use Phoenix.Socket
   require Logger
+  alias Websocket.Entity.User
 # 连接了socket之后，收到的消息和发出的消息都会被路由到channels。
 # 从客户端来的数据会通过transports被路由到channels
 # socket的责任之一就是将transports 和 channels 绑定到一起
@@ -11,8 +12,8 @@ defmodule WebsocketWeb.UserSocket do
 
   ## Channels
   #  Phoenix.Socket.channel/2 方法定义了channel和topic的映射关系
-  channel "room:_hall", WebsocketWeb.HallRoomChannel
   channel "room:*", WebsocketWeb.RoomsChannel
+  channel "room:_hall", WebsocketWeb.HallRoomChannel
 
   ## Transports
   # phx 支持websocket和longpoll两种传输方式
@@ -30,19 +31,22 @@ defmodule WebsocketWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(%{"user_id" => user_id}=params, socket) do
+  def connect(%{"user_name" => user_name}=params, socket) do
     Logger.debug "params:#{inspect params} connect to socket:#{inspect socket}"
-    case String.length user_id do
+    case String.length user_name do
       0 ->
-        {:error, %{reason: "invalid user_id"}}
+        :error
       _ ->
-        {:ok, assign(socket, :user_id, user_id)}
+        uid = UUID.uuid4();
+        user = %User{uid: uid, user_name: user_name}
+        Logger.debug "user:#{inspect user} connect"
+        {:ok, assign(socket, :user, user)}
     end  
   end
 
   def connect(_params, socket) do
     Logger.debug "params:#{inspect _params} connect to socket:#{inspect _params}"
-    {:error, %{reason: "invalid user_id"}}
+    :error
   end
 
 
@@ -58,6 +62,7 @@ defmodule WebsocketWeb.UserSocket do
   # Returning `nil` makes this socket anonymous(匿名).
   # id 通常被用来标志一个socket链接，上面展示了通常用法。
   def id(socket) do
-    "user_socket:#{socket.assigns.user_id}"
+    socket.assigns.user.uid
+    # "user_socket:#{socket.assigns.user_id}"
   end
 end
