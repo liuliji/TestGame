@@ -8,18 +8,19 @@
         "type":"connect",
         "intro":"建立socket连接。成功之后需要加入大厅房间(room:_hall 接口)",
         "params":{
-            "user_id":"123"
+            "user_name":"123"
         },
         "intro_params":{
-            "user_id":"用户唯一标识id"
+            "user_name":"用户名"
         },
         "return":[
             {
-                "state":"ok"
+                "state":"ok",
+                "uid":"用户唯一标识"
             },
             {
                 "state":"error",
-                "body":{"reason":"invalid user_id"}
+                "body":{"reason":"exist user_name"}
             }
         ]
     },
@@ -33,6 +34,48 @@
             }
         ]
     },
+
+    "room:room_id":{
+        "intro":"加入房间",
+        "params":{
+            "room_id":"asd5f798-asdf"
+        },
+        "return":[
+            {
+                "state":"ok",
+                "body":{
+                    "users":[
+                        {
+                            "uid":"111",
+                            "user_name":"tom"
+                        }
+                    ]
+                }
+            }
+        ]
+
+    },
+
+    // "ID_C2S_JOIN_ROOM":{
+    //     "intro":"加入房间",
+    //     "params":{
+    //         "room_id":"asd5f798-asdf"
+    //     },
+    //     "return":[
+    //         {
+    //             "state":"ok",
+    //             "body":{
+    //                 "users":[
+    //                     {
+    //                         "uid":"111",
+    //                         "user_name":"tom"
+    //                     }
+    //                 ]
+    //             }
+    //         }
+    //     ]
+
+    // },
 
     "ID_C2S_CREATE_ROOM":{
         "intro":"创建房间",
@@ -96,22 +139,21 @@
         ]
     },
 
-    "talk":{
-        "type":"S2C",
-        "intro":"有人在房间说话",
-        "params":{
-            "user_id":"123",
+//---------------------------- S2C -----------------
+
+    "ID_S2C_JOIN_ROOM":{
+        "intro":"有人加入房间",
+        "return":{
+            "uid":"111",
+            "user_name":"tom"
+        }
+    },
+
+    "ID_S2C_TALK":{
+        "return":{
+            "uid":"123",
             "content":"msg"
-        },
-        "intro_params":{
-            "user_id":"用户id",
-            "content":"说话的内容"
-        },
-        "return":[
-            {
-                "state":"ok"
-            }
-        ]
+        }
     }
 
 }
