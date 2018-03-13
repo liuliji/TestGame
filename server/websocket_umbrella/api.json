@@ -150,6 +150,7 @@
     },
 
     "ID_S2C_TALK":{
+        "intro":"有人说了话",
         "return":{
             "uid":"123",
             "content":"msg"
