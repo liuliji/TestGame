@@ -34,20 +34,26 @@
         ]
     },
 
-    "create_room":{
-        "type":"C2S",
+    "ID_C2S_CREATE_ROOM":{
         "intro":"创建房间",
         "params":{
-            "room_id":"111",
-            "title":"大家来玩啊"
+            // "room_name":"111"
         },
         "intro_params":{
-            "room_id":"房间唯一标识",
-            "title":"房间的名字"
+            // "room_id":"房间唯一标识",
+            // "title":"房间的名字"
         },
         "return":[
             {
-                "state":"ok"
+                "state":"ok",
+                "body":{
+                    "room_id":"asd5f798-asdf",
+                    "owner_id":"111"
+                },
+                "intr_body":{
+                    "room_id":"房间唯一标识",
+                    "owner_id":"房主uid"
+                }
             },
             {
                 "state":"error",
@@ -56,11 +62,10 @@
         ]
     },
 
-    "delete_room":{
-        "type":"C2S",
+    "ID_C2S_DELETE_ROOM":{
         "intro":"删除房间",
         "params":{
-            "room_id":"111"
+            "room_id":"asdf-fdaf"
         },
         "intro_params":{
             "room_id":"房间唯一标识"
@@ -72,8 +77,7 @@
         ]
     },
 
-    "bc:talk":{
-        "type":"C2S",
+    "ID_C2S_TALK":{
         "intro":"在房间说话",
         "params":{
             "content":"msg"
@@ -96,9 +100,11 @@
         "type":"S2C",
         "intro":"有人在房间说话",
         "params":{
+            "user_id":"123",
             "content":"msg"
         },
         "intro_params":{
+            "user_id":"用户id",
             "content":"说话的内容"
         },
         "return":[
