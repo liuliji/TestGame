@@ -6,6 +6,7 @@ var enWinShowType = require('UIWindowDef').enWinShowType;
 
 var WSph = require('WSph');
 
+var LobbySendMsgs = require('LobbySendMsgs');
 
 cc.Class({
     extends: UIWindow,
@@ -13,6 +14,11 @@ cc.Class({
     properties: {
         resultLabel: cc.Label,
         socket: null,// WSph对象
+
+        deletePanel: cc.Node,// 删除房间的panel
+        deleteEdit: cc.EditBox,// 删除房间的editBox
+
+
     },
 
     // use this for initialization
@@ -36,6 +42,8 @@ cc.Class({
     // 游戏初始化
     gameInit: function () {
         this.node.on('wsCallback',this.onWebsocketCallback.bind(this));
+        this.node.on('create_room',this.onCreateRoomCallback.bind(this));
+        this.node.on('enter_room',this.onEnterRoomCallback.bind(this));
     },
 
     // socket连接按钮的点击事件
@@ -55,6 +63,41 @@ cc.Class({
         this.socket.send('这是客户端给服务器发送的消息的内容，服务器能收到吗？？？');
     },
 
+    // 创建房间
+    onCreateRoom: function () {
+        LobbySendMsgs.oncreateRoom();
+    },
+
+    // 显示房间的面板，并输入房间号
+    onShowDeletePanel: function () {
+        if (this.deletePanel){
+            this.deletePanel.active = true;
+        }
+    },
+
+    // 删除房间
+    onDeleteRoom: function () {
+        debugger;
+        if (this.deleteEdit){
+            var roomId = this.deleteEdit.string;
+            if (roomId != ''){
+                LobbySendMsgs.onDeleteRoom(roomId);
+            } else {
+                LobbySendMsgs.onDeleteRoom(this.roomId);
+            }
+        }
+
+    },
+
+    // 显示加入房间面板
+    onShowEnterRomPanel: function () {
+
+    },
+
+    // 加入房间
+    onEnterRoom: function () {
+
+    },
 
     // 网络消息回调
     onWebsocketCallback: function (event) {
@@ -62,7 +105,35 @@ cc.Class({
         if (this.resultLabel){
             this.resultLabel.string = msg;
         }
-    }
+    },
+
+    // 创建房间成功
+    onCreateRoomCallback: function (event) {
+        var args = event.detail;
+        this.roomId = args.room_id;
+        if (this.resultLabel){
+            this.resultLabel.string = JSON.stringify(args);
+        }
+    },
+
+    // 加入房间成功
+    onEnterRoomCallback: function (event) {
+        var args = event.detail;
+        if (this.resultLabel){
+            this.resultLabel.string = JSON.stringify(args);
+        }
+    },
+
+    // 隐藏panel
+    onHidePanel: function (object) {
+        // debugger;
+        var target = object.target;
+        target.parent.active = false;
+    },
+
+    onBackClick: function () {
+        return;
+    },
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

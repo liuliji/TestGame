@@ -1,6 +1,6 @@
 module.exports = {
     'handle':[// 网络回包处理的方法类
-        require('LobbyRecvMsg'),
+        require('LobbyRecvMsgs'),
     ],
     'send': {
         'LobbySendMsg': [// 发给服务器的消息
@@ -14,10 +14,15 @@ module.exports = {
                 'function': 'onEnterRoom',
                 'desc': '创建房间',
             },
+            {
+                'id':'ID_C2S_DELETE_ROOM',
+                'function': 'onDeleteRoom',
+                'desc': '删除房间',
+            },
         ],
     },
     'recv': {
-        'LobbyRecvMsg': [// 服务器回包
+        'LobbyRecvMsgs': [// 服务器回包
             {
                 'id':'ID_S2C_CREATE_ROOM',
                 'function': 'onCreateRoom',

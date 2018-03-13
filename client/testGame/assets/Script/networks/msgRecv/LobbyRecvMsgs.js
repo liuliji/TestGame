@@ -6,6 +6,7 @@
  * Use      : 大厅收消息
  ************************************************************************/
 
+var App = require('App');
 
 /**
  * 创建房间
@@ -13,6 +14,7 @@
  */
 function oncreateRoom(args) {
 
+    App.UIManager.emit('create_room',args);
 }
 
 /**
@@ -21,6 +23,7 @@ function oncreateRoom(args) {
  */
 function onEnterRoom(args) {
 
+    App.UIManager.emit('enter_room',args);
 }
 
 module.exports = {
