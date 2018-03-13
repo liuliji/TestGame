@@ -77,7 +77,7 @@ cc.Class({
 
     // 删除房间
     onDeleteRoom: function () {
-        debugger;
+        // debugger;
         if (this.deleteEdit){
             var roomId = this.deleteEdit.string;
             if (roomId != ''){
