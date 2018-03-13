@@ -155,7 +155,12 @@ module.exports = cc.Class({
              * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
              */
             this.chan.push(msgId, args, 10000)
-                .receive("ok", (message) => console.log("created message", message))
+                .receive("ok", function (message) {
+                    console.log("created message", message);
+                    if (msgId == 'ID_C2S_CREATE_ROOM'){
+                        App.UIManager.emit('create_room',args);
+                    }
+                }.bind(this))
                 .receive("error", (reasons) => console.log("create failed", reasons))
                 .receive("timeout", () => console.log("Networking issue. Still waiting..."));
         } else {
