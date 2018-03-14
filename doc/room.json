@@ -1,0 +1,80 @@
+{
+    "room:room_id":{
+        "intro":"加入房间",
+        "params":{
+            "room_id":"asd5f798-asdf"
+        },
+        "return":[
+            {
+                "state":"ok",
+                "body":{
+                    "users":[
+                        {
+                            "uid":"111",
+                            "user_name":"tom"
+                        }
+                    ]
+                }
+            }
+        ]
+
+    },
+
+    // "ID_C2S_JOIN_ROOM":{
+    //     "intro":"加入房间",
+    //     "params":{
+    //         "room_id":"asd5f798-asdf"
+    //     },
+    //     "return":[
+    //         {
+    //             "state":"ok",
+    //             "body":{
+    //                 "users":[
+    //                     {
+    //                         "uid":"111",
+    //                         "user_name":"tom"
+    //                     }
+    //                 ]
+    //             }
+    //         }
+    //     ]
+
+    // },
+
+    "ID_C2S_TALK":{
+        "intro":"在房间说话",
+        "params":{
+            "content":"msg"
+        },
+        "intro_params":{
+            "content":"说话的内容"
+        },
+        "return":[
+            {
+                "state":"ok"
+            },
+            {
+                "state":"error",
+                "body":{"reason":"msg"}
+            }
+        ]
+    },
+
+    //---------------------------- S2C -----------------
+
+    "ID_S2C_JOIN_ROOM":{
+        "intro":"有人加入房间",
+        "return":{
+            "uid":"111",
+            "user_name":"tom"
+        }
+    },
+
+    "ID_S2C_TALK":{
+        "intro":"有人说了话",
+        "return":{
+            "uid":"123",
+            "content":"msg"
+        }
+    }
+}

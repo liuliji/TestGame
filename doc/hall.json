@@ -1,29 +1,4 @@
 {
-    "intro":{
-        "url_type":["connect", "join", "C2S", "S2C"],
-        "intro_url_type":"接口分为四种，connect:建立socket请求，join:加入channel，C2S:向服务端发消息，S2C:接收服务端消息"
-    },
-
-    "/socket":{
-        "type":"connect",
-        "intro":"建立socket连接。成功之后需要加入大厅房间(room:_hall 接口)",
-        "params":{
-            "user_name":"123"
-        },
-        "intro_params":{
-            "user_name":"用户名"
-        },
-        "return":[
-            {
-                "state":"ok",
-                "uid":"用户唯一标识"
-            },
-            {
-                "state":"error",
-                "body":{"reason":"exist user_name"}
-            }
-        ]
-    },
 
     "room:_hall":{
         "type":"join",
@@ -34,48 +9,6 @@
             }
         ]
     },
-
-    "room:room_id":{
-        "intro":"加入房间",
-        "params":{
-            "room_id":"asd5f798-asdf"
-        },
-        "return":[
-            {
-                "state":"ok",
-                "body":{
-                    "users":[
-                        {
-                            "uid":"111",
-                            "user_name":"tom"
-                        }
-                    ]
-                }
-            }
-        ]
-
-    },
-
-    // "ID_C2S_JOIN_ROOM":{
-    //     "intro":"加入房间",
-    //     "params":{
-    //         "room_id":"asd5f798-asdf"
-    //     },
-    //     "return":[
-    //         {
-    //             "state":"ok",
-    //             "body":{
-    //                 "users":[
-    //                     {
-    //                         "uid":"111",
-    //                         "user_name":"tom"
-    //                     }
-    //                 ]
-    //             }
-    //         }
-    //     ]
-
-    // },
 
     "ID_C2S_CREATE_ROOM":{
         "intro":"创建房间",
@@ -139,7 +72,8 @@
         ]
     },
 
-//---------------------------- S2C -----------------
+
+    //---------------------------- S2C -----------------
 
     "ID_S2C_JOIN_ROOM":{
         "intro":"有人加入房间",
@@ -156,5 +90,4 @@
             "content":"msg"
         }
     }
-
 }

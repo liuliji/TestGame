@@ -1,9 +1,14 @@
 defmodule Websocket.RoomManager do
     use Agent, export: __MODULE__
     require Logger
+    alias  
 
     defmodule Room do
-        defs
+        defstruct(
+            id: "",
+            owner_id: "",
+            user
+        )
     end
 
     def start_link() do
