@@ -18,6 +18,8 @@ cc.Class({
         deletePanel: cc.Node,// 删除房间的panel
         deleteEdit: cc.EditBox,// 删除房间的editBox
 
+        chatPanel: cc.Node,// 聊天的panel
+        chatEdit: cc.EditBox,// 聊天的editBox
 
     },
 
@@ -121,6 +123,22 @@ cc.Class({
         var args = event.detail;
         if (this.resultLabel){
             this.resultLabel.string = JSON.stringify(args);
+        }
+    },
+
+    // 显示房间的面板，并输入房间号
+    onShowChatPanel: function () {
+        if (this.chatPanel){
+            this.chatPanel.active = true;
+        }
+    },
+
+    onChat: function () {
+        if (this.chatEdit){
+            var chatStr = this.deleteEdit.string;
+            if (chatStr != ''){
+                LobbySendMsgs.onTalk(chatStr);
+            }
         }
     },
 

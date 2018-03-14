@@ -19,6 +19,11 @@ module.exports = {
                 'function': 'onDeleteRoom',
                 'desc': '删除房间',
             },
+            {
+                'id':'ID_C2S_TALK',
+                'function': 'onTalk',
+                'desc': '说话聊天',
+            }
         ],
     },
     'recv': {

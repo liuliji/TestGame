@@ -36,10 +36,18 @@ function onEnterRoom(roomId) {
 
 }
 
+function onTalk(content) {
+    var msg = {
+        content: content,
+    };
+    WSph.sendMsg('ID_C2S_TALK',msg);
+}
+
 module.exports = {
     'oncreateRoom': oncreateRoom,// 创建房间
     'onEnterRoom': onEnterRoom,// 加入房间
     'onDeleteRoom': onDeleteRoom,// 删除房间
+    'onTalk': onTalk,// 说话、聊天
 }
 
 
