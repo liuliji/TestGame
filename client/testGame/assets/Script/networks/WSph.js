@@ -155,7 +155,7 @@ module.exports = cc.Class({
                 .receive("ok", function (message) {
                     console.log("created message", message);
                     if (msgId == 'ID_C2S_CREATE_ROOM'){
-                        App.UIManager.emit('create_room',args);
+                        App.UIManager.emit('create_room',message);
                     }
                 }.bind(this))
                 .receive("error", (reasons) => console.log("create failed", reasons))
