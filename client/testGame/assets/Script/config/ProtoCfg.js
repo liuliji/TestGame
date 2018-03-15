@@ -1,6 +1,7 @@
 module.exports = {
     'handle':[// 网络回包处理的方法类
         require('LobbyRecvMsgs'),
+        require('RoomRecvMsgs'),
     ],
     'send': {
         'LobbySendMsg': [// 发给服务器的消息
@@ -34,14 +35,21 @@ module.exports = {
                 'desc': '创建房间',
             },
             {
-                'id':'ID_S2C_CREATE_ROOM',
+                'id':'ID_S2C_ENTER_ROOM',
                 'function': 'onEnterRoom',
-                'desc': '创建房间',
+                'desc': '大厅加入房间',
             },
             {
                 'id':'ID_S2C_TALK',
                 'function': 'onTalk',
-                'desc': '创建房间',
+                'desc': '大厅聊天',
+            },
+        ],
+        'RoomRecvMsgs': [// 房间服务器回包
+            {
+                'id':'ID_S2C_ROOM_TALK',
+                'function': 'onRoomTalk',
+                'desc': '房间聊天',
             },
         ],
     }

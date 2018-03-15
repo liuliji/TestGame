@@ -41,7 +41,7 @@
 
     // },
 
-    "ID_C2S_TALK":{
+    "ID_C2S_ROOM_TALK":{
         "intro":"在房间说话",
         "params":{
             "content":"msg"
