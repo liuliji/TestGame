@@ -12,7 +12,7 @@ var WSph = require('WSph');
  * 创建房间
  * @param info 房间信息
  */
-function oncreateRoom(info) {
+function onCreateRoom(info) {
     var msg = {};
     WSph.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }

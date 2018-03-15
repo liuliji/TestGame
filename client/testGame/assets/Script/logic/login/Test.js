@@ -67,7 +67,7 @@ cc.Class({
 
     // 创建房间
     onCreateRoom: function () {
-        LobbySendMsgs.oncreateRoom();
+        LobbySendMsgs.onCreateRoom();
     },
 
     // 显示房间的面板，并输入房间号
