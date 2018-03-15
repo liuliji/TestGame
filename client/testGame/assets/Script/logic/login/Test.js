@@ -26,6 +26,8 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this._super();
+        if (App.Init()) { // 初始化控制器
+        }
         // this.socket = new WSph();
         // debugger;
         this.gameInit();
