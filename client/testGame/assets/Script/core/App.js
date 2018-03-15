@@ -47,11 +47,11 @@ var App = cc.Class({
         /**
          * Socket请求
          */
-        this.Socket = new WebsocketScript();
+        // this.Socket = new WebsocketScript();
         /**
          * websocket请求
          */
-        this.Websocket = new WebsocketScript();
+        // this.Websocket = new WebsocketScript();
 
         // this.NetworkScript = require('NetworkScript');
 
@@ -82,7 +82,7 @@ var App = cc.Class({
         this.UserManager = require('UserManager');
 
         // 创建socket
-        this.socket = new WSph();
+        this.Socket = new WSph();
     },
 
     /**
@@ -99,22 +99,22 @@ var App = cc.Class({
          * 音效管理器
          */
         var Music = require('Music');
-        if (Music) {
-            Music.setMusicPath('resources/music/');//设置音乐默认路径//
-            Music.preload('300.mp3', function () {
-                // Log.debug('预加载音乐成功:300.MP3');
-            }.bind(this));
-            Music.preload('bgm2.mp3', function () {
-                // Log.debug('预加载音乐成功:bgm2.MP3');
-            }.bind(this));
-            Music.preload('bgm3.mp3', function () {
-                // Log.debug('预加载音乐成功:bgm3.MP3');
-            }.bind(this));
-        }
+        // if (Music) {
+        //     Music.setMusicPath('resources/music/');//设置音乐默认路径//
+        //     Music.preload('300.mp3', function () {
+        //         // Log.debug('预加载音乐成功:300.MP3');
+        //     }.bind(this));
+        //     Music.preload('bgm2.mp3', function () {
+        //         // Log.debug('预加载音乐成功:bgm2.MP3');
+        //     }.bind(this));
+        //     Music.preload('bgm3.mp3', function () {
+        //         // Log.debug('预加载音乐成功:bgm3.MP3');
+        //     }.bind(this));
+        // }
         // 初始化随机种子
         this.RandomUtils.initRandomSeed();
         // 初始化Http配置
-        this.Http.initServer(this.GlobalConfig.LocalServer, this.GlobalConfig.IsDebug);
+        // this.Http.initServer(this.GlobalConfig.LocalServer, this.GlobalConfig.IsDebug);
         // 实例化ProtoBuf
         cc.loader.loadResDir('proto', function (err, assets) {
             if (err) {
@@ -134,9 +134,9 @@ var App = cc.Class({
         }.bind(this));
 
 
-        this.Socket.setGameApp(this);
-        this.Websocket.setGameApp(this);
-        this.Http.setGameApp(this);
+        // this.Socket.setGameApp(this);
+        // this.Websocket.setGameApp(this);
+        // this.Http.setGameApp(this);
 
         // this.NetworkScript.registerHandler();// 注册socket回调函数
         this._init = true;

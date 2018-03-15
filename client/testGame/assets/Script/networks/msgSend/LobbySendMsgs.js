@@ -16,7 +16,7 @@ var App = require('App');
  */
 function onCreateRoom(info) {
     var msg = {};
-    App.socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
+    App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
 
 /**
@@ -27,7 +27,7 @@ function onDeleteRoom(room_id) {
     var msg = {
         room_id: room_id,
     };
-    App.socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
+    App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
 
 /**
@@ -42,7 +42,7 @@ function onTalk(content) {
     var msg = {
         content: content,
     };
-    App.socket.sendMsg('ID_C2S_TALK',msg);
+    App.Socket.sendMsg('ID_C2S_TALK',msg);
 }
 
 module.exports = {

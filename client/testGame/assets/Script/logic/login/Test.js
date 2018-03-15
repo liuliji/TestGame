@@ -54,7 +54,7 @@ cc.Class({
     onSocketBtnClick: function () {
         // 在这里设置要连接的socket地址
         // this.socket.connect('');
-        App.socket.connect('');
+        App.Socket.connect('');
     },
 
     // 发送消息
