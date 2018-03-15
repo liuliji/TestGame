@@ -3,7 +3,6 @@ var BaseClass = require('BaseClass');
 
 var Socket = require('phoenix').Socket;// 使用phoenix的socket
 
-var App = require('App');
 var ProtoCfg = require('ProtoCfg');
 
 
@@ -69,9 +68,6 @@ module.exports = cc.Class({
     registerEvent: function () {
         // debugger;
         // 首先取出所有的收包的消息对应的文件
-        if (App){
-
-        }
         var recvs = ProtoCfg.recv;
         var handles = ProtoCfg.handle;
         if (this.chan){
@@ -150,6 +146,7 @@ module.exports = cc.Class({
     },
 
     sendMsg: function (msgId,args) {
+        var App = require('App');
         if (this.chan) {
             /**
              * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度

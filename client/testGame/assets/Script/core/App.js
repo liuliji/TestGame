@@ -12,6 +12,8 @@ var RandomUtils = require('RandomUtils');
 var GlobalTable = require('GlobalTable');
 var StorageConst = require('StorageConst');
 
+var WSph = require('WSph');
+
 var App = cc.Class({
     properties: {},
     onLoad: function () {
@@ -78,6 +80,9 @@ var App = cc.Class({
          * 玩家数据管理
          */
         this.UserManager = require('UserManager');
+
+        // 创建socket
+        this.socket = new WSph();
     },
 
     /**

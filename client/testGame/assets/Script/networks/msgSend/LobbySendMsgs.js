@@ -6,7 +6,9 @@
  * Use      : 大厅发送消息
  ************************************************************************/
 
-var WSph = require('WSph');
+// var WSph = require('WSph');
+
+var App = require('App');
 
 /**
  * 创建房间
@@ -14,7 +16,7 @@ var WSph = require('WSph');
  */
 function onCreateRoom(info) {
     var msg = {};
-    WSph.sendMsg('ID_C2S_CREATE_ROOM',msg);
+    App.socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
 
 /**
@@ -25,7 +27,7 @@ function onDeleteRoom(room_id) {
     var msg = {
         room_id: room_id,
     };
-    WSph.sendMsg('ID_C2S_CREATE_ROOM',msg);
+    App.socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
 
 /**
@@ -40,7 +42,7 @@ function onTalk(content) {
     var msg = {
         content: content,
     };
-    WSph.sendMsg('ID_C2S_TALK',msg);
+    App.socket.sendMsg('ID_C2S_TALK',msg);
 }
 
 module.exports = {
