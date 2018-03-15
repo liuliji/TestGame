@@ -38,6 +38,11 @@ module.exports = {
                 'function': 'onEnterRoom',
                 'desc': '创建房间',
             },
+            {
+                'id':'ID_S2C_TALK',
+                'function': 'onTalk',
+                'desc': '创建房间',
+            },
         ],
     }
 

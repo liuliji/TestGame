@@ -26,8 +26,18 @@ function onEnterRoom(args) {
     App.UIManager.emit('enter_room',args);
 }
 
+/**
+ *
+ * @param args
+ */
+function onTalk(args) {
+
+    App.UIManager.emit('talk',args);
+}
+
 module.exports = {
     'oncreateRoom': oncreateRoom,// 创建房间
     'onEnterRoom': onEnterRoom,// 加入房间
+    'onTalk': onTalk,// 说话聊天
 }
 

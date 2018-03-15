@@ -70,7 +70,7 @@
         }
     },
 
-    "ID_S2C_TALK":{
+    "ID_S2C_ROOM_TALK":{
         "intro":"有人说了话",
         "return":{
             "uid":"123",
