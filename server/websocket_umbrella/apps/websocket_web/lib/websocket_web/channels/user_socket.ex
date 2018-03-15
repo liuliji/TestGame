@@ -1,7 +1,8 @@
 defmodule WebsocketWeb.UserSocket do
   use Phoenix.Socket
   require Logger
-  alias Websocket.Entity.User
+  alias Websocket.UserManager.User
+
 # 连接了socket之后，收到的消息和发出的消息都会被路由到channels。
 # 从客户端来的数据会通过transports被路由到channels
 # socket的责任之一就是将transports 和 channels 绑定到一起
@@ -32,13 +33,13 @@ defmodule WebsocketWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"user_name" => user_name}=params, socket) do
-    Logger.debug "params:#{inspect params} connect to socket:#{inspect socket}"
+    Logger.debug "params:#{inspect params}"
     case String.length user_name do
       0 ->
         :error
       _ ->
         uid = UUID.uuid4();
-        user = %User{uid: uid, user_name: user_name}
+        user = %User{uid: uid, user_name: user_name, socket_id: uid}
         Logger.debug "user:#{inspect user} connect"
         {:ok, assign(socket, :user, user)}
     end  
@@ -62,7 +63,7 @@ defmodule WebsocketWeb.UserSocket do
   # Returning `nil` makes this socket anonymous(匿名).
   # id 通常被用来标志一个socket链接，上面展示了通常用法。
   def id(socket) do
-    socket.assigns.user.uid
+    socket.assigns.user.socket_id
     # "user_socket:#{socket.assigns.user_id}"
   end
 end
