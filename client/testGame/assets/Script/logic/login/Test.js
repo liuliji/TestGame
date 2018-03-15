@@ -26,7 +26,9 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this._super();
-        this.socket = new WSph();
+        if (App.Init()) { // 初始化控制器
+        }
+        // this.socket = new WSph();
         // debugger;
         this.gameInit();
     },
@@ -51,7 +53,8 @@ cc.Class({
     // socket连接按钮的点击事件
     onSocketBtnClick: function () {
         // 在这里设置要连接的socket地址
-        this.socket.connect('');
+        // this.socket.connect('');
+        App.socket.connect('');
     },
 
     // 发送消息
