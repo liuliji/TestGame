@@ -68,6 +68,7 @@ defmodule WebsocketWeb.RoomsChannel do
 
     def terminate(reason, socket) do
         Logger.info "client live socket:#{inspect socket.id}. reason:#{inspect reason}"
+        
         :ok
     end
 
