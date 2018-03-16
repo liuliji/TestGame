@@ -1,23 +1,46 @@
+/************************************************************************
+ * Copyright (c) 2017 App
+ * Author    : liji.liu
+ * Mail        : liuliji1184899343@163.com
+ * Date        : 2018-03-15
+ * Use      : loginGM场景的主视图
+ ************************************************************************/
+
+var App = require('App');
+var UIWindow = require('UIWindow');
+var enWinType = require('UIWindowDef').enWinType;
+var enViewType = require('Consts').enViewType;
+var enWinShowType = require('UIWindowDef').enWinShowType;
+
+
 cc.Class({
-    extends: cc.Component,
+    extends: UIWindow,
 
     properties: {
-        // foo: {
-        //    default: null,      // The default value will be used only when the component attaching
-        //                           to a node for the first time
-        //    url: cc.Texture2D,  // optional, default is typeof default
-        //    serializable: true, // optional, default is true
-        //    visible: true,      // optional, default is true
-        //    displayName: 'Foo', // optional
-        //    readonly: false,    // optional, default is false
-        // },
-        // ...
+        idEditBox: cc.EditBox,// ID文本输入框
     },
+
 
     // use this for initialization
     onLoad: function () {
-
+        // 注册ID
+        this.windowID = enViewType.LoginUI;
+        // 设置窗口类型
+        this.windowType = enWinType.WT_Normal;
+        // 弹出方式
+        this.showType = enWinShowType.WST_HideOther;
+        this._super();
     },
+
+    onLogin: function () {
+        if (this.idEditBox){
+            var uid = this.idEditBox.string;
+            if (uid) {
+                App.Socket.connect('wyj');
+            }
+
+        }
+    }
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

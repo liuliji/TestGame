@@ -2,7 +2,7 @@
  * Copyright (c) 2018 testGame
  * Author    : liji.liu
  * Mail      : liuliji1184899343@163.com
- * Date      : 2017-3-4
+ * Date      : 2017-3-16
  * Use       : Login场景管理
  ************************************************************************/
 
@@ -23,8 +23,4 @@ cc.Class({
         App.UIManager.showAwait();
     },
 
-    // called every frame, uncomment this function to activate update callback
-    // update: function (dt) {
-
-    // },
 });

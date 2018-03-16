@@ -96,10 +96,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 14
+        "__id__": 16
       },
       {
-        "__id__": 15
+        "__id__": 17
+      },
+      {
+        "__id__": 18
       }
     ],
     "_prefab": null,
@@ -239,7 +242,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 13
+        "__id__": 14
+      },
+      {
+        "__id__": 15
       }
     ],
     "_prefab": null,
@@ -523,7 +529,11 @@
     "zoomScale": 1.2,
     "pressedSprite": null,
     "hoverSprite": null,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 13
+      }
+    ],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$normalColor": {
@@ -545,6 +555,15 @@
     "_N$target": {
       "__id__": 10
     }
+  },
+  {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 5
+    },
+    "component": "LoginViewGM",
+    "handler": "onLogin",
+    "customEventData": ""
   },
   {
     "__type__": "cc.Widget",
@@ -573,6 +592,26 @@
     "_originalHeight": 0
   },
   {
+    "__type__": "5f9f6dpzJFHc4Bczz7ceJVI",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 5
+    },
+    "_enabled": true,
+    "windowID": 0,
+    "windowType": 2,
+    "showType": 0,
+    "_base": null,
+    "_panel": null,
+    "_back": null,
+    "_close": null,
+    "_bIsLoad": false,
+    "idEditBox": {
+      "__id__": 9
+    }
+  },
+  {
     "__type__": "cc.Canvas",
     "_name": "",
     "_objFlags": 0,
@@ -596,7 +635,11 @@
       "__id__": 2
     },
     "_enabled": true,
-    "windowAry": [],
+    "windowAry": [
+      {
+        "__id__": 15
+      }
+    ],
     "allWindows": [],
     "showWindows": [],
     "UI_Normal": null,
@@ -604,12 +647,29 @@
     "UI_Popup": null,
     "UI_Tips": null,
     "showLable": null,
-    "_MessageBox": null,
-    "_Await": null,
-    "_Tips": null,
-    "_Revolve": null,
+    "_MessageBox": {
+      "__uuid__": "c8641130-65ad-424e-9163-35024d824e5a"
+    },
+    "_Await": {
+      "__uuid__": "ba27e468-33bc-45f4-b6f2-7585bbe85b63"
+    },
+    "_Tips": {
+      "__uuid__": "1866d0c4-47e9-436d-bdbe-6b65a0aa7be2"
+    },
+    "_Revolve": {
+      "__uuid__": "5d8f3c5f-40fc-4b9c-8a1f-30c24170d21a"
+    },
     "_Init": false,
     "_InitCallback": [],
     "isEmitEvent": true
+  },
+  {
+    "__type__": "11658czrZ9Ibo8tAr6HAiw1",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 2
+    },
+    "_enabled": true
   }
 ]

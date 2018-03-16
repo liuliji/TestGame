@@ -20,7 +20,7 @@ module.exports = cc.Class({
     },
 
     // 创建socket连接
-    connect: function (ip) {
+    connect: function (uid) {
         /**
          * 如果socket已经存在，就将channel置空，同时，断开当前的socket连接，
          * 重新建立连接
@@ -35,7 +35,7 @@ module.exports = cc.Class({
         /**
          * 创建socket连接，并发起连接请求
          */
-        this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_name: "wyj"}});
+        this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_name: uid}});
 
         /**
          * 设置socket的事件监听
@@ -60,6 +60,27 @@ module.exports = cc.Class({
         .receive("error", ({reason}) => console.log("failed join", reason) )
         .receive("timeout", () => console.log("Networking issue. Still waiting...") );
 
+    },
+
+    /**
+     * 切换到其他的channel
+     * @param channel 字符串类型，切换channel
+     */
+    switchChannel: function (channel) {
+        if (this.chan && channel){
+            this.chan.leave().receive("ok",function () {
+                this.chan = this.socket.channel('room:_hall');
+                this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
+                this.chan.onError(() => console.log("there was an error!"));
+                this.chan.onClose(() => console.log("the channel has gone away gracefully"));
+                this.chan.onClose(this.onDisconnected.bind(this));
+
+                this.chan.join()
+                    .receive("ok", ({messages}) => console.log("catching up", messages) )
+                    .receive("error", ({reason}) => console.log("failed join", reason) )
+                    .receive("timeout", () => console.log("Networking issue. Still waiting...") );
+            }.bind(this));
+        }
     },
 
     /**
