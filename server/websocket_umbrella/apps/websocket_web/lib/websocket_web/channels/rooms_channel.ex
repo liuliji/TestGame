@@ -6,10 +6,11 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
-    def join("room:" <> private_room_id, _params, socket) do
+    def join("room:" <> private_room_id, msg, socket) do
         case Websocket.RoomManager.room_exist?(%{room_id: private_room_id}) do
             true ->
                 Logger.debug "#{socket.id} join room #{private_room_id}"
+                send(self(), {:after_join, msg})
                 {:ok, socket}
             false ->
                 Logger.debug "#{socket.id} join doesn't exist room #{private_room_id}"
@@ -29,6 +30,14 @@ defmodule WebsocketWeb.RoomsChannel do
         {:reply, :ok, socket}
     end
 
+    def handle_in("ID_C2S_TALK", %{"content" => content} = msg, socket) do
+        user = socket.assign.user
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect user.user_name} talk #{inspect msg}"
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{user_id: user.uid, content: content})
+        {:noreply, socket}
+    end
+
     # 关于 hand_in的返回值
     # {:reply, {:ok, response}|:ok, socket}
     # {:reply, {:error, reson}|:error, socket}
@@ -42,16 +51,33 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ---------------Intercepting Outgoing Events start-------------------
     # 当时间通过 broadcast!/3 广播之后，每一个channel的订阅者可以通过
     # intercept/1 来打断event，并触发 handle_out/3 回调
-    intercept ["new_msg"]
+    intercept ["new_msg", "ID_S2C_TALK"]
 
     ### 我有问题啊，既然intercept 针对的是topic，那么应该也可以拦截 push 的消息
     def handle_out("new_msg", msg, socket) do
         Logger.debug "handle out new_msg topoc, return msg:#{inspect msg}"
         push socket, "new_msg", msg |> Map.put(:is_handle_out, true)
-        {:reply, :ok, socket}
+        {:noreply, socket}
+    end
+
+    def handle_out("ID_S2C_TALK", msg, socket) do
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        ID_S2C_TALK talk #{inspect msg}"
+        Phoenix.Channel.push(socket, "ID_S2C_TALK", msg)
+        {:noreply, socket}
     end
 
     ## ---------------Intercepting Outgoing Events start-------------------
+
+
+    def handle_info({:after_join, msg}, socket) do
+        user = socket.assigns.user
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        after join room #{inspect msg}"
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, user_name: user.user_name, room_id: user.room_id})
+        {:noreply, socket}
+    end
+
 
 
     ## ----------------- Terminate start ----------------
@@ -73,5 +99,5 @@ defmodule WebsocketWeb.RoomsChannel do
     end
 
 
-    ## ----------------- Terminate start ----------------
+    ## ----------------- Terminate end ----------------
 end

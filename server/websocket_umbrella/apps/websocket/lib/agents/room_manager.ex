@@ -10,7 +10,8 @@ defmodule Websocket.RoomManager do
     end
 
     def start_link() do
-        Logger.debug "#{__MODULE__} started."
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        room manager init"
         Agent.start_link(fn -> %{} end, name: __MODULE__)
     end
 
@@ -18,6 +19,8 @@ defmodule Websocket.RoomManager do
         if (room_exist? params) do
             {:error, "room exist"}
         else
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            create_room #{inspect room_id}"
             {Agent.update(__MODULE__, fn state -> 
                 state |> Map.put(room_id, %Room{room_id: room_id})
             end)}

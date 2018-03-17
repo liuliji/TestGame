@@ -3,6 +3,10 @@ defmodule Websocket.UserManager do
     require Logger
     alias Websocket.UserManager.User
 
+    @doc """
+    User struct.
+    :uid, :room_id, :user_name, :socket_id
+    """
     defmodule User do
         defstruct(
             uid: "",
@@ -17,6 +21,9 @@ defmodule Websocket.UserManager do
     end
 
     def init(:ok) do
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        inspect user_manager init"
+        #{inspect info}"
         {:ok, %{}}
     end
 
