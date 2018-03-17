@@ -24,7 +24,7 @@ cc.Class({
             openid: 'oPLJ80yxqJqDPRjo04y8WfqOFtlE',
         }
         HttpScript.getInstance().getRequest(url,msg,function(args){
-            debugger;
+            // debugger;
         });
     },
 

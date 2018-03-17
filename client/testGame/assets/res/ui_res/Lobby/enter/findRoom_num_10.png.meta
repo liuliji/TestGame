@@ -1,14 +1,14 @@
 {
   "ver": "1.0.0",
-  "uuid": "26d60d70-bd08-44db-a155-3f9d769abc13",
+  "uuid": "44fac6c5-5d26-4fcd-8fee-9557f4521c95",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "subMetas": {
-    "lobby_enter": {
+    "findRoom_num_10": {
       "ver": "1.0.3",
-      "uuid": "5aa14302-d523-4c54-a2d0-4d914dd61436",
-      "rawTextureUuid": "26d60d70-bd08-44db-a155-3f9d769abc13",
+      "uuid": "d7268e66-40cf-4334-9ffc-36052c76e96f",
+      "rawTextureUuid": "44fac6c5-5d26-4fcd-8fee-9557f4521c95",
       "trimType": "custom",
       "trimThreshold": 1,
       "rotated": false,
@@ -16,10 +16,10 @@
       "offsetY": 0,
       "trimX": 0,
       "trimY": 0,
-      "width": 399,
-      "height": 446,
-      "rawWidth": 399,
-      "rawHeight": 446,
+      "width": 233,
+      "height": 78,
+      "rawWidth": 233,
+      "rawHeight": 78,
       "borderTop": 0,
       "borderBottom": 0,
       "borderLeft": 0,

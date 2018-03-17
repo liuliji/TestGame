@@ -36,10 +36,18 @@ cc.Class({
         if (this.idEditBox){
             var uid = this.idEditBox.string;
             if (uid) {
-                App.Socket.connect('wyj');
+                App.Socket.connect(uid,'_hall',this.onLoginSuccess.bind(this));
             }
 
         }
+    },
+
+    /**
+     *
+     * @param msg
+     */
+    onLoginSuccess: function (msg) {
+        cc.director.loadScene('lobby');
     }
 
     // called every frame, uncomment this function to activate update callback

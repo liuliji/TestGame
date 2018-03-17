@@ -1,5 +1,13 @@
+var App = require('App');
+var UIWindow = require('UIWindow');
+var enWinType = require('UIWindowDef').enWinType;
+var enViewType = require('Consts').enViewType;
+var enWinShowType = require('UIWindowDef').enWinShowType;
+
+var LobbySendMsgs = require('LobbySendMsgs');
+
 cc.Class({
-    extends: cc.Component,
+    extends: UIWindow,
 
     properties: {
         // foo: {
@@ -16,8 +24,66 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
+        this._super();
+        if (App.Init()) { // 初始化控制器
+        }
+        this.gameInit();
 
     },
+    //< 初始化窗口
+    onInit: function () {
+        // 注册ID
+        this.windowID = enViewType.LobbyUI;
+        // 设置窗口类型
+        this.windowType = enWinType.WT_Normal;
+        // 弹出方式
+        this.showType = enWinShowType.WST_HideOther;
+        this._super();
+    },
+    // 游戏初始化
+    gameInit: function () {
+        this.node.on('create_room',this.onCreateRoomCallback.bind(this));
+        // this.node.on('join_room',this.onEnterRoomCallback.bind(this));
+
+    },
+    // 创建房间
+    onCreateRoom: function () {
+        LobbySendMsgs.onCreateRoom();
+    },
+    // 创建房间成功
+    onCreateRoomCallback: function (event) {
+        var args = event.detail;
+        this.roomId = args.room_id;
+        if (this.resultLabel){
+            this.resultLabel.string = JSON.stringify(args);
+        }
+        Log.debug('房间号为： ' + args.room_id);
+        // var roomObj = App.UserManager.getRoom();
+        // roomObj.roomId = args.room_id;
+        // debugger;
+        App.Socket.switchChannel('' + args.room_id,function () {
+            cc.director.loadScene('game');
+        }.bind(this));
+
+    },
+    // 加入房间面板显示
+    onEnterRoom: function () {
+        App.UIManager.showWindow(enViewType.EnterUI);
+    },
+    // 加入房间成功
+    // onEnterRoomCallback: function (event) {
+    //     var args = event.detail;
+    //     // if (this.resultLabel){
+    //     //     this.resultLabel.string = JSON.stringify(args);
+    //     // }
+    //     // cc.director.loadScene('game');
+    //
+    //
+    //     App.Socket.switchChannel(this.roomId,function () {
+    //         cc.director.loadScene('game');
+    //     }.bind(this));
+    // },
+
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

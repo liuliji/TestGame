@@ -44,12 +44,22 @@ module.exports = {
                 'function': 'onTalk',
                 'desc': '大厅聊天',
             },
+            {
+                'id':'ID_S2C_JOIN_HALL_TEST',
+                'function': 'onJoinHallTest',
+                'desc': '测试',
+            },
         ],
         'RoomRecvMsgs': [// 房间服务器回包
             {
                 'id':'ID_S2C_ROOM_TALK',
                 'function': 'onRoomTalk',
                 'desc': '房间聊天',
+            },
+            {
+                'id':'ID_S2C_JOIN_ROOM',
+                'function': 'onJoinRoom',
+                'desc': '房间有人加入',
             },
         ],
     }

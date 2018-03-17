@@ -12,18 +12,19 @@ var App = require('App');
  * 创建房间
  * @param args 房间信息
  */
-function oncreateRoom(args) {
-
-    App.UIManager.emit('create_room',args);
-}
+// function oncreateRoom(args) {
+//
+//     App.UIManager.emit('create_room',args);
+// }
 
 /**
  * 加入房间
  * @param args 房间ID
  */
-function onEnterRoom(args) {
-
-    App.UIManager.emit('enter_room',args);
+function onJoinRoom(args) {
+    debugger;
+    Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
+    // App.UIManager.emit('join_room',args);
 }
 
 /**
@@ -36,8 +37,8 @@ function onTalk(args) {
 }
 
 module.exports = {
-    'oncreateRoom': oncreateRoom,// 创建房间
-    'onEnterRoom': onEnterRoom,// 加入房间
+    // 'oncreateRoom': oncreateRoom,// 创建房间
+    'onJoinRoom': onJoinRoom,// 加入房间
     'onTalk': onTalk,// 说话聊天
 }
 
