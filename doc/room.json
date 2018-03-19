@@ -20,6 +20,22 @@
 
     },
 
+    
+    "ID_C2S_DELETE_ROOM":{
+        "intro":"删除房间",
+        "params":{
+            "room_id":"asdf-fdaf"
+        },
+        "intro_params":{
+            "room_id":"房间唯一标识"
+        },
+        "return":[
+            {
+                "state":"ok"
+            }
+        ]
+    },
+
     // "ID_C2S_JOIN_ROOM":{
     //     "intro":"加入房间",
     //     "params":{
