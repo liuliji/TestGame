@@ -12,11 +12,21 @@ module.exports = cc.Class({
     properties: {
         socket: null,// 当前类的socket属性，初始化后，会只想Socket的一个对象
         chan: null,// socket的channel
+        events:null,// 消息回调
     },
 
     // use this for initialization
-    onLoad: function () {
+    ctor: function () {
+        this.events = {};
+    },
 
+    /**
+     * 连接时间注册
+     * @param id 事件ID
+     * @param cb 事件回调
+     */
+    registerEventListener: function (id,cb) {
+        this.events[id] = cb;
     },
 
     /**
@@ -24,7 +34,7 @@ module.exports = cc.Class({
      * @param uid 玩家的ID
      * @param channel 想要连接到哪个channel
      */
-    connect: function (uid,channel,cb) {
+    connect: function (uid,channel) {
         /**
          * 如果socket已经存在，就将channel置空，同时，断开当前的socket连接，
          * 重新建立连接
@@ -43,44 +53,60 @@ module.exports = cc.Class({
         /**
          * 设置socket的事件监听
          */
-        this.socket.onError((msg) => console.log("connect error!!! wyj -> "+JSON.stringify(msg)));
-        this.socket.onClose(() => console.log("the connection dropped"));
+        this.socket.onOpen(this.onSocketConnectSuccess.bind(this));
+        this.socket.onError(this.onSocketConnectError);
+        this.socket.onClose(this.onSocketClose.bind(this));
         this.socket.connect();
 
         // 连接到channel
-        this.switchChannel(channel,cb);
+        this.switchChannel(channel);
 
-        // /**
-        //  * 获取channel，同时，设置消息监听，同时，设置错误监听和关闭的监听函数
-        //  */
-        // this.chan = this.socket.channel('room:_hall');
-        // this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
-        // this.chan.onError(() => console.log("there was an error!"));
-        // this.chan.onClose(() => console.log("the channel has gone away gracefully"));
-        // this.chan.onClose(this.onDisconnected.bind(this));
-        //
-        // // 创建了socket之后，注册事件回调
-        // this.registerEvent();
-        //
-        // this.chan.join()
-        // .receive("ok", ({messages}) => console.log("catching up", messages) )
-        // .receive("error", ({reason}) => console.log("failed join", reason) )
-        // .receive("timeout", () => console.log("Networking issue. Still waiting...") );
 
     },
+
+    /*****************************socket事件监听开始***************************/
+    /**
+     * socket连接成功
+     */
+    onSocketConnectSuccess: function () {
+        if (this.events['socket_success']){
+            this.events['socket_success']();
+        }
+    },
+
+    /**
+     * socket连接失败
+     * @param msg 失败原因
+     */
+    onSocketConnectError: function (msg) {
+        Log.debug('创建socket连接失败：' + JSON.stringify(msg));
+        if (this.events['socket_error']){
+            this.events['socket_error']();
+        }
+    },
+
+    /**
+     * 断开socket连接
+     */
+    onSocketClose: function () {
+        if (this.events['socket_close']){
+            this.events['socket_close']();
+        }
+    },
+    /*****************************socket事件监听结束***************************/
 
     /**
      * 切换到其他的channel
      * @param channel 字符串类型，切换channel
      */
-    switchChannel: function (channel,cb) {
+    switchChannel: function (channel) {
         // debugger;
         if (this.chan){
             this.chan.leave().receive("ok",function () {
-                this.createChannelAndRegistEvent(channel,cb);
+                this.createChannelAndRegistEvent(channel);
             }.bind(this));
         } else {
-            this.createChannelAndRegistEvent(channel,cb);
+            this.createChannelAndRegistEvent(channel);
         }
     },
 
@@ -89,7 +115,7 @@ module.exports = cc.Class({
      * @param channel
      * @param cb
      */
-    createChannelAndRegistEvent: function (channel,cb) {
+    createChannelAndRegistEvent: function (channel) {
 
         if (channel){
             /**
@@ -105,19 +131,57 @@ module.exports = cc.Class({
             this.registerEvent();
 
             this.chan.join()
-                .receive("ok",  function (message) {
-                    if (cb){
-                        cb(message);
-                    }
-                }.bind(this))
-                .receive("error", ({reason}) => console.log("failed join", reason) )
-                .receive("timeout", () => console.log("Networking issue. Still waiting...") );
+                .receive("ok",
+                    function (msg) {// channel连接成功
+                        this.onSwitchSuccess(msg,channel)
+                    }.bind(this))
+                .receive("error", function (reason) {// channel连接失败
+                    this.onJoinError(reason,channel)
+                }.bind(this) )
+                .receive("timeout", function () {// channel连接超时
+                    this.onJoinTimeOut(channel);
+                }.bind(this) );
         } else {
             // debugger;
             console.log('未设置要连接到哪个channel');
         }
 
     },
+
+    /*****************************channel事件监听开始***************************/
+    /**
+     * 切换channel成功回调
+     * @param msg
+     */
+    onSwitchSuccess: function (msg,channel) {
+        Log.debug('切换channel成功消息：' + JSON.stringify(msg));
+        Log.debug('切换channel成功channel————' + channel);
+        if (this.events['join_success']){
+            this.events['join_success']();
+        }
+    },
+
+    /**
+     * 加入channel失败
+     * @param msg 失败信息
+     * @param channel 要加入的channel
+     */
+    onJoinError: function (msg,channel) {
+        if (this.events['join_error']){
+            this.events['join_error'](msg);
+        }
+    },
+
+    /**
+     * 加入channel超时
+     * @param channel
+     */
+    onJoinTimeOut: function (channel) {
+        if (this.events['join_timeout']){
+            this.events['join_timeout'](channel);
+        }
+    },
+    /*****************************channel事件监听结束***************************/
 
     /**
      * 注册事件回调
@@ -139,7 +203,6 @@ module.exports = cc.Class({
                 }
                 // debugger;
                 // 有处理函数，才进行事件监听
-                // Object.getOwnPropertyNames(handleFuncs).length
                 if (handleFuncs && Object.getOwnPropertyNames(handleFuncs).length){
                     // 取出每个文件对应的方法的结构体
                     var handleEvents = recvs[handleObj];
@@ -168,40 +231,12 @@ module.exports = cc.Class({
         }
     },
 
-    /*****************************socket事件监听开始***************************/
-    // 创建连接成功
-    onConnectSuccess: function (event) {
-        console.log('connect Success: ' + JSON.stringify(event));
-    },
-    // 创建连接失败
-    onConnectError: function (event) {
-        console.log('connect failed: ' + JSON.stringify(event));
-    },
-    // 断开连接
-    onDisconnected: function (event) {
-        console.log('connect disconnected: ' + JSON.stringify(event));
-    },
-    // 收到消息
-    onMessage: function (msg) {
-        console.log('onMessage: ' + JSON.stringify(msg));
-        App.UIManager.emit('wsCallback', JSON.stringify(msg));
-    },
 
-
-    send: function (data) {
-        if (this.chan) {
-            /**
-             * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
-             */
-            this.chan.push("new_msg", {uid: "666"}, 1000)
-                .receive("ok", (message) => console.log("created message", message))
-                .receive("error", (reasons) => console.log("create failed", reasons))
-                .receive("timeout", () => console.log("Networking issue. Still waiting..."));
-        } else {
-            Log.debug('当前socket的channel为空');
-        }
-    },
-
+    /**
+     * 客户端向服务器发送消息
+     * @param msgId 消息ID
+     * @param args 消息内容
+     */
     sendMsg: function (msgId,args) {
         var App = require('App');
         if (this.chan) {
@@ -225,8 +260,5 @@ module.exports = cc.Class({
             Log.debug('当前socket的channel为空');
         }
     }
-
-
-    /*****************************socket事件监听结束***************************/
 
 });

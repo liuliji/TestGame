@@ -61,9 +61,10 @@ cc.Class({
         // var roomObj = App.UserManager.getRoom();
         // roomObj.roomId = args.room_id;
         // debugger;
-        App.Socket.switchChannel('' + args.room_id,function () {
-            cc.director.loadScene('game');
-        }.bind(this));
+        App.Socket.switchChannel('' + args.room_id);
+        // function () {
+        //     cc.director.loadScene('game');
+        // }.bind(this));
 
     },
     // 加入房间面板显示

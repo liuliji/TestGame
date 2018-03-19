@@ -47,9 +47,10 @@ cc.Class({
     },
 
     onEnterRoom: function () {
-        App.Socket.switchChannel(this.roomIdLabel.string,function () {
-            cc.director.loadScene('game');
-        }.bind(this));
+        App.Socket.switchChannel(this.roomIdLabel.string)
+        //     function () {
+        //     cc.director.loadScene('game');
+        // }.bind(this)
         // LobbySendMsgs.onEnterRoom(this.roomId);
     },
 
@@ -235,9 +236,10 @@ cc.Class({
         // cc.director.loadScene('game');
 
 
-        App.Socket.switchChannel(this.roomIdLabel.string,function () {
-            // cc.director.loadScene('game');
-        }.bind(this));
+        App.Socket.switchChannel(this.roomIdLabel.string);
+        // function () {
+        //     // cc.director.loadScene('game');
+        // }.bind(this));
     },
 
 

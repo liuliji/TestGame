@@ -53,7 +53,7 @@ var App = cc.Class({
          */
         // this.Websocket = new WebsocketScript();
 
-        // this.NetworkScript = require('NetworkScript');
+        this.NetworkScript = require('NetworkScript');
 
         /**
          * 数据表管理器
@@ -138,7 +138,7 @@ var App = cc.Class({
         // this.Websocket.setGameApp(this);
         // this.Http.setGameApp(this);
 
-        // this.NetworkScript.registerHandler();// 注册socket回调函数
+        this.NetworkScript.registerHandler();// 注册socket回调函数
         this._init = true;
         return true;
     },

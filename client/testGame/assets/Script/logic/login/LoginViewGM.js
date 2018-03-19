@@ -36,7 +36,7 @@ cc.Class({
         if (this.idEditBox){
             var uid = this.idEditBox.string;
             if (uid) {
-                App.Socket.connect(uid,'_hall',this.onLoginSuccess.bind(this));
+                App.Socket.connect(uid,'_hall');
             }
 
         }
