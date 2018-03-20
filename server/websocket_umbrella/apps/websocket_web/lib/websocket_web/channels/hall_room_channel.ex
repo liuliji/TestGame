@@ -19,10 +19,10 @@ defmodule WebsocketWeb.HallRoomChannel do
         roomId = UUID.uuid4
         case Websocket.RoomManager.create_room(%{roomId: roomId}) do
             {:ok} ->
-                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_SUCCESS", %{roomId: roomId, ownerId: get_user(socket).uid})
+                Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", %{roomId: roomId})
                 {:noreply, socket}
             {:error, msg} ->
-                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAIL", %{code: -1, reason: msg})
+                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAILED", %{code: -1, reason: msg})
                 {:noreply, socket}
         end
     end

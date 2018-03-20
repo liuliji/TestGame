@@ -74,6 +74,7 @@ defmodule WebsocketWeb.RoomsChannel do
         user = socket.assigns.user
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         after join room #{inspect msg}"
+        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", %{roomId: user.roomId})
         Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})
         {:noreply, socket}
     end
