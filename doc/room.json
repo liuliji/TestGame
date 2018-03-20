@@ -92,5 +92,11 @@
             "uid":"123",
             "content":"msg"
         }
+    },
+    "ID_S2C_ROOM_INFO":{
+        "intro":"加入房间成功，服务器给返回的房间信息",
+        "return":{
+            "roomId":"123"
+        }
     }
 }

@@ -42,7 +42,7 @@ cc.Class({
     },
     // 游戏初始化
     gameInit: function () {
-        this.node.on('create_room',this.onCreateRoomCallback.bind(this));
+        // this.node.on('create_room',this.onCreateRoomCallback.bind(this));
         // this.node.on('join_room',this.onEnterRoomCallback.bind(this));
 
     },
@@ -50,23 +50,7 @@ cc.Class({
     onCreateRoom: function () {
         LobbySendMsgs.onCreateRoom();
     },
-    // 创建房间成功
-    onCreateRoomCallback: function (event) {
-        var args = event.detail;
-        this.roomId = args.room_id;
-        if (this.resultLabel){
-            this.resultLabel.string = JSON.stringify(args);
-        }
-        Log.debug('房间号为： ' + args.room_id);
-        // var roomObj = App.UserManager.getRoom();
-        // roomObj.roomId = args.room_id;
-        // debugger;
-        App.Socket.switchChannel('' + args.room_id);
-        // function () {
-        //     cc.director.loadScene('game');
-        // }.bind(this));
 
-    },
     // 加入房间面板显示
     onEnterRoom: function () {
         App.UIManager.showWindow(enViewType.EnterUI);

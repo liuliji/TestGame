@@ -45,6 +45,16 @@ module.exports = {
                 'desc': '大厅聊天',
             },
             {
+                'id':'ID_S2C_CREATE_ROOM_INFO',
+                'function': 'onCreateRoomInfo',
+                'desc': '创建房间成功，返回房间信息',
+            },
+            {
+                'id':'ID_S2C_CREATE_ROOM_FAILED',
+                'function': 'onCreateRoomFailed',
+                'desc': '创建房间失败，服务器返回的错误信息',
+            },
+            {
                 'id':'ID_S2C_JOIN_HALL_TEST',
                 'function': 'onJoinHallTest',
                 'desc': '测试',
@@ -60,6 +70,11 @@ module.exports = {
                 'id':'ID_S2C_JOIN_ROOM',
                 'function': 'onJoinRoom',
                 'desc': '房间有人加入',
+            },
+            {
+                'id':'ID_S2C_ROOM_INFO',
+                'function': 'onRoomInfo',
+                'desc': '加入房间成功，服务器给返回的房间信息',
             },
         ],
     }

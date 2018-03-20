@@ -36,9 +36,20 @@ function onTalk(args) {
     App.UIManager.emit('talk',args);
 }
 
+/**
+ *
+ * @param args
+ */
+function onRoomInfo(args) {
+    var roomId = args.roomId;// 房间ID
+    App.UserManager.setRoom(args);
+    cc.director.loadScene('game');
+}
+
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
     'onJoinRoom': onJoinRoom,// 加入房间
     'onTalk': onTalk,// 说话聊天
+    'onRoomInfo': onRoomInfo,// 加入房间成功，服务器给返回的房间信息
 }
 

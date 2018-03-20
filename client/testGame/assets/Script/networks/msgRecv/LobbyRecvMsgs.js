@@ -36,17 +36,33 @@ function onTalk(args) {
 }
 
 /**
- * 测试
+ * 创建房间成功，返回房间信息
  * @param args
  */
-function onJoinHallTest(args) {
-    // debugger;
+function onCreateRoomInfo(args) {
+    var roomId = args.roomId;// 房间ID
+    var content = args.content;// 房间内容
+    App.UserManager.setRoom(args);
+    // 创建房间成功之后，切换channel，连接到房间channel
+    App.Socket.switchChannel('room:' + roomId);
+
 }
+
+/**
+ * 创建房间失败，服务器返回的错误信息
+ * @param args
+ */
+function onCreateRoomFailed(args) {
+    var code = args.code;// 错误码
+    var reason = args.reason;// 错误原因
+}
+
 
 module.exports = {
     'oncreateRoom': oncreateRoom,// 创建房间
     // 'onEnterRoom': onEnterRoom,// 加入房间
     'onTalk': onTalk,// 说话聊天
-    'onJoinHallTest': onJoinHallTest,// 测试
+    'onCreateRoomInfo': onCreateRoomInfo,// 创建房间成功，返回房间信息
+    'onCreateRoomFailed': onCreateRoomFailed,// 创建房间失败，服务器返回的错误信息
 }
 

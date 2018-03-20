@@ -13,6 +13,7 @@ module.exports = cc.Class({
         socket: null,// 当前类的socket属性，初始化后，会只想Socket的一个对象
         chan: null,// socket的channel
         events:null,// 消息回调
+        type: 1,// 连接的channel类型，1为lobby，2为大厅
     },
 
     // use this for initialization
@@ -34,7 +35,7 @@ module.exports = cc.Class({
      * @param uid 玩家的ID
      * @param channel 想要连接到哪个channel
      */
-    connect: function (uid,channel) {
+    connect: function (uid,channel,type) {
         /**
          * 如果socket已经存在，就将channel置空，同时，断开当前的socket连接，
          * 重新建立连接
@@ -44,17 +45,19 @@ module.exports = cc.Class({
             // 如果有，就断开连接，重新创建新的连接
             this.socket.disconnect();
         }
+        // socket类型
+        this.type = type;
 
         /**
          * 创建socket连接，并发起连接请求
          */
         // this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_name: uid}});
-        this.socket = new Socket("ws://localhost:4000/socket", {params: {user_name: uid}});
+        this.socket = new Socket("ws://localhost:4000/socket", {params: {userName: uid}});
         /**
          * 设置socket的事件监听
          */
         this.socket.onOpen(this.onSocketConnectSuccess.bind(this));
-        this.socket.onError(this.onSocketConnectError);
+        this.socket.onError(this.onSocketConnectError.bind(this));
         this.socket.onClose(this.onSocketClose.bind(this));
         this.socket.connect();
 
@@ -70,7 +73,7 @@ module.exports = cc.Class({
      */
     onSocketConnectSuccess: function () {
         if (this.events['socket_success']){
-            this.events['socket_success']();
+            this.events['socket_success'](this.type);
         }
     },
 
@@ -121,8 +124,8 @@ module.exports = cc.Class({
             /**
              * 设置链接成功的回调方法
              */
-            this.chan = this.socket.channel('room:' + channel);
-            this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
+            this.chan = this.socket.channel(channel);
+            // this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
             this.chan.onError(() => console.log("there was an error!"));
             this.chan.onClose(() => console.log("the channel has gone away gracefully"));
             this.chan.onClose(this.onDisconnected.bind(this));
@@ -180,6 +183,10 @@ module.exports = cc.Class({
         if (this.events['join_timeout']){
             this.events['join_timeout'](channel);
         }
+    },
+    // 断开连接
+    onDisconnected: function(data){
+        console.log('connect disconnected: ' + JSON.stringify(data));
     },
     /*****************************channel事件监听结束***************************/
 

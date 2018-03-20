@@ -32,8 +32,10 @@ function registerHandler() {
 /**
  * 建立socket成功
  */
-function onConnectSuccess() {
-    
+function onConnectSuccess(type) {
+    if (type == 1){
+        cc.director.loadScene('lobby');
+    }
 }
 
 /**

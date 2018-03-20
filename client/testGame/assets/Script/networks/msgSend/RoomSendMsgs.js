@@ -15,9 +15,9 @@ var App = require('App');
  * 删除房间
  * @param info
  */
-function onDeleteRoom(room_id) {
+function onDeleteRoom(roomId) {
     var msg = {
-        room_id: room_id,
+        roomId: roomId,
     };
     App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
