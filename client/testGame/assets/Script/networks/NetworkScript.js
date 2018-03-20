@@ -33,9 +33,7 @@ function registerHandler() {
  * 建立socket成功
  */
 function onConnectSuccess(type) {
-    if (type == 1){
-        cc.director.loadScene('lobby');
-    }
+
 }
 
 /**
@@ -57,8 +55,11 @@ function onConnectClose() {
  * 加入channel成功
  * @param msg 成功返回的消息
  */
-function onJoinSuccess(msg) {
-
+function onJoinSuccess(msg,type) {
+    debugger;
+    if (type == 1){
+        cc.director.loadScene('lobby');
+    }
 }
 
 /**

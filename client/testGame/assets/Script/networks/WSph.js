@@ -119,6 +119,7 @@ module.exports = cc.Class({
      * @param cb
      */
     createChannelAndRegistEvent: function (channel) {
+        debugger;
 
         if (channel){
             /**
@@ -136,6 +137,7 @@ module.exports = cc.Class({
             this.chan.join()
                 .receive("ok",
                     function (msg) {// channel连接成功
+                        debugger;
                         this.onSwitchSuccess(msg,channel)
                     }.bind(this))
                 .receive("error", function (reason) {// channel连接失败
@@ -157,10 +159,11 @@ module.exports = cc.Class({
      * @param msg
      */
     onSwitchSuccess: function (msg,channel) {
+        debugger;
         Log.debug('切换channel成功消息：' + JSON.stringify(msg));
         Log.debug('切换channel成功channel————' + channel);
         if (this.events['join_success']){
-            this.events['join_success']();
+            this.events['join_success'](msg,this.type);
         }
     },
 
