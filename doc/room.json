@@ -1,8 +1,8 @@
 {
-    "room:room_id":{
+    "room:roomId":{
         "intro":"加入房间",
         "params":{
-            "room_id":"asd5f798-asdf"
+            "roomId":"asd5f798-asdf"
         },
         "return":[
             {
@@ -11,7 +11,7 @@
                     "users":[
                         {
                             "uid":"111",
-                            "user_name":"tom"
+                            "userName":"tom"
                         }
                     ]
                 }
@@ -24,10 +24,10 @@
     "ID_C2S_DELETE_ROOM":{
         "intro":"删除房间",
         "params":{
-            "room_id":"asdf-fdaf"
+            "roomId":"asdf-fdaf"
         },
-        "intro_params":{
-            "room_id":"房间唯一标识"
+        "introParams":{
+            "roomId":"房间唯一标识"
         },
         "return":[
             {
@@ -39,7 +39,7 @@
     // "ID_C2S_JOIN_ROOM":{
     //     "intro":"加入房间",
     //     "params":{
-    //         "room_id":"asd5f798-asdf"
+    //         "roomId":"asd5f798-asdf"
     //     },
     //     "return":[
     //         {
@@ -48,7 +48,7 @@
     //                 "users":[
     //                     {
     //                         "uid":"111",
-    //                         "user_name":"tom"
+    //                         "userName":"tom"
     //                     }
     //                 ]
     //             }
@@ -62,7 +62,7 @@
         "params":{
             "content":"msg"
         },
-        "intro_params":{
+        "introParams":{
             "content":"说话的内容"
         },
         "return":[
@@ -82,7 +82,7 @@
         "intro":"有人加入房间",
         "return":{
             "uid":"111",
-            "user_name":"tom"
+            "userName":"tom"
         }
     },
 

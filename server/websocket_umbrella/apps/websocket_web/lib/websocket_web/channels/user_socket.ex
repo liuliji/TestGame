@@ -33,14 +33,15 @@ defmodule WebsocketWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(%{"user_name" => user_name}=params, socket) do
-    Logger.debug "params:#{inspect params}"
-    case String.length user_name do
+  def connect(%{"userName" => userName}=params, socket) do
+    Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+    params:#{inspect params}"
+    case String.length userName do
       0 ->
         :error
       _ ->
         uid = UUID.uuid4();
-        user = %User{uid: uid, user_name: user_name, socket_id: uid}
+        user = %User{uid: uid, userName: userName, socketId: uid}
         # UserManager.update_user(user)
         socket = assign(socket, :user, user)
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
@@ -50,7 +51,7 @@ defmodule WebsocketWeb.UserSocket do
   end
 
   def connect(_params, socket) do
-    Logger.debug "params:#{inspect _params} connect to socket:#{inspect _params}"
+    Logger.error "params:#{inspect _params} connect to socket:#{inspect _params}"
     :error
   end
 
@@ -67,7 +68,6 @@ defmodule WebsocketWeb.UserSocket do
   # Returning `nil` makes this socket anonymous(匿名).
   # id 通常被用来标志一个socket链接，上面展示了通常用法。
   def id(socket) do
-    socket.assigns.user.socket_id
-    # "user_socket:#{socket.assigns.user_id}"
+    socket.assigns.user.socketId
   end
 end

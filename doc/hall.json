@@ -13,22 +13,22 @@
     "ID_C2S_CREATE_ROOM":{
         "intro":"创建房间",
         "params":{
-            // "room_name":"111"
+            // "roomName":"111"
         },
-        "intro_params":{
-            // "room_id":"房间唯一标识",
+        "introParams":{
+            // "roomId":"房间唯一标识",
             // "title":"房间的名字"
         },
         "return":[
             {
                 "state":"ok",
                 "body":{
-                    "room_id":"asd5f798-asdf",
-                    "owner_id":"111"
+                    "roomId":"asd5f798-asdf",
+                    "ownerId":"111"
                 },
-                "intr_body":{
-                    "room_id":"房间唯一标识",
-                    "owner_id":"房主uid"
+                "intrBody":{
+                    "roomId":"房间唯一标识",
+                    "ownerId":"房主uid"
                 }
             },
             {
@@ -44,7 +44,7 @@
         "params":{
             "content":"msg"
         },
-        "intro_params":{
+        "introParams":{
             "content":"说话的内容"
         },
         "return":[
@@ -65,7 +65,7 @@
     //     "intro":"有人加入房间",
     //     "return":{
     //         "uid":"111",
-    //         "user_name":"tom"
+    //         "userName":"tom"
     //     }
     // },
 
@@ -84,7 +84,7 @@
             "roomId":"123",
             "content":"msg"
         }
-    },
+    }
 
 
 /****************************新添加的接口——结束********************************/

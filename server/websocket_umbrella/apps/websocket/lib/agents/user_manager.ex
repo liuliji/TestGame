@@ -5,14 +5,14 @@ defmodule Websocket.UserManager do
 
     @doc """
     User struct.
-    :uid, :room_id, :user_name, :socket_id
+    :uid, :roomId, :userName, :socketId
     """
     defmodule User do
         defstruct(
             uid: "",
-            room_id: "",
-            user_name: "",
-            socket_id: ""
+            roomId: "",
+            userName: "",
+            socketId: ""
             )
     end
 
@@ -31,28 +31,28 @@ defmodule Websocket.UserManager do
         GenServer.call(__MODULE__, {:get, uid})
     end
 
-    def update_user_room_id(uid, room_id) do
-        GenServer.call(__MODULE__, {:update_room_id, uid, room_id})
-        update_user(%{get_user(uid) | room_id: room_id})
+    def update_user_room_id(uid, roomId) do
+        GenServer.call(__MODULE__, {:updateRoomId, uid, roomId})
+        update_user(%{get_user(uid) | roomId: roomId})
     end
 
     def update_user(user) do
-        GenServer.call(__MODULE__, {:update_user, %{user: user}})
+        GenServer.call(__MODULE__, {:updateUser, %{user: user}})
     end
 
     def delete_user(uid) do
-        GenServer.call(__MODULE__, {:delete_user, %{uid: uid}})
+        GenServer.call(__MODULE__, {:deleteUser, %{uid: uid}})
     end
 
 
     # ------------------ Callback ----------------
 
-    def handle_call({:update_room_id, uid, room_id}, _from, state) do
+    def handle_call({:updateRoomId, uid, roomId}, _from, state) do
         case state |> Map.get(uid) do
             nil ->
                 {:reply, {:error, %{msg: "invalid uid"}}, state}
             user ->
-                {:reply, :ok, state |> Map.put(uid, %{user | room_id: room_id})}
+                {:reply, :ok, state |> Map.put(uid, %{user | roomId: roomId})}
         end
     end
 
@@ -60,11 +60,11 @@ defmodule Websocket.UserManager do
         {:reply, state |> Map.get(uid), state}
     end
 
-    def handle_call({:update_user, %{user: user}}, _from, state) do
+    def handle_call({:updateUser, %{user: user}}, _from, state) do
         {:noreply, state |> Map.put(user.uid, user)}
     end
 
-    def handle_call({:delete_user, %{uid: uid}}, _from, state) do
+    def handle_call({:deleteUser, %{uid: uid}}, _from, state) do
         {:noreply, state |> Map.delete(uid)}
     end
 

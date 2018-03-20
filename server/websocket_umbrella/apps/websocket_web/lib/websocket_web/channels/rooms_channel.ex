@@ -6,14 +6,14 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
-    def join("room:" <> private_room_id, msg, socket) do
-        case Websocket.RoomManager.room_exist?(%{room_id: private_room_id}) do
+    def join("room:" <> privateRoomId, msg, socket) do
+        case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
             true ->
-                Logger.debug "#{socket.id} join room #{private_room_id}"
-                send(self(), {:after_join, msg})
+                Logger.debug "#{socket.id} join room #{privateRoomId}"
+                send(self(), {:afterJoin, msg})
                 {:ok, socket}
             false ->
-                Logger.debug "#{socket.id} join doesn't exist room #{private_room_id}"
+                Logger.debug "#{socket.id} join doesn't exist room #{privateRoomId}"
                 {:error, %{reason: "room not exist"}}
         end
     end
@@ -33,8 +33,8 @@ defmodule WebsocketWeb.RoomsChannel do
     def handle_in("ID_C2S_TALK", %{"content" => content} = msg, socket) do
         user = socket.assign.user
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        #{inspect user.user_name} talk #{inspect msg}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{user_id: user.uid, content: content})
+        #{inspect user.userName} talk #{inspect msg}"
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{userId: user.uid, content: content})
         {:noreply, socket}
     end
 
@@ -70,11 +70,11 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ---------------Intercepting Outgoing Events start-------------------
 
 
-    def handle_info({:after_join, msg}, socket) do
+    def handle_info({:afterJoin, msg}, socket) do
         user = socket.assigns.user
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         after join room #{inspect msg}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, user_name: user.user_name, room_id: user.room_id})
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})
         {:noreply, socket}
     end
 

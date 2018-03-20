@@ -6,35 +6,35 @@ defmodule WebsocketWeb.HallRoomChannel do
     def get_user(socket), do: socket.assigns.user
 
     # `push`, `reply`, and `broadcast` can only be called after the socket has finished joining.
-    def join("room:_hall", msg, socket) do
-        Logger.debug "#{socket.id} join channel room:_hall"
-        Logger.debug "msg:#{inspect msg}"
-        send(self(), {:after_join, msg})
-        user = %{get_user(socket) | room_id: "_hall"}
+    def join("lobby", msg, socket) do
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{socket.id} join channel lobby msg:#{inspect msg}"
+        send(self(), {:afterJoin, msg})
+        user = %{get_user(socket) | roomId: "lobby"}
         # UserManager.update_user(user)
         {:ok, assign(socket, :user, user)}
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
-        Logger.debug "#{inspect socket.id} handle create_room, msg:#{inspect _msg}"
-        room_id = UUID.uuid4
-        case Websocket.RoomManager.create_room(%{room_id: room_id}) do
+        roomId = UUID.uuid4
+        case Websocket.RoomManager.create_room(%{roomId: roomId}) do
             {:ok} ->
-                {:reply, {:ok, %{room_id: room_id, owner_id: get_user(socket).uid}}, socket}
+                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_SUCCESS", %{roomId: roomId, ownerId: get_user(socket).uid})
+                {:noreply, socket}
             {:error, msg} ->
-                {:reply, {:error, %{reason: msg}}}
+                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAIL", %{code: -1, reason: msg})
+                {:noreply, socket}
         end
     end
 
-    def handle_in("ID_C2S_DELETE_ROOM",  %{"room_id" => room_id}=msg, socket) do
-        Logger.debug "#{inspect socket.id} hanle delete_room, msg:#{inspect msg}"
-        Websocket.RoomManager.delete_room(%{room_id: room_id})
+    def handle_in("ID_C2S_DELETE_ROOM",  %{"roomId" => roomId}=msg, socket) do
+        Websocket.RoomManager.delete_room(%{roomId: roomId})
         {:noreply, socket}
     end
 
     def handle_in("ID_C2S_TALK", %{"content" => content} = msg, socket) do
         Logger.debug "#{inspect socket.id} say #{content}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{user_id: get_user(socket).uid, content: content})
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{userId: get_user(socket).uid, content: content})
         {:noreply, socket}
     end
 
@@ -55,16 +55,15 @@ defmodule WebsocketWeb.HallRoomChannel do
 
     def terminate(reason, socket) do
         Logger.error "#{__MODULE__} termiatelive socket:#{inspect socket.id}. reason:#{inspect reason}"
-        {:ok, assign(socket, :user, %{get_user(socket) | room_id: ""})}
+        {:ok, assign(socket, :user, %{get_user(socket) | roomId: ""})}
         :ok
     end
 
     #----------- handle_info ------------------
-    def handle_info({:after_join, _msg}, socket) do
+    def handle_info({:afterJoin, _msg}, socket) do
         user = get_user(socket);
         Logger.debug "handle_info socket:#{inspect socket}"
-        push(socket, "ID_S2C_JOIN_HALL_TEST", %{msg: "join hall success"})
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, user_name: user.user_name, room_id: user.room_id})    
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
         {:noreply, socket}
     end
 

@@ -1,18 +1,18 @@
 // 申明 建立socket连接 加入大厅的接口
 {
     "intro":{
-        "url_type":["connect", "join", "C2S", "S2C"],
-        "intro_url_type":"接口分为四种，connect:建立socket请求，join:加入channel，C2S:向服务端发消息，S2C:接收服务端消息"
+        "urlType":["connect", "join", "C2S", "S2C"],
+        "introUrlType":"接口分为四种，connect:建立socket请求，join:加入channel，C2S:向服务端发消息，S2C:接收服务端消息"
     },
 
     "/socket":{
         "type":"connect",
         "intro":"建立socket连接。成功之后需要加入大厅房间(room:_hall 接口)",
         "params":{
-            "user_name":"123"
+            "userName":"123"
         },
-        "intro_params":{
-            "user_name":"用户名"
+        "introParams":{
+            "userName":"用户名"
         },
         "return":[
             {
@@ -21,7 +21,7 @@
             },
             {
                 "state":"error",
-                "body":{"reason":"exist user_name"}
+                "body":{"reason":"exist userName"}
             }
         ]
     }
