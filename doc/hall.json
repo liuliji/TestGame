@@ -1,6 +1,6 @@
 {
 
-    "lobby:":{
+    "lobby":{
         "type":"join",
         "intro":"加入大厅房间",
         "return":[
@@ -18,28 +18,11 @@
         "introParams":{
             // "roomId":"房间唯一标识",
             // "title":"房间的名字"
-        },
-        "return":[
-            {
-                "state":"ok",
-                "body":{
-                    "roomId":"asd5f798-asdf",
-                    "ownerId":"111"
-                },
-                "intrBody":{
-                    "roomId":"房间唯一标识",
-                    "ownerId":"房主uid"
-                }
-            },
-            {
-                "state":"error",
-                "body":{"reason":"msg"}
-            }
-        ]
+        }
     },
 
 
-    "ID_C2S_TALK":{
+    "ID_C2S_LOBBY_TALK":{
         "intro":"在房间说话",
         "params":{
             "content":"msg"
@@ -58,34 +41,13 @@
         ]
     },
 
+    // ----------------------- S2C -----------------------
 
-    //---------------------------- S2C -----------------
-
-    // "ID_S2C_JOIN_ROOM":{
-    //     "intro":"有人加入房间",
-    //     "return":{
-    //         "uid":"111",
-    //         "userName":"tom"
-    //     }
-    // },
-
-    "ID_S2C_TALK":{
+    "ID_S2C_LOBBY_TALK":{
         "intro":"有人说了话",
         "return":{
             "uid":"123",
             "content":"msg"
         }
-    },
-
-/****************************新添加的接口——开始********************************/
-    "ID_S2C_ROOM_INFO":{
-        "intro":"创建房间成功，服务器给返回的房间信息",
-        "return":{
-            "roomId":"123",
-            "content":"msg"
-        }
     }
-
-
-/****************************新添加的接口——结束********************************/
 }

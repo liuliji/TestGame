@@ -1,12 +1,22 @@
 defmodule WebsocketWeb.ErrorView do
   use WebsocketWeb, :view
 
+  @defaultErrorCode -1
+
   def render("404.json", _assigns) do
     %{errors: %{detail: "Page not found"}}
   end
 
   def render("500.json", _assigns) do
     %{errors: %{detail: "Internal server error"}}
+  end
+
+  def render(:error, reason) do
+    %{code: @defaultErrorCode, reason: reason}
+  end
+
+  def render(:error, code, reason) do
+    %{code: code, reason: reason}
   end
 
   # In case no render clause matches or no

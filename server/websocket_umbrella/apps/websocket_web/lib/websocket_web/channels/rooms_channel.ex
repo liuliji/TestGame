@@ -14,7 +14,7 @@ defmodule WebsocketWeb.RoomsChannel do
                 {:ok, socket}
             false ->
                 Logger.debug "#{socket.id} join doesn't exist room #{privateRoomId}"
-                {:error, %{reason: "room not exist"}}
+                {:error, WebsocketWeb.ErrorView.render(:error, "room not exist")}
         end
     end
     ## -----------------Callbacks end -------------------

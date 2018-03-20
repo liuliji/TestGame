@@ -19,7 +19,7 @@ defmodule WebsocketWeb.HallRoomChannel do
         roomId = UUID.uuid4
         case Websocket.RoomManager.create_room(%{roomId: roomId}) do
             {:ok} ->
-                Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", %{roomId: roomId})
+                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_INFO", %{roomId: roomId})
                 {:noreply, socket}
             {:error, msg} ->
                 Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAILED", %{code: -1, reason: msg})
@@ -32,13 +32,13 @@ defmodule WebsocketWeb.HallRoomChannel do
         {:noreply, socket}
     end
 
-    def handle_in("ID_C2S_TALK", %{"content" => content} = msg, socket) do
+    def handle_in("ID_C2S_LOBBY_TALK", %{"content" => content} = msg, socket) do
         Logger.debug "#{inspect socket.id} say #{content}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{userId: get_user(socket).uid, content: content})
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_LOBBY_TALK", %{userId: get_user(socket).uid, content: content})
         {:noreply, socket}
     end
 
-    intercept ["ID_S2C_TALK", "ID_S2C_JOIN_ROOM"]
+    intercept ["ID_C2S_LOBBY_TALK", "ID_S2C_JOIN_LOBBY_ROOM"]
     # handle_out can't reply
     # replies can only be sent from a `handle_in/3` callback
     def handle_out("ID_S2C_TALK", msg, socket) do
@@ -47,9 +47,9 @@ defmodule WebsocketWeb.HallRoomChannel do
         {:noreply, socket}
     end
 
-    def handle_out("ID_S2C_JOIN_ROOM", msg, socket) do
+    def handle_out("ID_S2C_JOIN_LOBBY_ROOM", msg, socket) do
         Logger.debug "#{inspect socket.id} handle out join topic, msg:#{inspect msg}"
-        Phoenix.Channel.push socket, "ID_S2C_JOIN_ROOM", msg
+        Phoenix.Channel.push socket, "ID_S2C_JOIN_LOBBY_ROOM", msg
         {:noreply, socket}
     end
 
@@ -63,7 +63,7 @@ defmodule WebsocketWeb.HallRoomChannel do
     def handle_info({:afterJoin, _msg}, socket) do
         user = get_user(socket);
         Logger.debug "handle_info socket:#{inspect socket}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_LOBBY_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
         {:noreply, socket}
     end
 
