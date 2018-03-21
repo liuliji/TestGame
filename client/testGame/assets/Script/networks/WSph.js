@@ -163,7 +163,7 @@ module.exports = cc.Class({
         Log.debug('切换channel成功消息：' + JSON.stringify(msg));
         Log.debug('切换channel成功channel————' + channel);
         if (this.events['join_success']){
-            this.events['join_success'](msg,this.type);
+            this.events['join_success'](msg,channel);
         }
     },
 

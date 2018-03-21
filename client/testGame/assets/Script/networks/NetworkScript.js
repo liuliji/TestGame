@@ -55,9 +55,9 @@ function onConnectClose() {
  * 加入channel成功
  * @param msg 成功返回的消息
  */
-function onJoinSuccess(msg,type) {
+function onJoinSuccess(msg,channel) {
     debugger;
-    if (type == 1){
+    if (channel == 'lobby'){
         cc.director.loadScene('lobby');
     }
 }
