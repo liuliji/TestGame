@@ -274,7 +274,7 @@
       "__id__": 1
     },
     "component": "LobbyView",
-    "handler": "",
+    "handler": "onCreateRoom",
     "customEventData": ""
   },
   {
@@ -283,7 +283,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "1fcfa5bf-cf25-447a-80a4-b405f7cfe49f"
+      "__id__": 0
     },
     "fileId": "f3ebcDVXOtB65dFjgmVcMKZ",
     "sync": false
@@ -431,7 +431,7 @@
       "__id__": 1
     },
     "component": "LobbyView",
-    "handler": "",
+    "handler": "onEnterRoom",
     "customEventData": ""
   },
   {
@@ -440,7 +440,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "1fcfa5bf-cf25-447a-80a4-b405f7cfe49f"
+      "__id__": 0
     },
     "fileId": "d2656/2tOxMeYfqFmmCKCyy",
     "sync": false
@@ -506,7 +506,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "1fcfa5bf-cf25-447a-80a4-b405f7cfe49f"
+      "__id__": 0
     },
     "fileId": "7dd08sT9ilA5LRb1v9FtpOI",
     "sync": false
@@ -560,7 +560,7 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "1fcfa5bf-cf25-447a-80a4-b405f7cfe49f"
+      "__id__": 0
     },
     "fileId": "f240cez3E1F4KBzaDUTZ/uu",
     "sync": false
