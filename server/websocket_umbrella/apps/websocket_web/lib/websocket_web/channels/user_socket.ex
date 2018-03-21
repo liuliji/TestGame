@@ -15,7 +15,7 @@ defmodule WebsocketWeb.UserSocket do
   ## Channels
   #  Phoenix.Socket.channel/2 方法定义了channel和topic的映射关系
   channel "room:*", WebsocketWeb.RoomsChannel
-  channel "room:_hall", WebsocketWeb.HallRoomChannel
+  channel "lobby", WebsocketWeb.HallRoomChannel
 
   ## Transports
   # phx 支持websocket和longpoll两种传输方式
