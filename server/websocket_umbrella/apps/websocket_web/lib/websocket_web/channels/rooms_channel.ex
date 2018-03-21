@@ -9,8 +9,9 @@ defmodule WebsocketWeb.RoomsChannel do
     def join("room:" <> privateRoomId, msg, socket) do
         case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
             true ->
+                socket = assign(socket, :user, %{socket.assigns.user | roomId: privateRoomId})
                 Logger.debug "#{socket.id} join room #{privateRoomId}"
-                send(self(), {:afterJoin, msg})
+                send(self(), {:afterJoin, %{roomId: privateRoomId}})
                 {:ok, socket}
             false ->
                 Logger.debug "#{socket.id} join doesn't exist room #{privateRoomId}"
@@ -70,7 +71,7 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ---------------Intercepting Outgoing Events start-------------------
 
 
-    def handle_info({:afterJoin, msg}, socket) do
+    def handle_info({:afterJoin, %{roomId: privateRoomId}=msg}, socket) do
         user = socket.assigns.user
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         after join room #{inspect msg}"
