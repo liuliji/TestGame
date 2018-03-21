@@ -5,12 +5,17 @@ var enViewType = require('Consts').enViewType;
 var enWinShowType = require('UIWindowDef').enWinShowType;
 
 var LobbySendMsgs = require('LobbySendMsgs');
+var Player = require('Player');
 
 cc.Class({
     extends: UIWindow,
 
     properties: {
         roomIdLabel: cc.Label,// 房间ID的label
+        playerAry:{// player数组
+            type: Player,
+            default:[],
+        }
     },
 
     // use this for initialization
