@@ -29,7 +29,7 @@ cc.Class({
         // 设置窗口类型
         this.windowType = enWinType.WT_Normal;
         // 弹出方式
-        this.showType = enWinShowType.WST_HideOther;
+        this.showType = enWinShowType.WST_None;
         this._super();
     },
     // 游戏初始化
@@ -228,7 +228,7 @@ cc.Class({
 
     // 加入房间成功
     onEnterRoomCallback: function (event) {
-        debugger;
+        // debugger;
         var args = event.detail;
         // if (this.resultLabel){
         //     this.resultLabel.string = JSON.stringify(args);

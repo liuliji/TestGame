@@ -24,6 +24,9 @@ var App = require('App');
 function onJoinRoom(args) {
     debugger;
     Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
+    var selfData = App.UserManager.setSelf(args);
+    selfData.nickName = args.userName;
+    selfData.position = 0;
     // App.UIManager.emit('join_room',args);
 }
 

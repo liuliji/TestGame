@@ -1,23 +1,34 @@
+/************************************************************************
+ * Copyright (c) 2017 App
+ * Author    : liji.liu
+ * Mail        : liuliji1184899343@163.com
+ * Date        : 2018-03-23
+ * Use      : player脚本
+ ************************************************************************/
+
+var App = require('App');
+var BasePlayer = require('BasePlayer');
 cc.Class({
-    extends: cc.Component,
+    extends: BasePlayer,
 
     properties: {
-        // foo: {
-        //    default: null,      // The default value will be used only when the component attaching
-        //                           to a node for the first time
-        //    url: cc.Texture2D,  // optional, default is typeof default
-        //    serializable: true, // optional, default is true
-        //    visible: true,      // optional, default is true
-        //    displayName: 'Foo', // optional
-        //    readonly: false,    // optional, default is false
-        // },
-        // ...
+
     },
 
     // use this for initialization
     onLoad: function () {
-
+        this._super();
     },
+
+    // 隐藏不需要的节点
+    removePlayer: function () {
+        this._super();
+        this.node.active = false;
+    },
+    setPlayerInfo: function (userData) {
+        this.node.active = true;
+
+    }
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

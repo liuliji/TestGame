@@ -35,7 +35,7 @@ module.exports = cc.Class({
         // xRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         // 设置状态回调
         xRequest.onreadystatechange = function () {
-            debugger;
+            // debugger;
             if (xRequest.readyState == 4 && (xRequest.status >= 200 && xRequest.status < 400)) {
                 var responseText = xRequest.responseText;
                 // 将返回值转成对象
@@ -73,7 +73,7 @@ module.exports = cc.Class({
         xRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         // 设置状态回调
         xRequest.onreadystatechange = function () {
-            debugger;
+            // debugger;
             if (xRequest.readyState == 4 && (xRequest.status >= 200 && xRequest.status < 400)) {
                 var responseText = xRequest.responseText;
                 // 将返回值转成对象

@@ -3,15 +3,13 @@
  * Author    : liji.liu
  * Mail        : liuliji1184899343@163.com
  * Date        : 2018-03-23
- * Use      : gameview房间的游戏主逻辑
+ * Use      : player脚本
  ************************************************************************/
 
 var App = require('App');
-var BaseGameView = require('BaseGameView');
-var LobbySendMsgs = require('LobbySendMsgs');
 
 cc.Class({
-    extends: BaseGameView,
+    extends: cc.Component,
 
     properties: {
 
@@ -19,17 +17,21 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        this._super();
+        this.baseInit();
+    },
+
+    start: function () {
 
     },
 
-    gameInit: function () {
-        if (this.roomIdLabel){
-            var roomObj = App.UserManager.getRoom();
-            if (roomObj){
-                this.roomIdLabel.string = roomObj.roomId;
-            }
-        }
+    baseInit: function () {
+        this.position = -1;// 玩家位置
+        this.mySelf = false;// 玩家是否是自己
+        this.roomOwner = false;// 玩家是否是房主
+    },
+
+    removePlayer: function () {
+
     },
 
     // called every frame, uncomment this function to activate update callback
