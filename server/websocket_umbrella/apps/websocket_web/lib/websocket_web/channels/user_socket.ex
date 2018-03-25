@@ -42,8 +42,10 @@ defmodule WebsocketWeb.UserSocket do
       _ ->
         uid = UUID.uuid4();
         user = %User{uid: uid, userName: userName, socketId: uid}
+        {:ok, pid} = Websocket.UserEntity.start_link(uid ,userName)
         # UserManager.update_user(user)
         socket = assign(socket, :user, user)
+        socket = assign(socket, :pid, pid)
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         user:#{inspect user} connect"
         {:ok, socket}

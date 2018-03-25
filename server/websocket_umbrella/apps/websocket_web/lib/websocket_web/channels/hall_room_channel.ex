@@ -11,6 +11,7 @@ defmodule WebsocketWeb.HallRoomChannel do
         #{socket.id} join channel lobby msg:#{inspect msg}"
         send(self(), {:afterJoin, msg})
         user = %{get_user(socket) | roomId: "lobby"}
+        Websocket.UserEntity.test(socket.assigns.pid)
         # UserManager.update_user(user)
         {:ok, assign(socket, :user, user)}
     end
@@ -62,7 +63,6 @@ defmodule WebsocketWeb.HallRoomChannel do
     #----------- handle_info ------------------
     def handle_info({:afterJoin, _msg}, socket) do
         user = get_user(socket);
-        Logger.debug "handle_info socket:#{inspect socket}"
         Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_LOBBY_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
         {:noreply, socket}
     end
