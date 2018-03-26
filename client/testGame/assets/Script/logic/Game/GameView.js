@@ -8,7 +8,7 @@
 
 var App = require('App');
 var BaseGameView = require('BaseGameView');
-var LobbySendMsgs = require('LobbySendMsgs');
+var enViewType = require('Consts').enViewType;
 
 cc.Class({
     extends: BaseGameView,
@@ -30,6 +30,13 @@ cc.Class({
                 this.roomIdLabel.string = roomObj.roomId;
             }
         }
+    },
+
+    /**
+     * 菜单按钮事件
+     */
+    onGameMenu: function () {
+        App.UIManager.showWindow(enViewType.GameMenuUI);
     },
 
     // called every frame, uncomment this function to activate update callback
