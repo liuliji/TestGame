@@ -13,28 +13,54 @@
     
     
     // ----------- 修改接口 start -------------
-    //修改加入房间成功的接口
+    // 修改加入房间成功的接口
     // 不返回消息了 通过给客户端发消息的方式 通知
     "room:roomId":{
         "intro":"加入房间",
         "params":{
             "roomId":"asd5f798-asdf"
-        },
-        "return":[
-            {
-                "state":"ok",
-                "body":{
-                    "users":[
-                        {
-                            "uid":"111",
-                            "userName":"tom"
-                        }
-                    ]
-                }
-            }
-        ]
-
+        }
     },
+
+    // 修改加入房间成功后 服务器给客户端其他用户广播消息的接口
+    "ID_S2C_JOIN_ROOM":{
+        "intro":"有人加入房间",
+        "return":{
+            "uid":"111",
+            "userName":"tom",
+            "position":3,
+            "roomOwner":false,
+            "readyStatus":false
+        }
+    },
+
+    //修改加入房间成功后，服务器给客户端返回的房间信息的接口
+    "ID_S2C_ROOM_INFO":{
+        "intro":"加入房间成功，服务器给返回的房间信息",
+        "return":{
+            "room":{
+                "roomId":"123",
+                "playerNum": 4,     //房间最多人数
+                "roomStatus": 1     //房间当前状态 (状态列表暂时未定义)
+            },
+            "users":[
+                {
+                    "uid":"111",
+                    "userName":"tom",
+                    "position":3,
+                    "roomOwner":true,       //默认房主的readyStatus为true
+                    "readyStatus":true 
+                },
+                {
+                    "uid":"112",
+                    "userName":"jerry",
+                    "position":1,
+                    "roomOwner":false,
+                    "readyStatus":false
+                }
+            ]
+        }
+    }
 
     // ----------- 修改接口 end -------------
     
