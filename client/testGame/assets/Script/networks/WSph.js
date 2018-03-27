@@ -19,6 +19,32 @@ module.exports = cc.Class({
     // use this for initialization
     ctor: function () {
         this.events = {};
+        // this.registerBindFunc();
+    },
+
+    registerBindFunc: function () {
+        /**
+         * 这里是对MsgDispatcher的使用，传进来的context其实是App.MsgDispatcher，
+         * App.MsgDispatcher有这个registerMsgCallback的方法
+         * @param context
+         * @returns {Function}
+         */
+        Function.prototype.bindMsg = function (context) {
+            var self = this;// this表示function，用self = this，是用来进行弱引用
+            /**
+             * 这里的args都是网络回包的参数，由于都是用来处理网络回包的，
+             * 所以，一定会有一个返回的args参数，当网络消息绑定的后，
+             * 如果此时收到服务器发来的消息，会调用下面的方法，
+             * 也就是将所有的消息以及参数都push到了MsgDispatcher中，
+             * 并没有执行，然后，在UI初始化完成后，会在update方法中，
+             * 调用processMessage方法，将所有收到的消息都处理一遍，
+             */
+            return function (args) {
+                if (context && context.pushMsg){
+                    context.pushMsg(self,args);
+                }
+            }
+        };
     },
 
     /**
@@ -199,6 +225,7 @@ module.exports = cc.Class({
     registerEvent: function () {
         // 首先取出所有的收包的消息对应的文件
         var ProtoCfg = require('ProtoCfg');
+        var App = require('App');
         var recvs = ProtoCfg.recv;
         var handles = ProtoCfg.handle;
         if (this.chan){
@@ -229,6 +256,7 @@ module.exports = cc.Class({
                              */
                             if (func && func.name == funcName){
                                 this.chan.on(eventName,handleFuncs[funcName]);
+                                // this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
                                 break;
                             }
                         }
