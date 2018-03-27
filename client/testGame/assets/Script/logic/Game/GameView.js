@@ -20,10 +20,11 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this._super();
-
+        this.gameInit();
     },
 
     gameInit: function () {
+        debugger;
         if (this.roomIdLabel){
             var roomObj = App.UserManager.getRoom();
             if (roomObj){

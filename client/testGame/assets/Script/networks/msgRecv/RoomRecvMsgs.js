@@ -22,7 +22,7 @@ var App = require('App');
  * @param args 房间ID
  */
 function onJoinRoom(args) {
-    debugger;
+    // debugger;
     Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
     var selfData = App.UserManager.setSelf(args);
     selfData.nickName = args.userName;
@@ -46,6 +46,7 @@ function onTalk(args) {
 function onRoomInfo(args) {
     var roomId = args.roomId;// 房间ID
     App.UserManager.setRoom(args);
+    // App.MsgDispatcher.setCanProcessMsg(false);
     cc.director.loadScene('game');
 }
 

@@ -1,26 +1,30 @@
+/************************************************************************
+ * Copyright (c) 2017 App
+ * Author    : liji.liu
+ * Mail        : liuliji1184899343@163.com
+ * Date        : 2018-03-27
+ * Use      : 房间canvas节点，进行房间相关的初始化
+ ************************************************************************/
+
+var App = require('App');
+
 cc.Class({
     extends: cc.Component,
 
     properties: {
-        // foo: {
-        //    default: null,      // The default value will be used only when the component attaching
-        //                           to a node for the first time
-        //    url: cc.Texture2D,  // optional, default is typeof default
-        //    serializable: true, // optional, default is true
-        //    visible: true,      // optional, default is true
-        //    displayName: 'Foo', // optional
-        //    readonly: false,    // optional, default is false
-        // },
-        // ...
+
     },
 
-    // use this for initialization
     onLoad: function () {
+        if (App.Init()) { // 初始化控制器
 
+        }
+        App.MsgDispatcher.setCanProcessMsg(true);
     },
 
-    // called every frame, uncomment this function to activate update callback
-    // update: function (dt) {
 
-    // },
+
+    update: function (dt) {
+        App.MsgDispatcher.processMessage(this);
+    },
 });

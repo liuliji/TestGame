@@ -18,8 +18,15 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         if (App.Init()) { // 初始化控制器
+
         }
+        App.MsgDispatcher.setCanProcessMsg(true);
     },
 
+
+
+    update: function (dt) {
+        App.MsgDispatcher.processMessage(this);
+    },
 
 });

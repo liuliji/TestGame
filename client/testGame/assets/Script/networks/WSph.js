@@ -19,7 +19,7 @@ module.exports = cc.Class({
     // use this for initialization
     ctor: function () {
         this.events = {};
-        // this.registerBindFunc();
+        this.registerBindFunc();
     },
 
     registerBindFunc: function () {
@@ -255,8 +255,8 @@ module.exports = cc.Class({
                              * 并跳出循环，进行下次的循环，这样能够尽量减少循环的次数
                              */
                             if (func && func.name == funcName){
-                                this.chan.on(eventName,handleFuncs[funcName]);
-                                // this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
+                                // this.chan.on(eventName,handleFuncs[funcName]);
+                                this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
                                 break;
                             }
                         }
