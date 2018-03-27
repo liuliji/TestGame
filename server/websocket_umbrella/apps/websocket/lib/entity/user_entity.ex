@@ -43,7 +43,7 @@ defmodule Websocket.UserEntity do
 
         def handle_event(event, state) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            #{inspect }"
+            #{inspect event}"
             {:ok, state}
         end
 
