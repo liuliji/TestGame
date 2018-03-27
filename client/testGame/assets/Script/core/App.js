@@ -11,6 +11,7 @@ var WebsocketScript = require('WebsocketScript');
 var RandomUtils = require('RandomUtils');
 var GlobalTable = require('GlobalTable');
 var StorageConst = require('StorageConst');
+var MsgDispatcher = require('MsgDispatcher');
 
 var WSph = require('WSph');
 
@@ -52,6 +53,8 @@ var App = cc.Class({
          * websocket请求
          */
         // this.Websocket = new WebsocketScript();
+
+        this.MsgDispatcher = new MsgDispatcher();
 
         this.NetworkScript = require('NetworkScript');
 
