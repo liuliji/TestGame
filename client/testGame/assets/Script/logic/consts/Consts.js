@@ -241,66 +241,8 @@ var  AgreementEvent={
     AGR_START_LICENSING:"emitStartLicensing",//发牌
     AGS_CURRENT_OPERATE:"emitCurrentOperate",//玩家当前操作(准备|叫地主|出牌)
 
-    AGS_ZB:"emitStateZB",//玩家当前操作---准备
-    AGS_JDZ:"emitStateJDZ",//玩家当前操作---叫地主
-    AGS_CP:"emitStateCP",//玩家当前操作---出牌
-    AGS_JF:'emitStateJF',// 玩家当前操作---叫分
-
-    // AGS_QDZ:'emitStateQDZ',// 玩家当前操作---抢地主
-    // AGS_TI_YES_NO:'emitStateTiYesNo',// 玩家当前操作---踢|不踢
-    // AGS_GEN_YES_NO:'emitStateGenYesNo',// 玩家当前操作---跟|不跟
-    // AGS_FAN_TI_YES_NO:'emitStateFanTiYesNo',// 玩家当前操作---反踢|不反踢
-    AGS_QTGF:'emitQTGF',//抢地主，踢|不踢，跟|不跟，反踢|不反踢
-
-
-    AGS_JDZ_TITLE:'emitJDZTitle',//提醒-叫地主
-
-    AGS_GIVE_UP:"emitGiveUp",//不出牌
-    AGS_CHU_PAI:'emitChuPai',//出牌
-
-    AGR_DISSOLUTION_MIN:'emitDissolutionMin',//小结束
-    AGR_DISSOLUTION_MAX:'emitDissolutionMax',//大结束
-    AGR_DISSOLUTION_HIDE:'emitDissolutionHide',//隐藏菜单
-
-
-    AGR_AGENCY_START:"agencyStart",//\ 代开房间，开始游戏
-    AGR_LAST_CARD:"emitLastCard",// 给地主发最后三张牌，并展示出来
-    AGR_SHOW_RED_PACKET:'redPacketTime',// 显示红包视图
-    AGR_GET_RED_PACKET:'getRedPacket',// 领取红包
-    AGR_TUO_GUAN: 'emitTuoGuan',// 托管
-
-    // 叫分玩法相关事件
-    AGR_JIAO_FEN: 'emitJiaoFen',// 叫分
-
-    AGS_UPDATE_JPQ: 'emitUpdateJPQ',// 刷新记牌器
-
-    AGR_TITLE_TI_FANTI_GEN:'emitTitleTiFanTiGen',//提醒--踢反踢跟
-    AGR_TITLE_QDZ:'emitTitleQiangDiZhu',//提醒--抢地主
-
-    AGR_SYNC_PLAYER_DATA:'emitSyncPlayerData',//同步玩家数据
-
-
-
-    AGR_MP_BEI_SHU:'emitMinPaiBeiShu',//明牌倍数
-    AGR_MP_DATA:'emitMinPaiData',//明牌数据
-
-
-    AGP_UPDATA_CARD_BG_TYPE:'updataCardBgType',//更新卡牌背景样式
-    AGP_UPDATA_CUT_ICON:'cutIcon',//切换-地主头像或微信头像
-
-    AGR_REPLAY_DATA:'replayData',//切换回放
-
-
-    // 刨幺新添加的事件
-    AGR_UPDATE_SCORE: 'updateScore',// 更新每组的分数
-    AGR_ENTER_SNOW: 'enterSnow',// 雪牌
-    AGR_FRIEND_CARD:'emitFriendCard',// 出完后对家手牌
-    AGR_KANGQI_POSITION:'emitKangqiPosition',// 扛旗玩家位置
-    AGR_SELECT_SNOW: 'emitSelectSnow',// 选择雪牌
-    AGR_EXCHANGE_POSITION: 'emitExchangePosition',// 交换后通知所有玩家
-    AGR_BEGIN_EXCHANGE: 'emitBeginExchange',// 通知所有人开始交换
-    AGR_REFUSE_EXCHANGE: 'emitRefuseExchange',// 拒绝交换
-    AGR_ZHUANYAO_GROUP: 'emitZhuanYaoGroup',// 转幺分组
+    AGS_JOIN_ROOM: 'emitJoinRoom',// 其他玩家加入房间
+    AGS_TALK: 'emitTalk',// 在房间内说话
 
 }
 

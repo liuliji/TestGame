@@ -9,6 +9,8 @@
 var App = require('App');
 var BaseGameView = require('BaseGameView');
 var enViewType = require('Consts').enViewType;
+var Event = require('Consts').AgreementEvent;
+var Consts = require('Consts');
 
 cc.Class({
     extends: BaseGameView,
@@ -21,16 +23,39 @@ cc.Class({
     onLoad: function () {
         this._super();
         this.gameInit();
+        this.gameEventRegist();
     },
 
     gameInit: function () {
-        debugger;
         if (this.roomIdLabel){
             var roomObj = App.UserManager.getRoom();
             if (roomObj){
                 this.roomIdLabel.string = roomObj.roomId;
             }
         }
+    },
+
+    // 游戏时间注册
+    gameEventRegist: function () {
+        this.node.on(Event.AGS_JOIN_ROOM,this.onPlayerJoin.bind(this));
+        this.node.on(Event.AGS_TALK,this.onPlayerTalk.bind(this));
+    },
+
+    // 玩家加入房间
+    onPlayerJoin: function (event) {
+        var userData = event.detail;
+        Log.debug('玩家加入房间：' + JSON.stringify(userData));
+        if (!userData){
+            return;
+        }
+        // 初始化自己信息
+        this.playerAry[userData.position].setPlayerInfo(userData, true);
+    },
+
+    // 玩家说话
+    onPlayerTalk: function (event) {
+        var args = event.detail;
+        Log.debug('玩家加入房间：' + JSON.stringify(args));
     },
 
     /**

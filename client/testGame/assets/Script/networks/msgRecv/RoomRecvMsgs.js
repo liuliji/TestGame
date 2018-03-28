@@ -7,6 +7,8 @@
  ************************************************************************/
 
 var App = require('App');
+var Event = require('Consts').AgreementEvent;
+var Consts = require('Consts');
 
 /**
  * 创建房间
@@ -27,7 +29,7 @@ function onJoinRoom(args) {
     var selfData = App.UserManager.setSelf(args);
     selfData.nickName = args.userName;
     selfData.position = 0;
-    // App.UIManager.emit('join_room',args);
+    App.UIManager.emit(Event.AGS_JOIN_ROOM,selfData);
 }
 
 /**
@@ -36,7 +38,7 @@ function onJoinRoom(args) {
  */
 function onTalk(args) {
 
-    App.UIManager.emit('talk',args);
+    App.UIManager.emit(Event.AGS_TALK,args);
 }
 
 /**
@@ -44,9 +46,10 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
+    // debugger;
     var roomId = args.roomId;// 房间ID
     App.UserManager.setRoom(args);
-    // App.MsgDispatcher.setCanProcessMsg(false);
+    App.MsgDispatcher.setCanProcessMsg(false);
     cc.director.loadScene('game');
 }
 
