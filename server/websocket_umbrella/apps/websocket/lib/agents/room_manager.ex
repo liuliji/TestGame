@@ -27,6 +27,20 @@ defmodule Websocket.RoomManager do
         end
     end
 
+    def add_user(%{roomId: roomId, pid: pid}) do
+        Agent.update(__MODULE__, fn state ->
+            room = state |> Map.get(roomId)
+            room = %{room | users: [pid | room.users]}
+            Map.put(state, roomId, room)
+        end)
+    end
+
+    def get_room(%{roomId: roomId}) do
+        Agent.get(__MODULE__, fn state ->
+            state |> Map.get(roomId)
+        end)
+    end
+
     def delete_room(%{roomId: roomId}=params) do
         Agent.update(__MODULE__, fn state -> state |> Map.delete roomId end)
     end

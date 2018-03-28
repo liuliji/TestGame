@@ -5,7 +5,7 @@ defmodule WebsocketWeb.HallRoomChannel do
 
     @room_name "lobby"
 
-    def get_user(socket), do: WebSocket.UserEntity.get_info(socket.assigns.pid)
+    def get_user(socket), do: Websocket.UserEntity.get_info(socket.assigns.pid)
     def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
 
     # `push`, `reply`, and `broadcast` can only be called after the socket has finished joining.
@@ -13,7 +13,7 @@ defmodule WebsocketWeb.HallRoomChannel do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{socket.id} join channel #{room_name} msg:#{inspect msg}"
         send(self(), {:afterJoin, msg})
-
+        get_user(socket)
         update_user(socket, %{roomId: room_name})
         {:ok, socket}
     end
@@ -51,7 +51,8 @@ defmodule WebsocketWeb.HallRoomChannel do
     end
 
     def handle_out("ID_S2C_JOIN_LOBBY_ROOM", msg, socket) do
-        Logger.debug "#{inspect socket.id} handle out join topic, msg:#{inspect msg}"
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect socket.id} handle out join topic, msg:#{inspect msg}"
         Phoenix.Channel.push socket, "ID_S2C_JOIN_LOBBY_ROOM", msg
         {:noreply, socket}
     end
@@ -59,12 +60,13 @@ defmodule WebsocketWeb.HallRoomChannel do
     def terminate(reason, socket) do
         Logger.error "#{__MODULE__} termiatelive socket:#{inspect socket.id}. reason:#{inspect reason}"
         {:ok, assign(socket, :user, %{get_user(socket) | roomId: ""})}
-        :ok
     end
 
     #----------- handle_info ------------------
     def handle_info({:afterJoin, _msg}, socket) do
-        user = get_user(socket);
+        user = get_user(socket)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect user}"
         Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_LOBBY_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
         {:noreply, socket}
     end

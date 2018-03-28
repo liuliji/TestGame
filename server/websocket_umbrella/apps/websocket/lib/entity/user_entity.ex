@@ -13,7 +13,7 @@ defmodule Websocket.UserEntity do
             
             # 和房间相关信息
             roomId: "",
-            roomOwner: "",
+            roomOwner: false,
             position: -1,   # -1 是初始值，代表没有安排座位
             readyStatus: false,
 
@@ -32,7 +32,10 @@ defmodule Websocket.UserEntity do
     end
 
     def get_info(pid) do
-        Entity.get_attribute(pid, User)
+        result = Entity.get_attribute(pid, User)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect result}"
+        result
     end
 
     def get_attr(pid, key) do
@@ -42,9 +45,11 @@ defmodule Websocket.UserEntity do
     def update_info(pid, map) do
         Entity.update_attribute(pid, User,
         fn user ->
-            map |> Enum.map(fn {key, value} ->
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            #{inspect user}"
+            map |> Enum.reduce(user, fn {key, value}, user ->
                 user |> Map.put(key, value)
-                )
+            end)
         end)
     end
 
@@ -56,20 +61,21 @@ defmodule Websocket.UserEntity do
         def init(%Entity{attributes: attr} = entity, %User{pid: pid} = user) do
 
             entity = entity |> put_attribute(user)
-
-            {:ok, %{state | attributes: attr}}
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            #{inspect entity}"
+            {:ok, entity}
         end
 
         def handle_call(event, entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             handle call #{inspect event}"
-            {:ok, :ok, state}
+            {:ok, :ok, entity}
         end
 
         def handle_event(event, entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             #{inspect event}"
-            {:ok, state}
+            {:ok, entity}
         end
 
 

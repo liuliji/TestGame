@@ -2,6 +2,9 @@ defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
 
+    def get_user(socket), do: Websocket.UserEntity.get_info(socket.assigns.pid)
+    def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
+
 
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
@@ -9,7 +12,7 @@ defmodule WebsocketWeb.RoomsChannel do
     def join("room:" <> privateRoomId, msg, socket) do
         case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
             true ->
-                socket = assign(socket, :user, %{socket.assigns.user | roomId: privateRoomId})
+                update_user(socket, %{roomId: privateRoomId})
                 Logger.debug "#{socket.id} join room #{privateRoomId}"
                 send(self(), {:afterJoin, %{roomId: privateRoomId}})
                 {:ok, socket}
@@ -32,7 +35,7 @@ defmodule WebsocketWeb.RoomsChannel do
     end
 
     def handle_in("ID_C2S_TALK", %{"content" => content} = msg, socket) do
-        user = socket.assign.user
+        user = get_user(socket)
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{inspect user.userName} talk #{inspect msg}"
         Phoenix.Channel.broadcast!(socket, "ID_S2C_TALK", %{userId: user.uid, content: content})
@@ -72,11 +75,19 @@ defmodule WebsocketWeb.RoomsChannel do
 
 
     def handle_info({:afterJoin, %{roomId: privateRoomId}=msg}, socket) do
-        user = socket.assigns.user
+        user = get_user(socket)
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         after join room #{inspect msg}"
-        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", %{roomId: user.roomId})
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})
+        Websocket.RoomManager.add_user(%{roomId: privateRoomId, pid: user.pid})
+        room = Websocket.RoomManager.get_room(%{roomId: privateRoomId})
+        userList = room.users |> Enum.map(fn pid -> Websocket.UserEntity.get_info(pid) |> Map.from_struct |> Map.delete(:pid) end)
+        resultRoomAndUsers = %{room: Map.from_struct(room) |> Map.delete(:users),
+                        users: userList}
+        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", resultRoomAndUsers)
+        resultUser = socket |> get_user() |> Map.from_struct |> Map.delete(:pid)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        roominfo: #{inspect resultRoomAndUsers}, \n userinfo: #{inspect resultUser}"
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", resultUser)
         {:noreply, socket}
     end
 
