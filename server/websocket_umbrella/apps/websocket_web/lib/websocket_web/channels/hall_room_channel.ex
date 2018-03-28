@@ -3,17 +3,19 @@ defmodule WebsocketWeb.HallRoomChannel do
     require Logger
     alias Websocket.UserManager
 
-    def get_user(socket), do: socket.assigns.user
+    @room_name "lobby"
+
+    def get_user(socket), do: WebSocket.UserEntity.get_info(socket.assigns.pid)
+    def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
 
     # `push`, `reply`, and `broadcast` can only be called after the socket has finished joining.
-    def join("lobby", msg, socket) do
+    def join(@room_name = room_name, msg, socket) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        #{socket.id} join channel lobby msg:#{inspect msg}"
+        #{socket.id} join channel #{room_name} msg:#{inspect msg}"
         send(self(), {:afterJoin, msg})
-        user = %{get_user(socket) | roomId: "lobby"}
-        Websocket.UserEntity.test(socket.assigns.pid)
-        # UserManager.update_user(user)
-        {:ok, assign(socket, :user, user)}
+
+        update_user(socket, %{roomId: room_name})
+        {:ok, socket}
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
