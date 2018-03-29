@@ -89,11 +89,13 @@ defmodule WebsocketWeb.RoomsChannel do
         after join room #{inspect msg}"
         Websocket.RoomManager.add_user(%{roomId: privateRoomId, pid: user.pid})
         room = Websocket.RoomManager.get_room(%{roomId: privateRoomId})
+        resultUser = user |> Map.from_struct |> Map.delete(:pid)
         userList = room.users |> Enum.map(fn pid -> Websocket.UserEntity.get_info(pid) |> Map.from_struct |> Map.delete(:pid) end)
+        userList = List.delete(userList, resultUser)
         resultRoomAndUsers = %{room: Map.from_struct(room) |> Map.delete(:users),
-                        users: userList}
+                        users: userList,
+                        userSelf: resultUser}
         Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", resultRoomAndUsers)
-        resultUser = socket |> get_user() |> Map.from_struct |> Map.delete(:pid)
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         roominfo: #{inspect resultRoomAndUsers}, \n userinfo: #{inspect resultUser}"
         Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", resultUser)

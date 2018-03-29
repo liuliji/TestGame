@@ -30,6 +30,14 @@ defmodule WebsocketWeb.HallRoomChannel do
         end
     end
 
+    def handle_in("ID_C2S_JOIN_ROOM_ON_LOBBY", %{"roomId" => roomId} = msg, socket) do
+        room = Websocket.RoomManager.get_room(%{roomId: roomId})
+        # 这里需要占座，假装有人
+        roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users)}
+        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
+        {:noreply, socket}
+    end
+
     def handle_in("ID_C2S_DELETE_ROOM",  %{"roomId" => roomId}=msg, socket) do
         Websocket.RoomManager.delete_room(%{roomId: roomId})
         {:noreply, socket}
