@@ -21,10 +21,14 @@ function oncreateRoom(args) {
  * 加入房间
  * @param args 房间ID
  */
-// function onEnterRoom(args) {
-//
-//     App.UIManager.emit('enter_room',args);
-// }
+function onRoomInfoOnLobby(args) {
+    debugger;
+    var roomId = args.room.room.roomId;// 房间ID
+    // var content = args.content;// 房间内容
+    App.UserManager.setRoom(args.room.room);
+    // 创建房间成功之后，切换channel，连接到房间channel
+    App.Socket.switchChannel('room:' + roomId);
+}
 
 /**
  *
@@ -40,8 +44,8 @@ function onTalk(args) {
  * @param args
  */
 function onCreateRoomInfo(args) {
+    debugger;
     var roomId = args.roomId;// 房间ID
-    var content = args.content;// 房间内容
     App.UserManager.setRoom(args);
     // 创建房间成功之后，切换channel，连接到房间channel
     App.Socket.switchChannel('room:' + roomId);
@@ -60,7 +64,7 @@ function onCreateRoomFailed(args) {
 
 module.exports = {
     'oncreateRoom': oncreateRoom,// 创建房间
-    // 'onEnterRoom': onEnterRoom,// 加入房间
+    'onRoomInfoOnLobby': onRoomInfoOnLobby,// 加入房间
     'onTalk': onTalk,// 说话聊天
     'onCreateRoomInfo': onCreateRoomInfo,// 创建房间成功，返回房间信息
     'onCreateRoomFailed': onCreateRoomFailed,// 创建房间失败，服务器返回的错误信息

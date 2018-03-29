@@ -1,22 +1,7 @@
 {
 // ----------- 新增接口 start -------------
-"ID_C2S_JOIN_ROOM_ON_LOBBY":{
-    "intro":"有人加入房间",
-    "params":{
-        "roomId":"111"
-    }
-},
 
-"ID_S2C_ROOM_INFO_ON_LOBBY":{
-    "intro":"加入房间成功，服务器给返回的房间信息",
-    "return":{
-        "room":{
-            "roomId":"123",
-            "playerNum": 4,     //房间最多人数
-            "roomStatus": 1     //房间当前状态 (状态列表暂时未定义)
-        }
-    }
-}
+
 // ----------- 新增接口 end -------------
 
 

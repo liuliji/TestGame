@@ -34,8 +34,12 @@ function onDeleteRoom(room_id) {
  * 加入房间
  * @param roomId 房间ID
  */
-function onEnterRoom(roomId) {
-
+function onJoinRoomOnLobby(roomId) {
+    debugger;
+    var msg = {
+        roomId: roomId,
+    };
+    App.Socket.sendMsg('ID_C2S_JOIN_ROOM_ON_LOBBY',msg);
 }
 
 function onTalk(content) {
@@ -47,7 +51,7 @@ function onTalk(content) {
 
 module.exports = {
     'onCreateRoom': onCreateRoom,// 创建房间
-    'onEnterRoom': onEnterRoom,// 加入房间
+    'onJoinRoomOnLobby': onJoinRoomOnLobby,// 加入房间
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onTalk': onTalk,// 说话、聊天
 }

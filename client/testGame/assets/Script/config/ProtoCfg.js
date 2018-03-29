@@ -24,7 +24,13 @@ module.exports = {
                 'id':'ID_C2S_TALK',
                 'function': 'onTalk',
                 'desc': '说话聊天',
+            },
+            {
+                'id':'ID_C2S_JOIN_ROOM_ON_LOBBY',
+                'function': 'onJoinRoomOnLobby',
+                'desc': '有人加入房间',
             }
+
         ],
     },
     'recv': {
@@ -58,6 +64,11 @@ module.exports = {
                 'id':'ID_S2C_JOIN_HALL_TEST',
                 'function': 'onJoinHallTest',
                 'desc': '测试',
+            },
+            {
+                'id':'ID_S2C_ROOM_INFO_ON_LOBBY',
+                'function': 'onRoomInfoOnLobby',
+                'desc': '加入房间成功，服务器给返回的房间信息',
             },
         ],
         'RoomRecvMsgs': [// 房间服务器回包

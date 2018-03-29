@@ -47,11 +47,11 @@ cc.Class({
     },
 
     onEnterRoom: function () {
-        App.Socket.switchChannel(this.roomIdLabel.string)
+        // App.Socket.switchChannel(this.roomIdLabel.string)
         //     function () {
         //     cc.director.loadScene('game');
         // }.bind(this)
-        // LobbySendMsgs.onEnterRoom(this.roomId);
+        LobbySendMsgs.onJoinRoomOnLobby(this.roomIdLabel.string);
     },
 
     // 键盘输入监听，便于平时调试
