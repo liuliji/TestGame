@@ -46,9 +46,21 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
-    // debugger;
-    var roomId = args.roomId;// 房间ID
-    App.UserManager.setRoom(args);
+    debugger;
+    var room = args.room;// 房间ID
+    App.UserManager.setRoom(room);
+    // 设置自己的信息
+    var userSelf = args.userSelf;
+    var selfData = App.UserManager.setSelf(userSelf);
+    selfData.nickName = args.userName;
+
+    // 设置其他玩家的信息
+    var users = args.users;
+    for (var i = 0; i < users.length; i ++){
+        let userData = App.UserManager.setOtherUser(users[i]);
+        userData.setPlayerInfo(users[i]);
+    }
+
     App.MsgDispatcher.setCanProcessMsg(false);
     cc.director.loadScene('game');
 }
