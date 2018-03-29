@@ -42,6 +42,15 @@ defmodule WebsocketWeb.RoomsChannel do
         {:noreply, socket}
     end
 
+    def handle_in("ID_C2S_DELETE_ROOM", %{"roomId" => roomId} = msg, socket) do
+        room = Websocket.RoomManager.get_room(%{roomId: roomId})
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_DELETE_ROOM", %{content: "room was deleted"})
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        user #{inspect socket.assigns.uid} delete room"
+        {:stop, :normal, socket}
+    end
+
+
     # 关于 hand_in的返回值
     # {:reply, {:ok, response}|:ok, socket}
     # {:reply, {:error, reson}|:error, socket}
