@@ -35,7 +35,7 @@ function onDeleteRoom(room_id) {
  * @param roomId 房间ID
  */
 function onJoinRoomOnLobby(roomId) {
-    debugger;
+    // debugger;
     var msg = {
         roomId: roomId,
     };

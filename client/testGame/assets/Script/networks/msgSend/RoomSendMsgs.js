@@ -16,10 +16,11 @@ var App = require('App');
  * @param info
  */
 function onDeleteRoom(roomId) {
+    // debugger;
     var msg = {
         roomId: roomId,
     };
-    App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
+    App.Socket.sendMsg('ID_C2S_DELETE_ROOM',msg);
 }
 
 /**
@@ -32,6 +33,7 @@ function onRoomTalk(roomId) {
 
 module.exports = {
     'onRoomTalk': onRoomTalk,// 说话、聊天
+    'onDeleteRoom': onDeleteRoom,// 删除房间
 }
 
 

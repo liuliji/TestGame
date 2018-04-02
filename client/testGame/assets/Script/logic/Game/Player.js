@@ -37,7 +37,7 @@ cc.Class({
         this.node.active = false;
     },
     setPlayerInfo: function (userData) {
-        debugger;
+        // debugger;
         this.node.active = true;
         this.nameLabel.string = userData.nickName;
     }

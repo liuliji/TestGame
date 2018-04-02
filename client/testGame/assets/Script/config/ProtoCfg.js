@@ -4,7 +4,7 @@ module.exports = {
         require('RoomRecvMsgs'),
     ],
     'send': {
-        'LobbySendMsg': [// 发给服务器的消息
+        'LobbySendMsgs': [// 发给服务器的消息
             {
                 'id':'ID_C2S_CREATE_ROOM',
                 'function': 'onCreateRoom',
@@ -30,6 +30,14 @@ module.exports = {
                 'function': 'onJoinRoomOnLobby',
                 'desc': '有人加入房间',
             }
+
+        ],
+        'RoomSendMsgs': [// 发给服务器的消息
+            {
+                'id':'ID_C2S_DELETE_ROOM',
+                'function': 'onDeleteRoom',
+                'desc': '删除房间',
+            },
 
         ],
     },
@@ -86,6 +94,11 @@ module.exports = {
                 'id':'ID_S2C_ROOM_INFO',
                 'function': 'onRoomInfo',
                 'desc': '加入房间成功，服务器给返回的房间信息',
+            },
+            {
+                'id':'ID_S2C_DELETE_ROOM',
+                'function': 'onDeleteRoom',
+                'desc': '删除房间',
             },
         ],
     }
