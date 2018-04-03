@@ -33,13 +33,15 @@ defmodule WebsocketWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
+
+  # socket 存储了 uid userName pid roomId
   def connect(%{"userName" => userName}=params, socket) do
     case String.length userName do
       0 ->
         :error
       _ ->
         uid = UUID.uuid4();
-        {:ok, pid} = Websocket.UserEntity.start_link(uid ,userName, uid)
+        {:ok, pid} = Websocket.ServerUser.start(uid, userName, socket.channel_pid)
         socket = socket |> assign(:uid, uid)
                         |> assign(:pid, pid)
                         |> assign(:userName, userName)

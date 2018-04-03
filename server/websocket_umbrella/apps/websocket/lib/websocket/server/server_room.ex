@@ -19,8 +19,16 @@ defmodule Websocket.ServerRoom do
         {:ok, pid}
     end
 
-    def join_room(roomPid, uid) do
-        Coordination.register(uid, roomPid)
+    def del_room(pid) do
+        
+    end
+
+    def room_info(pid) do
+        Entity.get_attribute(pid, Room)
+    end
+
+    def join_room(roomId, userPid) do
+        Coordination.register(userPid, roomId)
     end
 
     defmodule Websocket.ServerRoom.DefaultBehaviour do
@@ -40,12 +48,14 @@ defmodule Websocket.ServerRoom do
         def handle_call({:joinRoom, uid},
         %Entity{
             attributes: %{users: users} = attr
-        })
+        } = entity) do
+            {:ok, entity}
+        end
 
         def terminate(reason, entity) do
             Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             destory room  reason:#{inspect reason}, entity: #{inspect entity}"
-            {:ok, state}
+            {:ok, entity}
         end
     end
 

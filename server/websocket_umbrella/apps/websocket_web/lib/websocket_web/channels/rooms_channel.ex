@@ -1,15 +1,26 @@
 defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
+    alias Websocket.RoomManager
 
     def get_user(socket), do: Websocket.UserEntity.get_info(socket.assigns.pid)
     def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
 
+    def get_user_uid(socket), do: socket.assigns.uid
+    def get_user_pid(socket), do: socket.assigns.pid
+    def get_user_roomId(socket), do: socket.assigns.roomId
+    def get_user_roomPid(socket), do: RoomManager.get_room_pid(socket.assigns.roomId)
 
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
     def join("room:" <> privateRoomId, msg, socket) do
+
+        socket = socket |> assign(:roomId. privateRoomId)
+
+        send(get_user_pid(socket), {:join, get_user_roomId(socket)})
+        Websocket.ServerUser.join(privateRoomId, %{uid: socket.assigns.uid, pid: socket.assigns.pid, msg: msg})
+
         case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
             true ->
                 update_user(socket, %{roomId: privateRoomId})
