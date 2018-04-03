@@ -79,8 +79,18 @@ defmodule Websocket.ServerRoom do
             get join msg. user:#{inspect user}, room:#{inspect room}"
             room = %{room | users: [pid | room.users]}
             entity = put_attribute(entity, room)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            entity #{inspect entity}"
             send(pid, {:joinSuccess, room.roomId})
-            Coordination.register(pid, room.roomId)
+            send(self(), {:notify_all, {:joined, user}})
+            {:ok, entity}
+        end
+
+        def handle_event({:notify_all, msg},
+        %Entity{attributes: %{Room => room}} = entity) do
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            notify_all msg:#{inspect msg}. room.users:#{inspect room.users}"
+            room.users |> Enum.map(fn pid -> send(pid, msg) end)
             {:ok, entity}
         end
     end

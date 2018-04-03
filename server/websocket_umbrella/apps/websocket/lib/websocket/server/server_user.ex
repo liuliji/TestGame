@@ -59,6 +59,7 @@ defmodule Websocket.ServerUser do
         use Entice.Entity.Behaviour
         require Logger
         alias Websocket.ServerUser.User
+        alias Entice.Entity
 
         def init(entity, args) do
             entity = put_attribute(entity, args)
@@ -93,11 +94,20 @@ defmodule Websocket.ServerUser do
             {:ok, entity}
         end
 
-        def handle_event({:entity_join, %{attributes: %{} = inital_attributes} = new_entity},
+        def handle_event({:entity_join, %Entity{attributes: %{} = inital_attributes} = new_entity},
         %Entity{attributes: %{User => user}} = entity) do
             newUser = get_attribute(new_entity, User)
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             others receive entity_join msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
+            user = get_attribute(entity, User)
+            send(user.socketPid, {:joined, newUser})
+            {:ok, entity}
+        end
+
+        def handle_event({:joined, %User{} = newUser},
+        %Entity{attributes: %{User => user}} = entity) do
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            others receive joined msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
             user = get_attribute(entity, User)
             send(user.socketPid, {:joined, newUser})
             {:ok, entity}

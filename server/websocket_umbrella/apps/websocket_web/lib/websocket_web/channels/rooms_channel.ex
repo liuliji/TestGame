@@ -104,8 +104,6 @@ defmodule WebsocketWeb.RoomsChannel do
     end
 
     def handle_info({:joinSuccess, roomId}, socket) do
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        joinSuccess #{inspect roomId}"
         socket = socket |> Socket.assign(:roomId, roomId)
         userList = Websocket.ServerRoom.get_users(get_user_roomPid(socket))
             |> Enum.map(fn pid -> get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket))) end)
@@ -114,7 +112,8 @@ defmodule WebsocketWeb.RoomsChannel do
             userSelf: get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket))),
             users: userList
         }
-
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        joinSuccess #{inspect roomId}, result:#{inspect result}"
         Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
         {:noreply, socket}
     end
