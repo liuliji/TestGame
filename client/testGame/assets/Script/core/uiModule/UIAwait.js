@@ -107,6 +107,6 @@ cc.Class({
         this._startTimeNow = Date.now();
     },
     update: function (dt) {
-       this.recordTime();
+       // this.recordTime();
     },
 });
