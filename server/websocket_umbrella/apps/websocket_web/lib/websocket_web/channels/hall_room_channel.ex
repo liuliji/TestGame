@@ -2,6 +2,7 @@ defmodule WebsocketWeb.HallRoomChannel do
     use Phoenix.Channel
     require Logger
     alias Websocket.UserManager
+    alias Phoenix.Socket
 
     @room_name "lobby"
 
@@ -16,15 +17,16 @@ defmodule WebsocketWeb.HallRoomChannel do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{socket.id} join channel #{room_name} msg:#{inspect msg}"
         # send(self(), {:afterJoin, msg})
-        socket = socket |> assign(:roomId, room_name)
+        socket = socket |> Socket.assign(:roomId, room_name)
         send(get_user_pid(socket), :joinLobby)
         {:ok, socket}
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
         roomId = UUID.uuid4
-        {:ok, roomPid} = Websocket.ServerRoom.new_room(roomId)
-        case Websocket.RoomManager.create_room(%{roomId: roomId, roomPid: roomPid}) do
+        # 这里创建的room这个进程，所以当这个进程关闭的时候，这里创建的所有room进程都会关闭。
+        # 这时候呢 我们就应该用roomManager来创建这个进程
+        case Websocket.RoomManager.create_room(%{roomId: roomId}) do
             {:ok} ->
                 Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_INFO", %{roomId: roomId})
                 {:noreply, socket}
@@ -44,7 +46,7 @@ defmodule WebsocketWeb.HallRoomChannel do
             roomPid ->
                 room = Websocket.ServerRoom.room_info(roomPid)
                 # 这里需要占座，假装有人
-                roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users)}
+                roomInfo = Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)
                 Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
                 {:noreply, socket}
         end

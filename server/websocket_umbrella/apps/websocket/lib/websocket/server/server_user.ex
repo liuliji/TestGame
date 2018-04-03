@@ -2,6 +2,7 @@ defmodule Websocket.ServerUser do
     require Logger
     alias Entice.Entity
     alias Entice.Entity.Coordination
+    alias Websocket.ServerUser.DefaultBehaviour
 
     @doc """
     User struct.
@@ -50,6 +51,10 @@ defmodule Websocket.ServerUser do
         {:ok, pid}
     end
 
+    def user_info(pid) do
+        Entity.get_attribute(pid, User)
+    end
+
     defmodule DefaultBehaviour do
         use Entice.Entity.Behaviour
         require Logger
@@ -71,9 +76,12 @@ defmodule Websocket.ServerUser do
             {:ok, update_user(entity, :roomId, WebsocketWeb.HallRoomChannel.get_lobby_name())}
         end
 
-        def handle_event({:join, roomId}, entity) do
-            entity = update_user(entity, :roomId, roomId)
-            Coordination.
+        def handle_event({:join, roomId, socketPid}, entity) do
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            receive msg join #{inspect roomId} "
+            user = entity |> get_attribute(User)
+            entity = put_attribute(entity, %{user | socketPid: socketPid})
+            send(get_room_pid(roomId), {:join, user})
             {:ok, entity}
         end
 
@@ -81,15 +89,27 @@ defmodule Websocket.ServerUser do
         %Entity{id: id} = entity) do
         
             Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
-            自己收到了 自己加入房间的消息"
+            myself receive entity_join msg. uid:#{id}"
             {:ok, entity}
         end
 
         def handle_event({:entity_join, %{attributes: %{} = inital_attributes} = new_entity},
         %Entity{attributes: %{User => user}} = entity) do
             newUser = get_attribute(new_entity, User)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            others receive entity_join msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
             user = get_attribute(entity, User)
-            send(user.socketPid, {:joinedRoom, newUser})
+            send(user.socketPid, {:joined, newUser})
+            {:ok, entity}
+        end
+
+        def handle_event({:joinSuccess, roomId} = msg,
+        %Entity{attributes: %{User => user}} = entity) do
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            joinSuccess roomId:#{inspect roomId}, user:#{inspect user}"
+            entity = update_user(entity, :roomId, roomId)
+            send(user.socketPid, msg)
+            {:ok, entity}
         end
 
 

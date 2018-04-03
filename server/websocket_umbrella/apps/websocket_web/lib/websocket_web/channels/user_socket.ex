@@ -47,6 +47,8 @@ defmodule WebsocketWeb.UserSocket do
                         |> assign(:userName, userName)
         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         userName:#{inspect userName} connect, pid:#{inspect pid}"
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        socket #{inspect socket}"
         {:ok, socket}
     end  
   end
