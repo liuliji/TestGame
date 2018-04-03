@@ -44,7 +44,6 @@ function onTalk(args) {
  * @param args
  */
 function onCreateRoomInfo(args) {
-    debugger;
     var roomId = args.roomId;// 房间ID
     App.UserManager.setRoom(args);
     // 创建房间成功之后，切换channel，连接到房间channel

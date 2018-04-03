@@ -16,11 +16,6 @@ module.exports = {
                 'desc': '创建房间',
             },
             {
-                'id':'ID_C2S_DELETE_ROOM',
-                'function': 'onDeleteRoom',
-                'desc': '删除房间',
-            },
-            {
                 'id':'ID_C2S_TALK',
                 'function': 'onTalk',
                 'desc': '说话聊天',

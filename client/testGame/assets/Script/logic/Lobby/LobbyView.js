@@ -55,23 +55,5 @@ cc.Class({
     onEnterRoom: function () {
         App.UIManager.showWindow(enViewType.EnterUI);
     },
-    // 加入房间成功
-    // onEnterRoomCallback: function (event) {
-    //     var args = event.detail;
-    //     // if (this.resultLabel){
-    //     //     this.resultLabel.string = JSON.stringify(args);
-    //     // }
-    //     // cc.director.loadScene('game');
-    //
-    //
-    //     App.Socket.switchChannel(this.roomId,function () {
-    //         cc.director.loadScene('game');
-    //     }.bind(this));
-    // },
 
-
-    // called every frame, uncomment this function to activate update callback
-    // update: function (dt) {
-
-    // },
 });

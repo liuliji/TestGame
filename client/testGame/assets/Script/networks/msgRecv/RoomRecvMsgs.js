@@ -46,7 +46,7 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
-    debugger;
+    App.UIManager.hideAwait();
     var room = args.room;// 房间ID
     App.UserManager.setRoom(room);
     // 设置自己的信息

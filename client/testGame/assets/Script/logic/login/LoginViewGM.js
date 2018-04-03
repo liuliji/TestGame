@@ -30,12 +30,16 @@ cc.Class({
         // 弹出方式
         this.showType = enWinShowType.WST_HideOther;
         this._super();
+        this.scheduleOnce(function () {
+            App.UIManager.showAwait();
+        }.bind(this),5.0);
     },
 
     onLogin: function () {
         if (this.idEditBox){
             var uid = this.idEditBox.string;
             if (uid) {
+                App.UIManager.showAwait();
                 App.Socket.connect(uid,'lobby',1);
             }
 
