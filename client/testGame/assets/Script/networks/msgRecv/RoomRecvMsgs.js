@@ -42,7 +42,7 @@ function onTalk(args) {
 }
 
 /**
- *
+ * 获取房间信息
  * @param args
  */
 function onRoomInfo(args) {
@@ -65,10 +65,23 @@ function onRoomInfo(args) {
     cc.director.loadScene('game');
 }
 
+/**
+ * 删除房间
+ * @param args
+ */
+function onDeleteRoom(args) {
+    // debugger;
+    var content = args.content;
+    Log.debug('删除房间信息：' + content);
+    App.Socket.switchChannel('lobby');
+}
+
+
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
     'onJoinRoom': onJoinRoom,// 加入房间
     'onTalk': onTalk,// 说话聊天
     'onRoomInfo': onRoomInfo,// 加入房间成功，服务器给返回的房间信息
+    'onDeleteRoom': onDeleteRoom,// 删除房间
 }
 

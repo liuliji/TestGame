@@ -11,6 +11,8 @@ var UIWindow = require('UIWindow');
 var enWinType = require('UIWindowDef').enWinType;
 var enViewType = require('Consts').enViewType;
 var enWinShowType = require('UIWindowDef').enWinShowType;
+var RoomSendMsgs = require('RoomSendMsgs');
+var enMsgType = require('UIWindowDef').enMsgType;
 
 cc.Class({
     extends: UIWindow,
@@ -41,7 +43,20 @@ cc.Class({
 
     // 设置解散按钮和退出按钮的显示和隐藏、以及是否置灰
     setUpgroupOrLeaveShown: function () {
-
+        App.UIManager.showMessageBox('确定要解散房间吗？',enMsgType.Message,this.onUpgroupConfirm.bind(this),this.onUpgroupCancel.bind(this));
+    },
+    // 解散确定按钮
+    onUpgroupConfirm: function () {
+        var roomObj = App.UserManager.getRoom();
+        if (!roomObj){
+            App.UIManager.hideWindow(this.windowID);
+            return;
+        }
+        RoomSendMsgs.onDeleteRoom(roomObj.roomId);
+    },
+    // 取消解散
+    onUpgroupCancel: function () {
+        // App.UIManager.hideWindow(this.windowID);
     },
 
     // 打开设置页面
