@@ -47,6 +47,8 @@ defmodule WebsocketWeb.HallRoomChannel do
                 room = Websocket.ServerRoom.room_info(roomPid)
                 # 这里需要占座，假装有人
                 roomInfo = Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                roomInfo: #{inspect roomInfo}"
                 Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
                 {:noreply, socket}
         end
