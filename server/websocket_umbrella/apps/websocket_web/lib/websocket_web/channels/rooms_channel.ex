@@ -1,25 +1,39 @@
 defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
+    alias Websocket.RoomManager
+    alias Phoenix.Socket
 
     def get_user(socket), do: Websocket.UserEntity.get_info(socket.assigns.pid)
     def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
 
+    def get_user_uid(socket), do: socket.assigns.uid
+    def get_user_pid(socket), do: socket.assigns.pid
+    def get_user_roomId(socket), do: socket.assigns.roomId
+    def get_user_roomPid(socket), do: RoomManager.get_room_pid(socket.assigns.roomId)
 
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
     def join("room:" <> privateRoomId, msg, socket) do
-        case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
-            true ->
-                update_user(socket, %{roomId: privateRoomId})
-                Logger.debug "#{socket.id} join room #{privateRoomId}"
-                send(self(), {:afterJoin, %{roomId: privateRoomId}})
-                {:ok, socket}
-            false ->
-                Logger.debug "#{socket.id} join doesn't exist room #{privateRoomId}"
-                {:error, WebsocketWeb.ErrorView.render(:error, "room not exist")}
-        end
+
+        # socket = socket |> Socket.assign(:roomId, privateRoomId)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect socket}"
+        send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
+        {:ok, socket}
+        # Websocket.ServerUser.join(privateRoomId, %{uid: socket.assigns.uid, pid: socket.assigns.pid, msg: msg})
+
+        # case Websocket.RoomManager.room_exist?(%{roomId: privateRoomId}) do
+        #     true ->
+        #         update_user(socket, %{roomId: privateRoomId})
+        #         Logger.debug "#{socket.id} join room #{privateRoomId}"
+        #         send(self(), {:afterJoin, %{roomId: privateRoomId}})
+        #         {:ok, socket}
+        #     false ->
+        #         Logger.debug "#{socket.id} join doesn't exist room #{privateRoomId}"
+        #         {:error, WebsocketWeb.ErrorView.render(:error, "room not exist")}
+        # end
     end
     ## -----------------Callbacks end -------------------
 
@@ -82,6 +96,27 @@ defmodule WebsocketWeb.RoomsChannel do
 
     ## ---------------Intercepting Outgoing Events start-------------------
 
+    def handle_info({:joined, newUser}, socket) do
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        new user join in roomId:#{inspect get_user_roomId(socket)}, user: #{inspect newUser}"
+        Phoenix.Channel.push(socket, "ID_S2C_JOIN_ROOM", get_client_user(newUser))
+        {:noreply, socket}
+    end
+
+    def handle_info({:joinSuccess, roomId}, socket) do
+        socket = socket |> Socket.assign(:roomId, roomId)
+        userList = Websocket.ServerRoom.get_users(get_user_roomPid(socket))
+            |> Enum.map(fn pid -> get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket))) end)
+
+        result = %{room: get_client_room(Websocket.ServerRoom.room_info(get_user_roomPid(socket))),
+            userSelf: get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket))),
+            users: userList
+        }
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        joinSuccess #{inspect roomId}, result:#{inspect result}"
+        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
+        {:noreply, socket}
+    end
 
     def handle_info({:afterJoin, %{roomId: privateRoomId}=msg}, socket) do
         user = get_user(socket)
@@ -124,4 +159,12 @@ defmodule WebsocketWeb.RoomsChannel do
 
 
     ## ----------------- Terminate end ----------------
+
+    defp get_client_user(%Websocket.ServerUser.User{} = user) do
+        user |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:socketPid) |> Map.delete(:roomPid)
+    end
+
+    defp get_client_room(%Websocket.ServerRoom.Room{} = room) do
+        room |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:users)
+    end
 end

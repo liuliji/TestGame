@@ -2,50 +2,61 @@ defmodule WebsocketWeb.HallRoomChannel do
     use Phoenix.Channel
     require Logger
     alias Websocket.UserManager
+    alias Phoenix.Socket
 
     @room_name "lobby"
 
-    def get_user(socket), do: Websocket.UserEntity.get_info(socket.assigns.pid)
-    def update_user(socket, map), do: Websocket.UserEntity.update_info(socket.assigns.pid, map)
+    def get_lobby_name(), do: @room_name
+
+    def get_user_pid(socket), do: socket.assigns.pid
+
+    def get_user_uid(socket), do: socket.assigns.uid
 
     # `push`, `reply`, and `broadcast` can only be called after the socket has finished joining.
     def join(@room_name = room_name, msg, socket) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{socket.id} join channel #{room_name} msg:#{inspect msg}"
-        send(self(), {:afterJoin, msg})
-        get_user(socket)
-        update_user(socket, %{roomId: room_name})
+        # send(self(), {:afterJoin, msg})
+        socket = socket |> Socket.assign(:roomId, room_name)
+        send(get_user_pid(socket), :joinLobby)
         {:ok, socket}
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
         roomId = UUID.uuid4
+        # 这里创建的room这个进程，所以当这个进程关闭的时候，这里创建的所有room进程都会关闭。
+        # 这时候呢 我们就应该用roomManager来创建这个进程
         case Websocket.RoomManager.create_room(%{roomId: roomId}) do
             {:ok} ->
                 Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_INFO", %{roomId: roomId})
                 {:noreply, socket}
             {:error, msg} ->
+                Websocket.ServerRoom.del_room(roomId)
                 Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAILED", %{code: -1, reason: msg})
                 {:noreply, socket}
         end
     end
 
     def handle_in("ID_C2S_JOIN_ROOM_ON_LOBBY", %{"roomId" => roomId} = msg, socket) do
-        room = Websocket.RoomManager.get_room(%{roomId: roomId})
-        # 这里需要占座，假装有人
-        roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users)}
-        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
-        {:noreply, socket}
-    end
-
-    def handle_in("ID_C2S_DELETE_ROOM",  %{"roomId" => roomId}=msg, socket) do
-        Websocket.RoomManager.delete_room(%{roomId: roomId})
-        {:noreply, socket}
+        case Websocket.RoomManager.get_room_pid(roomId) do
+            nil ->
+                Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
+                房间不存在 #{inspect msg}"
+                {:noreply, socket}
+            roomPid ->
+                room = Websocket.ServerRoom.room_info(roomPid)
+                # 这里需要占座，假装有人
+                roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)}
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                roomInfo: #{inspect roomInfo}"
+                Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
+                {:noreply, socket}
+        end
     end
 
     def handle_in("ID_C2S_LOBBY_TALK", %{"content" => content} = msg, socket) do
         Logger.debug "#{inspect socket.id} say #{content}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_LOBBY_TALK", %{userId: get_user(socket).uid, content: content})
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_LOBBY_TALK", %{userId: get_user_uid(socket), content: content})
         {:noreply, socket}
     end
 
@@ -67,15 +78,12 @@ defmodule WebsocketWeb.HallRoomChannel do
 
     def terminate(reason, socket) do
         Logger.error "#{__MODULE__} termiatelive socket:#{inspect socket.id}. reason:#{inspect reason}"
-        {:ok, assign(socket, :user, %{get_user(socket) | roomId: ""})}
+        {:ok, assign(socket, :roomId, "")}
     end
 
     #----------- handle_info ------------------
     def handle_info({:afterJoin, _msg}, socket) do
-        user = get_user(socket)
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        #{inspect user}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_LOBBY_ROOM", %{uid: user.uid, userName: user.userName, roomId: user.roomId})    
+        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_LOBBY_ROOM", %{uid: get_user_uid(socket), userName: socket.assigns.userName})    
         {:noreply, socket}
     end
 

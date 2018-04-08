@@ -16,17 +16,7 @@ var App = require('App');
  */
 function onCreateRoom(info) {
     var msg = {};
-    App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
-}
-
-/**
- * 删除房间
- * @param info
- */
-function onDeleteRoom(room_id) {
-    var msg = {
-        room_id: room_id,
-    };
+    App.UIManager.showAwait();
     App.Socket.sendMsg('ID_C2S_CREATE_ROOM',msg);
 }
 
@@ -39,6 +29,7 @@ function onJoinRoomOnLobby(roomId) {
     var msg = {
         roomId: roomId,
     };
+    App.UIManager.showAwait();
     App.Socket.sendMsg('ID_C2S_JOIN_ROOM_ON_LOBBY',msg);
 }
 
@@ -52,7 +43,6 @@ function onTalk(content) {
 module.exports = {
     'onCreateRoom': onCreateRoom,// 创建房间
     'onJoinRoomOnLobby': onJoinRoomOnLobby,// 加入房间
-    'onDeleteRoom': onDeleteRoom,// 删除房间
     'onTalk': onTalk,// 说话、聊天
 }
 

@@ -10,9 +10,7 @@ defmodule Websocket.UserManager do
     defmodule User do
         defstruct(
             uid: "",
-            roomId: "",
-            userName: "",
-            socketId: ""
+            pid: nil
             )
     end
 
@@ -31,13 +29,8 @@ defmodule Websocket.UserManager do
         GenServer.call(__MODULE__, {:get, uid})
     end
 
-    def update_user_room_id(uid, roomId) do
-        GenServer.call(__MODULE__, {:updateRoomId, uid, roomId})
-        update_user(%{get_user(uid) | roomId: roomId})
-    end
-
-    def update_user(user) do
-        GenServer.call(__MODULE__, {:updateUser, %{user: user}})
+    def update_user(uid, pid) do
+        GenServer.call(__MODULE__, {:updateUser, %User{uid: uid, pid: pid}})
     end
 
     def delete_user(uid) do
@@ -47,21 +40,12 @@ defmodule Websocket.UserManager do
 
     # ------------------ Callback ----------------
 
-    def handle_call({:updateRoomId, uid, roomId}, _from, state) do
-        case state |> Map.get(uid) do
-            nil ->
-                {:reply, {:error, %{msg: "invalid uid"}}, state}
-            user ->
-                {:reply, :ok, state |> Map.put(uid, %{user | roomId: roomId})}
-        end
-    end
-
     def handle_call({:get, uid}, _from, state) do
         {:reply, state |> Map.get(uid), state}
     end
 
-    def handle_call({:updateUser, %{user: user}}, _from, state) do
-        {:noreply, state |> Map.put(user.uid, user)}
+    def handle_call({:updateUser, %{uid: uid, pid: pid}}, _from, state) do
+        {:noreply, state |> Map.put(uid, %User{uid: uid, pid: pid})}
     end
 
     def handle_call({:deleteUser, %{uid: uid}}, _from, state) do

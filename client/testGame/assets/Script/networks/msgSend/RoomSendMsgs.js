@@ -17,6 +17,7 @@ var App = require('App');
  */
 function onDeleteRoom(roomId) {
     // debugger;
+    App.UIManager.showAwait();
     var msg = {
         roomId: roomId,
     };

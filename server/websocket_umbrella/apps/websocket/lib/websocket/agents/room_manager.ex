@@ -5,6 +5,7 @@ defmodule Websocket.RoomManager do
     defmodule Room do
         defstruct(
             roomId: "",
+            roomPid: nil,
             users: []
         )
     end
@@ -22,7 +23,8 @@ defmodule Websocket.RoomManager do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             create_room #{inspect roomId}"
             {Agent.update(__MODULE__, fn state -> 
-                state |> Map.put(roomId, %Room{roomId: roomId})
+                {:ok, roomPid} = Websocket.ServerRoom.new_room(roomId)
+                state |> Map.put(roomId, %Room{roomId: roomId, roomPid: roomPid})
             end)}
         end
     end
@@ -39,6 +41,19 @@ defmodule Websocket.RoomManager do
         Agent.get(__MODULE__, fn state ->
             state |> Map.get(roomId)
         end)
+    end
+
+    def get_room_pid(roomId) do
+        case Agent.get(__MODULE__, fn state ->
+            state |> Map.get(roomId)
+        end) do
+            nil ->
+                Logger.error "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
+                #{inspect roomId} error state"
+                nil
+            room ->
+                room.roomPid
+        end
     end
 
     def delete_room(%{roomId: roomId}=params) do
