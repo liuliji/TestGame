@@ -16,7 +16,7 @@ defmodule Websocket.ServerRoom do
         defstruct(
             roomId: "",
             pid: nil,
-            users: [],       # 存放的user pid
+            users: [],       # 存放的user {uid, pid}
             seats: [nil, nil, nil, nil, nil]    #存放的user id
         )
     end
@@ -38,6 +38,22 @@ defmodule Websocket.ServerRoom do
 
     def del_room(pid) do
         
+    end
+
+    @doc """
+        param1 roomPid, param2 uid
+        找到了座位 返回>0 没找到 返回-1
+    """
+    def get_seat(pid, uid) do
+        Entity.call_behaviour(pid, DefaultBehaviour, {:takeSeat, uid})
+    end
+
+    def remove_seat(pid, uid) when is_bitstring(uid) do
+        Entity.call_behaviour(pid, DefaultBehaviour, {:removeSeat, uid})
+    end
+
+    def remove_seat(pid, pos) when is_integer(pos) do
+        Entity.call_behaviour(pid, DefaultBehaviour, {:removeSeat, pos})
     end
 
     def room_info(pid) do
@@ -78,14 +94,78 @@ defmodule Websocket.ServerRoom do
 
         def handle_call(:getUsers,
         %Entity{attributes: %{Room => room}} = entity) do
-            {:ok, room.users |> Enum.map(fn pid -> Websocket.ServerUser.user_info(pid) end), entity}
+            {:ok, room.users |> Enum.map(fn {uid, pid} -> Websocket.ServerUser.user_info(pid) end), entity}
+        end
+
+        @doc """
+        找到了座位 返回>0 没找到 返回-1
+        """
+        def handle_call({:takeSeat, uid}, entity) do
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            takeSeat #{inspect entity}"
+            room = entity |> get_attribute(Room)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            找座位时的room： #{inspect room}"
+            index =
+            if (room.seats |> Enum.member?(uid)) do
+                room.seats |> Enum.find_index(fn x -> x==uid end)
+            else
+                {isFind, pos} = room.seats |> Enum.reduce({false, 0}, fn x, {isFind, pos} ->
+                    if (isFind) do
+                        {isFind, pos}
+                    else
+                        if (x == nil) do
+                            {true, pos}
+                        else
+                            {isFind, pos = pos + 1}
+                        end
+                    end
+                end)
+
+                if (isFind) do
+                    Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    找到了座位 pos:#{inspect pos}"
+                    room = %{room | seats: room.seats |> List.update_at(pos, fn x -> uid end)}
+                    entity = entity |> put_attribute(room)
+                    Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    座位更新之后：#{inspect entity}"
+                    pos
+                else
+                    -1
+                end
+            end
+
+            # 更新user 这里不应该更新 应该在user真正加入房间的时候再更新，而且这时候 根本获取不到user信息
+            # 这里只是 预占座
+            # {^uid, pid} = List.keyfind(room.users, uid, 0)
+            # Websocket.ServerUser.update_seat(pid, index)
+
+            {:ok, index, entity}
+        end
+
+        def handle_call({:removeSeat, uid}, entity) when is_bitstring(uid) do
+            room = get_attribute(entity, Room)
+            case room.seats |> Enum.find_index(fn x -> x==uid end) do
+                nil ->
+                    {:ok, %{}, entity}
+                pos ->
+                    room = %{room | seats: room.seats |> List.update_at(pos, fn x -> nil end)}
+                    {:ok, %{}, entity |> put_attribute(room)}
+            end
+
+        end
+
+        def handle_call({:removeSeat, pos}, entity) when is_integer(pos) do
+            room = get_attribute(entity, Room)
+            room = %{room | seats: room.seats |> List.update_at(pos, fn x -> nil end)}
+            {:ok, %{}, entity |> put_attribute(room)}
         end
 
         def handle_event({:join, %{uid: uid, pid: pid} = user},
         %Entity{attributes: %{Room => room}} = entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             get join msg. user:#{inspect user}, room:#{inspect room}"
-            room = %{room | users: [pid | room.users]}
+            room = %{room | users: [{uid, pid} | room.users]}
             entity = put_attribute(entity, room)
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             entity #{inspect entity}"
@@ -98,31 +178,11 @@ defmodule Websocket.ServerRoom do
         %Entity{attributes: %{Room => room}} = entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             notify_all msg:#{inspect msg}. room.users:#{inspect room.users}"
-            room.users |> Enum.map(fn pid -> send(pid, msg) end)
+            room.users |> Enum.map(fn {uid, pid} -> send(pid, msg) end)
             {:ok, entity}
         end
 
-        @doc """
-        找到了座位 返回>0 没找到 返回-1
-        """
-        def handle_event({:takeSeat, uid}, entity) do
-            room = entity |> Entity.get_attribute(Room)
-            if (room.seats |> Enum.member?(uid)) do
-                index = room.seats |> Enum.find_index(fn x -> x==uid end)
-            else
-                {isFind, pos} = room.seats |> Enum.reduce({false, 0}, fn x, {isFind, pos} ->
-                    unless (isFind) do
-                        if (x == nil) do
-                            isFind = true
-                        else
-                            pos = pos + 1
-                        end
-                    end
-                end)
 
-                if ()
-            end
-        end
     end
 
 end

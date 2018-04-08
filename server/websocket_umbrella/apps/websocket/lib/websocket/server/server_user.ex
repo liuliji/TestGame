@@ -55,6 +55,10 @@ defmodule Websocket.ServerUser do
         Entity.get_attribute(pid, User)
     end
 
+    def update_seat(pid, value) do
+        Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :position, value})
+    end
+
     defmodule DefaultBehaviour do
         use Entice.Entity.Behaviour
         require Logger
@@ -71,6 +75,11 @@ defmodule Websocket.ServerUser do
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             #{inspect get_attribute(attr, User)} exit"
             {:ok, entity}
+        end
+
+        def handle_call({:update_info, key, value}, entity) do
+            entity = update_user(entity, key, value)
+            {:ok, get_attribute(entity, User), entity}
         end
 
         def handle_event(:joinLobby, entity) do
@@ -118,6 +127,9 @@ defmodule Websocket.ServerUser do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             joinSuccess roomId:#{inspect roomId}, user:#{inspect user}"
             entity = update_user(entity, :roomId, roomId)
+            seat = Websocket.ServerRoom.get_seat(Websocket.RoomManager.get_room_pid(roomId), user.uid)
+            entity = update_user(entity, :position, seat)
+            # roomPid
             send(user.socketPid, msg)
             {:ok, entity}
         end

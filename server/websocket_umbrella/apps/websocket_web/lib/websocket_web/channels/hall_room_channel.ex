@@ -45,11 +45,17 @@ defmodule WebsocketWeb.HallRoomChannel do
                 {:noreply, socket}
             roomPid ->
                 room = Websocket.ServerRoom.room_info(roomPid)
-                # 这里需要占座，假装有人
-                roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)}
-                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                roomInfo: #{inspect roomInfo}"
-                Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
+                if (Websocket.ServerRoom.get_seat(roomPid, get_user_uid(socket)) >= 0) do
+                    # 这里需要占座，假装有人
+                    roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)}
+                    Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    roomInfo: #{inspect roomInfo}"
+                    Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO_ON_LOBBY", %{room: roomInfo})
+                else
+                    Logger.error "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    uid:#{get_user_uid(socket)} 没有占到座 在房间 #{roomId}"
+                end
+                
                 {:noreply, socket}
         end
     end
