@@ -10,3 +10,25 @@
 
 
 > 我发现，只要弄清楚了整个通信流程，每个上下文变量中应该存储什么值也就确定了。
+
+
+### 本工程
+
+命名规范：
+- 和客户端的消息ID： 全部大写、_ 分割
+- struct：驼峰，
+- 给客户端返回的消息体： 驼峰
+- 内部消息：驼峰
+- 方法命名：全部小写、_ 分割
+
+-----------
+
+- `消息传递过程`：当socket收到客户端发过来消息之后，socket基本不做处理（），仅仅是转发给内部的服务系统中的user_server，user_server这时候基本不做数据处理（除非不更新 没办法继续），将消息发送给room_server，room_server处理了该消息之后 更新房间数据并通知到user_server，user_server更新数据处理了该消息之后，再通知socket，然后由socket返回给客户端。
+
+> 注意： 数据应在room_server处理了消息之后才开始更新；整个消息传递过程中，注意传递参数的合理性，如果传递了不正常的参数，那么说明内存中存储的数据有问题（不够用）；
+
+------------
+
+- `运行时数据`：在socket中，保存了uid，pid，userName，roomId，roomPid；在user_server中保存了user的这种信息，想要获取相关信息，必须通过pid来发送消息；在room_server中保存了room的相关消息，user_list中是{uid, pid}的二元组，另外用list保存uid，index为position来保存用户座位信息；room_manager保存了所有room的roomid和roomPid；
+
+------------
