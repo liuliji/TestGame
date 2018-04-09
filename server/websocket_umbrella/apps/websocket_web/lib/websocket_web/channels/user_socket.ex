@@ -1,8 +1,6 @@
 defmodule WebsocketWeb.UserSocket do
   use Phoenix.Socket
   require Logger
-  alias Websocket.UserManager.User
-  alias Websocket.UserManager
 
 # 连接了socket之后，收到的消息和发出的消息都会被路由到channels。
 # 从客户端来的数据会通过transports被路由到channels
@@ -41,7 +39,9 @@ defmodule WebsocketWeb.UserSocket do
         :error
       _ ->
         uid = UUID.uuid4();
-        {:ok, pid} = Websocket.ServerUser.start(uid, userName, socket.channel_pid)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        socket pid #{inspect self()}, #{inspect socket.channel_pid}"
+        pid = Websocket.UserManager.start_user(uid, userName, self())
         socket = socket |> assign(:uid, uid)
                         |> assign(:pid, pid)
                         |> assign(:userName, userName)

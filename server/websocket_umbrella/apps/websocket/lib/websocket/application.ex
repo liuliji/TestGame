@@ -16,6 +16,7 @@ defmodule Websocket.Application do
 
     Supervisor.start_link([
       supervisor(Websocket.RoomManager, []),
+      supervisor(Websocket.UserManager, [])
     ], strategy: :one_for_one, name: Websocket.Supervisor)
   end
 end

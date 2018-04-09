@@ -97,8 +97,6 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ---------------Intercepting Outgoing Events start-------------------
 
     def handle_info({:joined, newUser}, socket) do
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        new user join in roomId:#{inspect get_user_roomId(socket)}, user: #{inspect newUser}"
         Phoenix.Channel.push(socket, "ID_S2C_JOIN_ROOM", get_client_user(newUser))
         {:noreply, socket}
     end
@@ -112,8 +110,6 @@ defmodule WebsocketWeb.RoomsChannel do
             userSelf: get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket))),
             users: userList
         }
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        joinSuccess #{inspect roomId}, result:#{inspect result}"
         Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
         {:noreply, socket}
     end
@@ -153,7 +149,7 @@ defmodule WebsocketWeb.RoomsChannel do
 
     def terminate(reason, socket) do
         Logger.info "client live socket:#{inspect socket.id}. reason:#{inspect reason}"
-        
+        Websocket.ServerUser.leave_channel(get_user_pid(socket))
         :ok
     end
 
@@ -161,7 +157,7 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ----------------- Terminate end ----------------
 
     defp get_client_user(%Websocket.ServerUser.User{} = user) do
-        user |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:socketPid) |> Map.delete(:roomPid)
+        user |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:socketPid) |> Map.delete(:roomPid) |> Map.delete(:channelPid)
     end
 
     defp get_client_room(%Websocket.ServerRoom.Room{} = room) do

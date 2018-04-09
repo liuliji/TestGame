@@ -1,7 +1,6 @@
 defmodule Websocket.UserManager do
     use GenServer
     require Logger
-    alias Websocket.UserManager.User
 
     @doc """
     User struct.
@@ -15,41 +14,26 @@ defmodule Websocket.UserManager do
     end
 
     def start_link() do
-        GenServer.start_link(__MODULE__, :ok, [])
+        GenServer.start_link(__MODULE__, :ok, [{:name, __MODULE__}])
     end
 
     def init(:ok) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        inspect user_manager init"
-        #{inspect info}"
+        user_manager init"
         {:ok, %{}}
     end
 
-    def get_user(uid) do
-        GenServer.call(__MODULE__, {:get, uid})
-    end
-
-    def update_user(uid, pid) do
-        GenServer.call(__MODULE__, {:updateUser, %User{uid: uid, pid: pid}})
-    end
-
-    def delete_user(uid) do
-        GenServer.call(__MODULE__, {:deleteUser, %{uid: uid}})
+    # 不在socket那个process里面启动的该进程，因为当用户退出socket的时候，也会退出该进程
+    def start_user(uid, userName, socketPid) do
+        GenServer.call(__MODULE__, {:start_user, {uid, userName, socketPid}})
     end
 
 
     # ------------------ Callback ----------------
 
-    def handle_call({:get, uid}, _from, state) do
-        {:reply, state |> Map.get(uid), state}
-    end
-
-    def handle_call({:updateUser, %{uid: uid, pid: pid}}, _from, state) do
-        {:noreply, state |> Map.put(uid, %User{uid: uid, pid: pid})}
-    end
-
-    def handle_call({:deleteUser, %{uid: uid}}, _from, state) do
-        {:noreply, state |> Map.delete(uid)}
+    def handle_call({:start_user, {uid, userName, socketPid}}, _from, state) do
+        {:ok, pid}  = Websocket.ServerUser.start(uid, userName, socketPid)
+        {:reply, pid, state}
     end
 
 end

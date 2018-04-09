@@ -101,8 +101,6 @@ defmodule Websocket.ServerRoom do
         找到了座位 返回>0 没找到 返回-1
         """
         def handle_call({:takeSeat, uid}, entity) do
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            takeSeat #{inspect entity}"
             room = entity |> get_attribute(Room)
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             找座位时的room： #{inspect room}"

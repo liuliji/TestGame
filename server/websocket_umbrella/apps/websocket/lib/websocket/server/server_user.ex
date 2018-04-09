@@ -18,6 +18,7 @@ defmodule Websocket.ServerUser do
 
             pid: pid,
             socketPid: pid,
+            channelPid: pid,
 
             # 房间信息
             roomId: String.t,
@@ -35,6 +36,7 @@ defmodule Websocket.ServerUser do
             online: true,
             pid: nil,
             socketPid: nil,
+            channelPid: nil,
 
             # inner 
             roomId: "",
@@ -59,6 +61,11 @@ defmodule Websocket.ServerUser do
         Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :position, value})
     end
 
+    def leave_channel(pid) do
+        # 这里如果 设置为null的话，如果客户端掉线了 send(nil, msg)就会出问题，所以直接往不存在的process发消息就可以了
+        # Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :channelPid, nil})
+    end
+
     defmodule DefaultBehaviour do
         use Entice.Entity.Behaviour
         require Logger
@@ -67,14 +74,22 @@ defmodule Websocket.ServerUser do
 
         def init(entity, args) do
             entity = put_attribute(entity, args)
+            Process.monitor(args.socketPid)
             {:ok, entity}
         end
 
+        
         def terminate(reason,
         %Entity{attributes: attr} = entity) do
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
-            #{inspect get_attribute(attr, User)} exit"
+            #{inspect get_attribute(entity, User)} exit"
             {:ok, entity}
+        end
+
+        def handle_event({:DOWN, _, _, _, reason} = msg, entity) do
+            Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            user client disconnected #{inspect msg}. entity: #{inspect entity}"
+            {:stop, %{reason: "client disconnect"}, entity}
         end
 
         def handle_call({:update_info, key, value}, entity) do
@@ -82,34 +97,24 @@ defmodule Websocket.ServerUser do
             {:ok, get_attribute(entity, User), entity}
         end
 
-        def handle_event(:joinLobby, entity) do
-            {:ok, update_user(entity, :roomId, WebsocketWeb.HallRoomChannel.get_lobby_name())}
+        def handle_event({:joinLobby, channelPid}, entity) do
+            {:ok, entity |> update_user(:roomId, WebsocketWeb.HallRoomChannel.get_lobby_name()) |> update_user(:channelPid, channelPid)}
         end
 
-        def handle_event({:join, roomId, socketPid}, entity) do
+        def handle_event({:join, roomId, channelPid}, entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             receive msg join #{inspect roomId} "
             user = entity |> get_attribute(User)
-            entity = put_attribute(entity, %{user | socketPid: socketPid})
+            entity = put_attribute(entity, %{user | channelPid: channelPid})
             send(get_room_pid(roomId), {:join, user})
             {:ok, entity}
         end
 
-        def handle_event({:entity_join, %Entity{id: id}},
-        %Entity{id: id} = entity) do
-        
-            Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
-            myself receive entity_join msg. uid:#{id}"
-            {:ok, entity}
-        end
-
-        def handle_event({:entity_join, %Entity{attributes: %{} = inital_attributes} = new_entity},
-        %Entity{attributes: %{User => user}} = entity) do
-            newUser = get_attribute(new_entity, User)
+        # 自己受到的joined 消息
+        def handle_event({:joined, %User{uid: uid} = newUser},
+        %Entity{attributes: %{User => %{uid: uid} = user}} = entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            others receive entity_join msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
-            user = get_attribute(entity, User)
-            send(user.socketPid, {:joined, newUser})
+            self receive joined msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
             {:ok, entity}
         end
 
@@ -118,7 +123,7 @@ defmodule Websocket.ServerUser do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             others receive joined msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
             user = get_attribute(entity, User)
-            send(user.socketPid, {:joined, newUser})
+            send(user.channelPid, {:joined, newUser})
             {:ok, entity}
         end
 
@@ -130,7 +135,7 @@ defmodule Websocket.ServerUser do
             seat = Websocket.ServerRoom.get_seat(Websocket.RoomManager.get_room_pid(roomId), user.uid)
             entity = update_user(entity, :position, seat)
             # roomPid
-            send(user.socketPid, msg)
+            send(user.channelPid, msg)
             {:ok, entity}
         end
 

@@ -1,7 +1,6 @@
 defmodule WebsocketWeb.HallRoomChannel do
     use Phoenix.Channel
     require Logger
-    alias Websocket.UserManager
     alias Phoenix.Socket
 
     @room_name "lobby"
@@ -16,9 +15,12 @@ defmodule WebsocketWeb.HallRoomChannel do
     def join(@room_name = room_name, msg, socket) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{socket.id} join channel #{room_name} msg:#{inspect msg}"
+
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        socket pid #{inspect self()}, #{inspect socket.channel_pid}"
         # send(self(), {:afterJoin, msg})
         socket = socket |> Socket.assign(:roomId, room_name)
-        send(get_user_pid(socket), :joinLobby)
+        send(get_user_pid(socket), {:joinLobby, self()})
         {:ok, socket}
     end
     
@@ -84,6 +86,7 @@ defmodule WebsocketWeb.HallRoomChannel do
 
     def terminate(reason, socket) do
         Logger.error "#{__MODULE__} termiatelive socket:#{inspect socket.id}. reason:#{inspect reason}"
+        Websocket.ServerUser.leave_channel(get_user_pid(socket))
         {:ok, assign(socket, :roomId, "")}
     end
 
