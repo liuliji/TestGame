@@ -24,12 +24,17 @@ var Consts = require('Consts');
  * @param args 房间ID
  */
 function onJoinRoom(args) {
-    // debugger;
+    debugger;
     Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
-    var selfData = App.UserManager.setSelf(args);
-    selfData.nickName = args.userName;
-    selfData.position = 0;
-    App.UIManager.emit(Event.AGS_JOIN_ROOM,selfData);
+    var userData = App.UserManager.setOtherUser(args);
+    userData.userName = args.userName;
+    if (args.position >= 0){
+        userData.position = args.position;
+    } else {
+        userData.position = 0;
+    }
+
+    App.UIManager.emit(Event.AGS_JOIN_ROOM,userData);
 }
 
 /**
@@ -46,19 +51,22 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
+    debugger;
     App.UIManager.hideAwait();
     var room = args.room;// 房间ID
     App.UserManager.setRoom(room);
     // 设置自己的信息
     var userSelf = args.userSelf;
     var selfData = App.UserManager.setSelf(userSelf);
-    selfData.nickName = args.userName;
+    selfData.userName = args.userName;
 
     // 设置其他玩家的信息
     var users = args.users;
     for (var i = 0; i < users.length; i ++){
-        let userData = App.UserManager.setOtherUser(users[i]);
-        userData.setPlayerInfo(users[i]);
+        if (users[i].position != selfData.position){
+            let userData = App.UserManager.setOtherUser(users[i]);
+            userData.setPlayerInfo(users[i]);
+        }
     }
 
     App.MsgDispatcher.setCanProcessMsg(false);

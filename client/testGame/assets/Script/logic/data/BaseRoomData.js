@@ -18,7 +18,7 @@ var BaseRoomData = cc.Class({
         ungroupName: '',       //< 请求解散玩家昵称
         ungroupUid: 0,         //< 请求解散玩家UID
         ungroupTime: '',       //< 请求解散时间
-        ungroupArray: [],      //< 玩家同意或不同意数组 [{uid:用户id, agree:同意类型,nickName:'用户'},...]
+        ungroupArray: [],      //< 玩家同意或不同意数组 [{uid:用户id, agree:同意类型,userName:'用户'},...]
         playCount: 0,          // 第几局
         totalCount: 30,        //\ 总局数
         playerNum: 3,//\ 最大玩家数

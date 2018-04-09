@@ -44,7 +44,7 @@ var UserData = cc.Class({
         this.agent = info.agent || 0;//代理权限 0没有权限,1有权限
         this.diZhuStatus = info.diZhuStatus || 0;//\玩家是否叫地主
         this.diZhu = info.diZhu || false;//\ 玩家是否是地主
-        // Log.warn('UserData设置地主:'+this.nickName+'\t是否是地主:'+this.diZhu);
+        // Log.warn('UserData设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
         this.xiaFen = info.xiaFen || 0;//\ 下分数字
         this.cards = info.cards || [];//\ 玩家手牌
         this.paiArray = info.paiArray || [];// 玩家出去的牌
@@ -61,7 +61,7 @@ var UserData = cc.Class({
         }
 
         if (this.zhuang) {
-            Log.debug("-----庄------UserData 初始化 设置庄:" + this.nickName);
+            Log.debug("-----庄------UserData 初始化 设置庄:" + this.userName);
         }
         this.voiceMsg = null;//语音消息记录(指保存一条)
         this.diamonds = info.diamonds || 0;    // 玩家的 钻石数量
@@ -89,7 +89,7 @@ var UserData = cc.Class({
         this.winScore = info.winScore || 0;//\ 输赢积分
         this.win = info.win || 0; // 胜利次数
         if (this.zhuang) {
-            Log.debug("-----庄------UserData 结束时设置玩家数据 设置庄 " + this.nickName);
+            Log.debug("-----庄------UserData 结束时设置玩家数据 设置庄 " + this.userName);
         }
     },
 
@@ -131,16 +131,16 @@ var UserData = cc.Class({
             this.place = info.place;  //  玩家的地理位子
         }
         if (info.zhuang) {
-            Log.debug("-----庄------UserData 设置玩家信息 设置庄 " + this.nickName);
+            Log.debug("-----庄------UserData 设置玩家信息 设置庄 " + this.userName);
         }
 
         this.cards = info.cardArray || info.cards || [];//玩家手牌
         this.paiCount = info.paiCount || 0;//\ 玩家手中牌数
         this.paiArray = info.paiArray || [];// 玩家出去的牌
         this.diZhu = info.diZhu || false;// 是否是地主
-        // Log.warn('setPlayerInfo设置地主:'+this.nickName+'\t是否是地主:'+this.diZhu);
+        // Log.warn('setPlayerInfo设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
         this.diZhuStatus = info.diZhuStatus || 0;//是否叫地主(1叫地主,2不叫地主)
-        // Log.warn('是否叫地主setPlayerInfo:'+this.nickName+'\t是否叫地主现:'+this.diZhuStatus + ' 原'+ info.diZhuStatus);
+        // Log.warn('是否叫地主setPlayerInfo:'+this.userName+'\t是否叫地主现:'+this.diZhuStatus + ' 原'+ info.diZhuStatus);
         this.isTuoGuan = info.isTuoGuan || false; //
         // this.redBean = info.redBean || 0;// 乐豆数
         this.leftTime = info.leftTime || 0;// 红包倒计时
@@ -161,7 +161,7 @@ var UserData = cc.Class({
         } else {
             this.isMPIcon = false;//明牌
         }
-        // Log.warn('设置玩家信息 名字:'+this.nickName+' 是否明牌:'+this.isMPIcon);
+        // Log.warn('设置玩家信息 名字:'+this.userName+' 是否明牌:'+this.isMPIcon);
         var vDoubleNumType = typeof (info.doubleNum);
         if (vDoubleNumType !== 'undefined') { // 明牌倍数
             this.doubleNum = info.doubleNum;
@@ -172,7 +172,7 @@ var UserData = cc.Class({
      * 重置玩家数据
      */
     reset: function () {
-        // Log.warn(this.nickName+'---重置玩家数据---');
+        // Log.warn(this.userName+'---重置玩家数据---');
         this.zhuangStatus = 0;//\玩家是否抢庄
         this.zhuang = false;//\ 玩家是否是庄家
         this.xiaFen = 0;//\ 下分数字
@@ -189,7 +189,7 @@ var UserData = cc.Class({
         this.paiArray = [];
         this.diZhuStatus = 0;//\玩家是否叫地主
         this.diZhu = false;//\ 玩家是否是地主
-        // Log.warn('reset设置地主:'+this.nickName+'\t是否是地主:'+this.diZhu);
+        // Log.warn('reset设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
         this.leftTime = 0;
         // this.countDown = 300;// 还有多少秒弹出红包//
         //————【这里不重置倒计时，是为了防止重置继续的时候，倒计时跳到了5秒，然后，有网的时候，有变成很少的秒数】
@@ -209,8 +209,8 @@ var UserData = cc.Class({
         if (typeof(args.uid) !== 'undefined') {
             this.uid = args.uid;// 玩家id
         }
-        if (typeof(args.nickName) !== 'undefined') {
-            this.nickName = args.nickName;// 玩家昵称
+        if (typeof(args.userName) !== 'undefined') {
+            this.userName = args.userName;// 玩家昵称
         }
         if (typeof(this.sex) !== 'undefined') {
             this.sex = args.sex;// 性别
@@ -246,7 +246,7 @@ var UserData = cc.Class({
     setMPData: function (args) {
         this.cards = args.cardArray || [];//玩家手牌
         this.isMPIcon = true;//明牌图标
-        // Log.warn('设置明牌数据 名字:'+this.nickName+' 是否明牌:'+this.isMPIcon);
+        // Log.warn('设置明牌数据 名字:'+this.userName+' 是否明牌:'+this.isMPIcon);
     },
     weiTouCard: function () {
         var cardArray = [];

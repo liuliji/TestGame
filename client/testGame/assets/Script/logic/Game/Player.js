@@ -39,7 +39,7 @@ cc.Class({
     setPlayerInfo: function (userData) {
         // debugger;
         this.node.active = true;
-        this.nameLabel.string = userData.nickName;
+        this.nameLabel.string = userData.userName;
     }
 
     // called every frame, uncomment this function to activate update callback
