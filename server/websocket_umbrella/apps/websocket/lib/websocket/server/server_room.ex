@@ -103,7 +103,7 @@ defmodule Websocket.ServerRoom do
         def handle_call({:takeSeat, uid}, entity) do
             room = entity |> get_attribute(Room)
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            找座位时的room： #{inspect room}"
+            finding seat... room： #{inspect room}"
             index =
             if (room.seats |> Enum.member?(uid)) do
                 room.seats |> Enum.find_index(fn x -> x==uid end)
@@ -122,11 +122,11 @@ defmodule Websocket.ServerRoom do
 
                 if (isFind) do
                     Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                    找到了座位 pos:#{inspect pos}"
+                    find the seat pos:#{inspect pos}"
                     room = %{room | seats: room.seats |> List.update_at(pos, fn x -> uid end)}
                     entity = entity |> put_attribute(room)
                     Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                    座位更新之后：#{inspect entity}"
+                    room seats updated ：#{inspect room}"
                     pos
                 else
                     -1
@@ -165,8 +165,6 @@ defmodule Websocket.ServerRoom do
             get join msg. user:#{inspect user}, room:#{inspect room}"
             room = %{room | users: [{uid, pid} | room.users]}
             entity = put_attribute(entity, room)
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            entity #{inspect entity}"
             send(pid, {:joinSuccess, room.roomId})
             send(self(), {:notify_all, {:joined, user}})
             {:ok, entity}

@@ -82,7 +82,7 @@ defmodule Websocket.ServerUser do
         def terminate(reason,
         %Entity{attributes: attr} = entity) do
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
-            #{inspect get_attribute(entity, User)} exit"
+            user server exit reason:#{inspect reason} \nuser:#{inspect get_attribute(entity, User)}"
             {:ok, entity}
         end
 
