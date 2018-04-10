@@ -38,7 +38,7 @@ cc.Class({
     },
     showWindow: function () {
         this._super();
-        this.setUpgroupOrLeaveShown();
+        // this.setUpgroupOrLeaveShown();
     },
 
     // 设置解散按钮和退出按钮的显示和隐藏、以及是否置灰
@@ -88,6 +88,7 @@ cc.Class({
             Log.debug('菜单页面无法获取房间信息');
             return;
         }
+        this.setUpgroupOrLeaveShown();
     },
 
     // 离开房间

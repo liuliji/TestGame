@@ -30,9 +30,9 @@ cc.Class({
         // 弹出方式
         this.showType = enWinShowType.WST_HideOther;
         this._super();
-        this.scheduleOnce(function () {
-            App.UIManager.showAwait();
-        }.bind(this),5.0);
+        // this.scheduleOnce(function () {
+        //     App.UIManager.showAwait();
+        // }.bind(this),5.0);
     },
 
     onLogin: function () {

@@ -70,6 +70,14 @@ cc.Class({
         }
         // 初始化自己信息
         this.playerAry[0].setPlayerInfo(selfData, true);
+        // 初始化其他玩家
+        App.UserManager.foreachOtherUser(function (userData) {
+            debugger;
+            if (userData){
+                var position = userData.position;
+                this.playerMgr[position].setPlayerInfo(userData, false);
+            }
+        }.bind(this));
     },
 
     // 动态获取控件

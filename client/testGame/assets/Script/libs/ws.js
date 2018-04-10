@@ -50,9 +50,9 @@
 //     }))
 //     .onOK(function(msg) {
 //       console.log(msg)
-//       nickname = msg.user.nickname;
+//       userName = msg.user.userName;
 //
-//       if (nickname && nickname.length) {
+//       if (userName && userName.length) {
 //         require("./user").setNickName(nickname)
 //         require("./user").setUserID(msg.user.id)
 //         require("./user").setHeadURL(msg.user.head)

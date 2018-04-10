@@ -8,7 +8,7 @@
 var BaseUserData = cc.Class({
     properties: {
         uid: 0, //< 玩家uid
-        nickName: '',//< 昵称
+        userName: '',//< 昵称
         sex: 0,//< 性别  0男 1女 -1没有性别
         image: '',//< 头像
         ip: '',//< IP
@@ -29,7 +29,7 @@ var BaseUserData = cc.Class({
     //< 初始化数据(lobby场景)
     initPlayerInfo: function (player) {
         this.uid = player.uid || 0;
-        this.nickName = player.nickName || '';
+        this.userName = player.userName || '';
         this.sex = player.sex || 0;
         this.image = player.image || '';
         this.ip = player.ip || '';
@@ -41,7 +41,7 @@ var BaseUserData = cc.Class({
     //< 设置房间数据
     setPlayerInfo: function (player) {
         this.roomOwner = player.roomOwner || false;
-        // Log.warn('是否是房主A '+this.nickName + ' ' + this.roomOwner + ' 原数据:' + info.roomOwner);
+        // Log.warn('是否是房主A '+this.userName + ' ' + this.roomOwner + ' 原数据:' + info.roomOwner);
         this.score = player.score || 0;
         this.position = player.position || 0;
         this.longitude = player.longitude || '';
