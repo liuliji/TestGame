@@ -66,7 +66,7 @@
  断开连接： 就是当做断线处理就可以了。
 
 
- ** 注意问题 **
+ **注意问题**
  1. 断线重连只会发生在游戏中，如果游戏结束了，还未连接上，这块逻辑记着处理。
  2. user_process，要monitor socketPid，用于断线重连；要monitor channelPid，如果是强制退出，要更新user_process和room_process的状态，如果是非强制退出，标记为掉线就可以了。
  3. room_process，要monitor user_process，仅仅用于极特殊的user_process异常注销了。如果user_process都异常注销了，那么可以认为是强制退出。正常情况下，user_process退出房间都是通过发消息的。有monitor 就有 注销monitor。
