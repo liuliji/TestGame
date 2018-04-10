@@ -87,7 +87,7 @@ cc.Class({
 
     // 准备
     onReady: function () {
-        
+
     },
 
     // 开始

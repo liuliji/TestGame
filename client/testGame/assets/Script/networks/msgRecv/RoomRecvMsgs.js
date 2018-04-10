@@ -58,7 +58,7 @@ function onRoomInfo(args) {
     // 设置自己的信息
     var userSelf = args.userSelf;
     var selfData = App.UserManager.setSelf(userSelf);
-    selfData.userName = args.userName;
+    // selfData.userName = args.userName;
 
     // 设置其他玩家的信息
     var users = args.users;
