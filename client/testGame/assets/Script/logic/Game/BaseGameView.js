@@ -80,20 +80,7 @@ cc.Class({
         }.bind(this));
     },
 
-    // 动态获取控件
-    getNodes: function () {
 
-    },
-
-    // 准备
-    onReady: function () {
-
-    },
-
-    // 开始
-    onStart: function () {
-
-    },
 
 
 

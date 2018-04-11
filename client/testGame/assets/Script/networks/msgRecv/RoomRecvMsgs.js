@@ -27,6 +27,7 @@ function onJoinRoom(args) {
     debugger;
     Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
     var userData = App.UserManager.setOtherUser(args);
+    userData.setPlayerInfo(args);
     userData.userName = args.userName;
     if (args.position >= 0){
         userData.position = args.position;
@@ -58,6 +59,7 @@ function onRoomInfo(args) {
     // 设置自己的信息
     var userSelf = args.userSelf;
     var selfData = App.UserManager.setSelf(userSelf);
+    selfData.setPlayerInfo(userSelf);
     // selfData.userName = args.userName;
 
     // 设置其他玩家的信息

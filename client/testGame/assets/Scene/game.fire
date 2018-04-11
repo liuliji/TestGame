@@ -3395,7 +3395,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_start",
+    "_name": "btnStart",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -3550,7 +3550,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_ready",
+    "_name": "btnReady",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {

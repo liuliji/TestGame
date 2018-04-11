@@ -22,16 +22,30 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this._super();
+        // 先动态获取当前页面的所有控件
+        this.getNodes();
+        // 基本的初始化操作
         this.gameInit();
+        // 注册事件监听
         this.gameEventRegist();
     },
 
     gameInit: function () {
+        // 显示房间号
         if (this.roomIdLabel){
             var roomObj = App.UserManager.getRoom();
             if (roomObj){
                 this.roomIdLabel.string = roomObj.roomId;
             }
+        }
+        var selfData = App.UserManager.getSelf();
+        if (!selfData){
+            return;
+        }
+        if (!selfData.roomOwner && !selfData.readyStatus){
+            this.setReadyIsShow(true);
+        } else {
+            this.setReadyIsShow(false);
         }
     },
 
@@ -39,6 +53,39 @@ cc.Class({
     gameEventRegist: function () {
         this.node.on(Event.AGS_JOIN_ROOM,this.onPlayerJoin.bind(this));
         this.node.on(Event.AGS_TALK,this.onPlayerTalk.bind(this));
+    },
+
+    // 动态获取控件
+    getNodes: function () {
+        debugger;
+        // 开始游戏按钮
+        this.btnStart = null;
+        var btnStart = sgm.MethodsUtils.getNodeChildObject(this.node,'bottomLayer?btnStart');
+        if (btnStart){
+            this.btnStart = btnStart;
+        }
+        // 准备按钮
+        this.btnReady = null;
+        var btnReady = sgm.MethodsUtils.getNodeChildObject(this.node,'bottomLayer?btnReady');
+        if (btnReady){
+            this.btnReady = btnReady;
+        }
+    },
+
+    // 准备
+    onReady: function () {
+
+    },
+
+    // 开始
+    onStart: function () {
+
+    },
+
+    setReadyIsShow: function (isShow) {
+        if (this.btnReady){
+            this.btnReady.active = isShow;
+        }
     },
 
     // 玩家加入房间
