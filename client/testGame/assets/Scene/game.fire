@@ -4010,7 +4010,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_menu",
+    "_name": "btnMenu",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -4154,7 +4154,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_set",
+    "_name": "btnSet",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -4311,7 +4311,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_rule",
+    "_name": "btnRule",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -4468,7 +4468,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_upgroup",
+    "_name": "btnUpgroup",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {
@@ -4625,7 +4625,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_leave",
+    "_name": "btnLeave",
     "_objFlags": 0,
     "_opacity": 255,
     "_color": {

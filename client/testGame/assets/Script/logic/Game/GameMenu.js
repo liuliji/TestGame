@@ -25,6 +25,7 @@ cc.Class({
     onLoad: function () {
         this._super();
 
+        this.getNodes();
     },
     //< 初始化窗口
     onInit: function () {
@@ -39,6 +40,65 @@ cc.Class({
     showWindow: function () {
         this._super();
         // this.setUpgroupOrLeaveShown();
+        var selfData = App.UserManager.getSelf();
+        if (!selfData){
+            return;
+        }
+        if (selfData.roomOwner){// 是房主
+            this.setUpgroupIsShow(true);
+            this.setLeaveIsShow(false);
+        } else {// 不是房主
+            this.setUpgroupIsShow(false);
+            this.setLeaveIsShow(true);
+        }
+    },
+
+    // 动态获取控件
+    getNodes: function () {
+        // 菜单按钮
+        this.btnMenu = null;
+        var btnMenu = sgm.MethodsUtils.getNodeChildObject(this.node,'bg_yc?menuNode?btnMenu');
+        if (btnMenu){
+            this.btnMenu = btnMenu;
+        }
+        // 设置按钮
+        this.btnSet = null;
+        var btnSet = sgm.MethodsUtils.getNodeChildObject(this.node,'bg_yc?menuNode?btnSet');
+        if (btnSet){
+            this.btnSet = btnSet;
+        }
+        // 游戏规则按钮
+        this.btnRule = null;
+        var btnRule = sgm.MethodsUtils.getNodeChildObject(this.node,'bg_yc?menuNode?btnRule');
+        if (btnRule){
+            this.btnRule = btnRule;
+        }
+        // 解散按钮
+        this.btnUpgroup = null;
+        var btnUpgroup = sgm.MethodsUtils.getNodeChildObject(this.node,'bg_yc?menuNode?btnUpgroup');
+        if (btnUpgroup){
+            this.btnUpgroup = btnUpgroup;
+        }
+        // 退出按钮
+        this.btnLeave = null;
+        var btnLeave = sgm.MethodsUtils.getNodeChildObject(this.node,'bg_yc?menuNode?btnLeave');
+        if (btnLeave){
+            this.btnLeave = btnLeave;
+        }
+    },
+
+    // 设置解散按钮的显示和隐藏
+    setUpgroupIsShow: function (isShow) {
+        if (this.btnUpgroup){
+            this.btnUpgroup.active = isShow;
+        }
+    },
+
+    // 退出按钮的显示和隐藏
+    setLeaveIsShow: function (isShow) {
+        if (this.btnLeave){
+            this.btnLeave.active = isShow;
+        }
     },
 
     // 设置解散按钮和退出按钮的显示和隐藏、以及是否置灰
