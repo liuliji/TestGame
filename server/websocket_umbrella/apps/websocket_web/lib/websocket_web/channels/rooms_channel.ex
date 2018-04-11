@@ -62,6 +62,11 @@ defmodule WebsocketWeb.RoomsChannel do
         {:stop, :normal, socket}
     end
 
+    def handle_in("ID_C2S_LEAVE_ROOM", _msg, socket) do
+        send(get_user_pid(socket), :leaveRoom)
+        {:noreply, socket}
+    end
+
 
     # 关于 hand_in的返回值
     # {:reply, {:ok, response}|:ok, socket}
@@ -104,39 +109,19 @@ defmodule WebsocketWeb.RoomsChannel do
 
     def handle_info({:joinSuccess, roomId}, socket) do
         socket = socket |> Socket.assign(:roomId, roomId)
-        userList = Websocket.ServerRoom.get_users(get_user_roomPid(socket))
-            |> Enum.map(fn user_item -> get_client_user(user_item) end)
-
-        userSelf = get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket)))
-
-        userList = userList |> List.delete(userSelf)
-
-        result = %{room: get_client_room(Websocket.ServerRoom.room_info(get_user_roomPid(socket))),
-            userSelf: userSelf,
-            users: userList
-        }
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        joinSuccess return result:#{inspect result}"
-        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
+        bd_room_info(socket)
         {:noreply, socket}
     end
 
-    def handle_info({:afterJoin, %{roomId: privateRoomId}=msg}, socket) do
-        user = get_user(socket)
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        after join room #{inspect msg}"
-        Websocket.RoomManager.add_user(%{roomId: privateRoomId, pid: user.pid})
-        room = Websocket.RoomManager.get_room(%{roomId: privateRoomId})
-        resultUser = user |> Map.from_struct |> Map.delete(:pid)
-        userList = room.users |> Enum.map(fn pid -> Websocket.UserEntity.get_info(pid) |> Map.from_struct |> Map.delete(:pid) end)
-        userList = List.delete(userList, resultUser)
-        resultRoomAndUsers = %{room: Map.from_struct(room) |> Map.delete(:users),
-                        users: userList,
-                        userSelf: resultUser}
-        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", resultRoomAndUsers)
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        roominfo: #{inspect resultRoomAndUsers}, \n userinfo: #{inspect resultUser}"
-        Phoenix.Channel.broadcast!(socket, "ID_S2C_JOIN_ROOM", resultUser)
+    def handle_info(:leavedRoom, socket) do
+        roomId = get_user_roomId(socket)
+        socket = socket |> Socket.assign(:roomId, roomId)
+        Phoenix.Channel.push(socket, "ID_S2C_LEAVE_ROOM_SUCCESS", %{roomId: roomId})
+        {:noreply, socket}
+    end
+
+    def handle_info(:user_updated, socket) do
+        bd_room_info(socket)
         {:noreply, socket}
     end
 
@@ -169,5 +154,20 @@ defmodule WebsocketWeb.RoomsChannel do
 
     defp get_client_room(%Websocket.ServerRoom.Room{} = room) do
         room |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:users)
+    end
+
+    defp bd_room_info(socket) do
+        userList = Websocket.ServerRoom.get_users(get_user_roomPid(socket))
+            |> Enum.map(fn user_item -> get_client_user(user_item) end)
+
+        userSelf = get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket)))
+
+        userList = userList |> List.delete(userSelf)
+
+        result = %{room: get_client_room(Websocket.ServerRoom.room_info(get_user_roomPid(socket))),
+            userSelf: userSelf,
+            users: userList
+        }
+        Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
     end
 end

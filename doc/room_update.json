@@ -8,6 +8,28 @@
     //
     //
 
+    // 增加离开房间接口
+    "ID_C2S_LEAVE_ROOM":{
+        "intro":"离开房间"
+    },
+
+    // 离开房间成功接口，监听到此消息后，客户端才可真正离开房间
+    // 每当用户有变动的时候 客户端的每个用户都会收到 ID_S2C_ROOM_INFO 的消息
+    "ID_S2C_LEAVE_ROOM_SUCCESS":{
+        "intro":"离开房间成功",
+        "return":{
+            "roomId": "asd-asf21"
+        }
+    },
+
+    "ID_S2C_LEAVE_ROOM_FAILED":{
+        "intro":"离开房间失败，如正在游戏中",
+        "return":{
+            "code": -1,
+            "reason": "游戏已开始"
+        }
+    },
+
     // ----------- 新增接口 end -------------
     
     

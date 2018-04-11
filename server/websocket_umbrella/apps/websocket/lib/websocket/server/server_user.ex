@@ -61,6 +61,10 @@ defmodule Websocket.ServerUser do
         Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :position, value})
     end
 
+    def update_info(pid, key, value) do
+        Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, key, value})
+    end
+
     def leave_channel(pid) do
         # 这里如果 设置为null的话，如果客户端掉线了 send(nil, msg)就会出问题，所以直接往不存在的process发消息就可以了
         # Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :channelPid, nil})
@@ -80,7 +84,8 @@ defmodule Websocket.ServerUser do
 
         
         def terminate(reason,
-        %Entity{attributes: attr} = entity) do
+        %Entity{attributes: %{User => user}} = entity) do
+            leave_room(user)
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             user server exit reason:#{inspect reason} \nuser:#{inspect get_attribute(entity, User)}"
             {:ok, entity}
@@ -139,11 +144,40 @@ defmodule Websocket.ServerUser do
             {:ok, entity}
         end
 
+        def handle_event(:leaveRoom,
+        %Entity{attributes: %{User => user}} = entity) do
+            leave_room(user)
+            {:ok, entity}
+        end
+
+        def handle_event(:leavedRoom,
+        %Entity{attributes: %{User => user}} = entity) do
+            channelPid = user.channelPid
+            entity = entity |> update_user(:channelPid, nil)
+                    |> update_user(:roomPid, nil)
+                    |> update_user(:roomId, "")
+                    |> update_user(:position, -1)
+                    |> update_user(:readyStatus, false)
+                    |> update_user(:roomOwner, false)
+            send(channelPid, :leavedRoom)
+            {:ok, entity}
+        end
+
+        def handle_event(:user_updated,
+        %Entity{attributes: %{User => user}} = entity) do
+            send(user.channelPid, :user_updated)
+            {:ok, entity}
+        end
+
 
         # ------------- private mothod -----------------
         defp update_user(entity, key, value) do
             user = %{get_attribute(entity, User) | key => value}
             entity = entity |> put_attribute(user)
+        end
+
+        defp leave_room(user) do
+            send(get_room_pid(user.roomId), {:leaveRoom, user.uid})
         end
 
         defp get_room_pid(roomId) do

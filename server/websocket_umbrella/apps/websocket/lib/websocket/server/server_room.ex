@@ -163,6 +163,11 @@ defmodule Websocket.ServerRoom do
         %Entity{attributes: %{Room => room}} = entity) do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             get join msg. user:#{inspect user}, room:#{inspect room}"
+
+            if(length(room.users) == 0) do
+                Websocket.ServerUser.update_info(pid, :roomOwner, true)
+            end
+
             room = %{room | users: [{uid, pid} | room.users]}
             entity = put_attribute(entity, room)
             send(pid, {:joinSuccess, room.roomId})
@@ -178,7 +183,16 @@ defmodule Websocket.ServerRoom do
             {:ok, entity}
         end
 
-
+        def handle_event({:leaveRoom, uid},
+        %Entity{attributes: %{Room => room}} = entity) do
+            {^uid, pid} = room.users |> List.keyfind(uid, 0)
+            room = %{room | users: room.users |> List.keydelete(uid,  0),
+                            seats: room.seats |> List.delete(uid)}
+            entity = put_attribute(entity, room)
+            send(pid, :leavedRoom)
+            send(self(), {:notify_all, :user_updated})
+            {:ok, entity}
+        end
     end
 
 end
