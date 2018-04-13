@@ -86,9 +86,13 @@ defmodule Websocket.ServerRoom do
             {:ok, %{}, entity}
         end
 
-        def terminate(reason, entity) do
-            Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
+        def terminate(reason, entity,
+        %Entity{attributes: %{Room => room}} = entity) do
+            Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             destory room  reason:#{inspect reason}, entity: #{inspect entity}"
+
+            send(self(), {:notify_all, :dissolvedRoom})
+            Websocket.RoomManager.delete_room(room.roomId)
             {:ok, entity}
         end
 
@@ -191,6 +195,31 @@ defmodule Websocket.ServerRoom do
             entity = put_attribute(entity, room)
             send(pid, :leavedRoom)
             send(self(), {:notify_all, :user_updated})
+            {:ok, entity}
+        end
+
+        def handle_event({:dissolveRoom, uid},
+        %Entity{attributes: %{Room => room}} = entity) do
+            {^uid, pid} = room.users |> List.keyfind(uid, 0)
+            user = Websocket.ServerUser.user_info(pid)
+            if user.roomOwner do
+                {:stop_process, %{msg: "dissolve room"}, entity}
+            else
+                {:ok, entity}
+            end
+        end
+
+        def handle_event({:ready, uid},
+        %Entity{attributes: %{Room => room}} = entity) do
+            {^uid, pid} = room.users |> List.keyfind(uid, 0)
+            send(self(), {:notify_all, {:readyed, uid}})
+            {:ok, entity}
+        end
+
+        def handle_event({:cancelReady, uid},
+        %Entity{attributes: %{Room => room}} = entity) do
+            {^uid, pid} = room.users |> List.keyfind(uid, 0)
+            send(self(), {:notify_all, {:canceledReady, uid}})
             {:ok, entity}
         end
     end

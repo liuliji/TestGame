@@ -153,12 +153,7 @@ defmodule Websocket.ServerUser do
         def handle_event(:leavedRoom,
         %Entity{attributes: %{User => user}} = entity) do
             channelPid = user.channelPid
-            entity = entity |> update_user(:channelPid, nil)
-                    |> update_user(:roomPid, nil)
-                    |> update_user(:roomId, "")
-                    |> update_user(:position, -1)
-                    |> update_user(:readyStatus, false)
-                    |> update_user(:roomOwner, false)
+            entity = clear_room_info(entity)
             send(channelPid, :leavedRoom)
             {:ok, entity}
         end
@@ -169,6 +164,45 @@ defmodule Websocket.ServerUser do
             {:ok, entity}
         end
 
+        def handle_event(:dissolveRoom,
+        %Entity{attributes: %{User => user}} = entity) do
+            send(get_room_pid(user.roomId), {:dissolveRoom, user.uid})
+            {:ok, entity}
+        end
+
+        def handle_event(:dissolvedRoom,
+        %Entity{attributes: %{User => user}} = entity) do
+            channelPid = user.channelPid
+            entity = clear_room_info(entity)
+            send(channelPid, :leavedRoom)
+            {:ok, entity}
+        end
+
+        def handle_event(:ready,
+        %Entity{attributes: %{User => user}} = entity) do
+            entity = update_user(entity, :readyStatus, true)
+            send(get_room_pid(user.roomId), {:ready, user.uid})
+            {:ok, entity}
+        end
+
+        def handle_event(:cancelReady,
+        %Entity{attributes: %{User => user}} = entity) do
+            entity = update_user(entity, :readyStatus, false)
+            send(get_room_pid(user.roomId), {:cancelReady, user.uid})
+            {:ok, entity}
+        end
+
+        def handle_event({:readyed, uid},
+        %Entity{attributes: %{User => user}} = entity) do
+            send(user.channelPid, {:readyed, uid})
+            {:ok, entity}
+        end
+
+        def handle_event({:canceledReady, uid},
+        %Entity{attributes: %{User => user}} = entity) do
+            send(user.channelPid, :canceledReady)
+            {:ok, entity}
+        end
 
         # ------------- private mothod -----------------
         defp update_user(entity, key, value) do
@@ -182,6 +216,15 @@ defmodule Websocket.ServerUser do
 
         defp get_room_pid(roomId) do
             Websocket.RoomManager.get_room_pid(roomId)
+        end
+
+        defp clear_room_info(entity) do
+            entity |> update_user(:channelPid, nil)
+            |> update_user(:roomPid, nil)
+            |> update_user(:roomId, "")
+            |> update_user(:position, -1)
+            |> update_user(:readyStatus, false)
+            |> update_user(:roomOwner, false)
         end
 
     end

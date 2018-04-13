@@ -12,6 +12,14 @@
     "ID_C2S_LEAVE_ROOM":{
         "intro":"离开房间"
     },
+    
+    "ID_C2S_READY":{
+        "intro":"准备"
+    },
+
+    "ID_C2S_CANCEL_READY":{
+        "intro":"取消准备"
+    },
 
     // 离开房间成功接口，监听到此消息后，客户端才可真正离开房间
     // 每当用户有变动的时候 客户端的每个用户都会收到 ID_S2C_ROOM_INFO 的消息
@@ -29,6 +37,22 @@
             "reason": "游戏已开始"
         }
     },
+
+    "ID_S2C_READY":{
+        "intro":"有人准备了",
+        "return":{
+            "uid":"da4f87d98-as2d156"
+        }
+    },
+
+    "ID_S2C_CANCEL_READY":{
+        "intro":"有人取消准备了",
+        "return":{
+            "uid":"da4f87d98-as2d156"
+        }
+    },
+
+
 
     // ----------- 新增接口 end -------------
     

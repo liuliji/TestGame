@@ -67,6 +67,21 @@ defmodule WebsocketWeb.RoomsChannel do
         {:noreply, socket}
     end
 
+    def handle_in("ID_C2S_DISSOLVE_ROOM", _msg, socket) do
+        send(get_user_pid(socket), :dissolveRoom)
+        {:noreply, socket}
+    end
+
+    def handle_in("ID_C2S_READY", _msg, socket) do
+        send(get_user_pid(socket), :ready)
+        {:noreply, socket}
+    end
+
+    def handle_in("ID_C2S_CANCEL_READY", _msg, socket) do
+        send(get_user_pid(socket), :cancelReady)
+        {:noreply, socket}
+    end
+
 
     # 关于 hand_in的返回值
     # {:reply, {:ok, response}|:ok, socket}
@@ -124,6 +139,17 @@ defmodule WebsocketWeb.RoomsChannel do
         bd_room_info(socket)
         {:noreply, socket}
     end
+
+    def handle_info({:readyed, uid}, socket) do
+        Phoenix.Channel.push(socket, "ID_S2C_READY", %{uid: uid})
+        {:noreply, socket}
+    end
+
+    def handle_info({:cancelReady, uid}, socket) do
+        Phoenix.Channel.push(socket, "ID_S2C_CANCEL_READY", %{uid: uid})
+        {:noreply, socket}
+    end
+
 
 
 
