@@ -33,6 +33,11 @@ module.exports = {
                 'function': 'onDeleteRoom',
                 'desc': '删除房间',
             },
+            {
+                'id':'ID_C2S_READY',
+                'function': 'onReady',
+                'desc': '房间中准备',
+            },
 
         ],
     },
@@ -93,6 +98,11 @@ module.exports = {
             {
                 'id':'ID_S2C_DELETE_ROOM',
                 'function': 'onDeleteRoom',
+                'desc': '删除房间',
+            },
+            {
+                'id':'ID_S2C_READY',
+                'function': 'onReady',
                 'desc': '删除房间',
             },
         ],

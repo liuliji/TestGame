@@ -13,9 +13,7 @@
         "intro":"离开房间"
     },
     
-    "ID_C2S_READY":{
-        "intro":"准备"
-    },
+
 
     "ID_C2S_CANCEL_READY":{
         "intro":"取消准备"
@@ -38,12 +36,7 @@
         }
     },
 
-    "ID_S2C_READY":{
-        "intro":"有人准备了",
-        "return":{
-            "uid":"da4f87d98-as2d156"
-        }
-    },
+
 
     "ID_S2C_CANCEL_READY":{
         "intro":"有人取消准备了",

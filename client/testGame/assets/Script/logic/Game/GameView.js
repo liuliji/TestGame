@@ -11,6 +11,7 @@ var BaseGameView = require('BaseGameView');
 var enViewType = require('Consts').enViewType;
 var Event = require('Consts').AgreementEvent;
 var Consts = require('Consts');
+var RoomSendMsgs = require('RoomSendMsgs');
 
 cc.Class({
     extends: BaseGameView,
@@ -74,7 +75,8 @@ cc.Class({
 
     // 准备
     onReady: function () {
-
+        this.setReadyIsShow(false);
+        RoomSendMsgs.onReady();
     },
 
     // 开始

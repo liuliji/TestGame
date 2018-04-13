@@ -87,11 +87,21 @@ function onDeleteRoom(args) {
 }
 
 
+/**
+ * 玩家准备
+ * @param args
+ */
+function onReady(args) {
+    App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
+}
+
+
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
     'onJoinRoom': onJoinRoom,// 加入房间
     'onTalk': onTalk,// 说话聊天
     'onRoomInfo': onRoomInfo,// 加入房间成功，服务器给返回的房间信息
     'onDeleteRoom': onDeleteRoom,// 删除房间
+    'onReady': onReady,// 玩家准备
 }
 

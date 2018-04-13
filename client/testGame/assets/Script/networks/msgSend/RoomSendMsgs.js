@@ -32,9 +32,15 @@ function onRoomTalk(roomId) {
 
 }
 
+function onReady() {
+    var msg = {};
+    App.Socket.sendMsg('ID_C2S_READY',msg);
+}
+
 module.exports = {
     'onRoomTalk': onRoomTalk,// 说话、聊天
     'onDeleteRoom': onDeleteRoom,// 删除房间
+    'onReady': onReady,// 准备
 }
 
 
