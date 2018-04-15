@@ -20,7 +20,9 @@ defmodule Websocket.ServerRoom do
                     1 => nil,
                     2 => nil,
                     3 => nil,
-                    4  => nil}
+                    4  => nil},
+            playingIndexList: [],  #当前还在参与游戏的玩家座位号
+            currIndex: -1,   # 当前发言玩家列表中的index
         )
     end
 
@@ -73,6 +75,7 @@ defmodule Websocket.ServerRoom do
         alias Entice.Entity
         alias Entice.Entity.Coordination
         alias Websocket.ServerRoom.Room
+        alias Websocket.Poker
 
         def init(entity, %{roomId: roomId, pid: pid} = args) do
             Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
@@ -218,8 +221,33 @@ defmodule Websocket.ServerRoom do
         %Entity{attributes: %{Room => room}} = entity) do
             # 按照我们现在的设计 ，开始游戏之前是应该检查一下 seat中的用户和users中的用户是否一致的。
             #check_user_(entity)
+            all_poker = Poker.init_all_poker()
+            Enum.reduce(room.users, all_poker, fn
+                {pos, %{pid: pid}}, all_poker ->
+                    {poker, all_poker} = Poker.random(all_poker)
+                    send(pid, {:fapai, poker})
+                    room = %{room | playingIndexList: [pos | room.playingIndexList]}
+                    all_poker
+                _, all_poker -> all_poker end)
+            room = %{room | playingIndexList: :lists.sort(room.playingIndexList)}
+            send(self(), :next_talk)
+            
+            {:ok, entity |> put_attribute(room)}
+        end
 
+        def handle_event(:next_talk,
+        %Entity{attributes: %{Room => room}} = entity) do
+            currIndex = if (room.currIndex == -1) do
+                :random.uniform(length(room.playingIndexList)-1)
+            else
+                rem(room.currIndex+1, length(room.playingIndexList))
+            end
 
+            room = %{room | currIndex: currIndex}
+            pos =  Enum.at(room.playingIndexList, currIndex)
+            user = Map.get(room.users, pos)
+            send(user.pid, :next_talk)
+            {:ok, entity |> put_attribute(room)}
         end
 
         # -----------------private --------------
@@ -247,6 +275,12 @@ defmodule Websocket.ServerRoom do
                 {pos, user}
             end
 
+        end
+
+        defp next_user_(room) do
+            currIndex = room.currIndex
+            nextIndex = rem(currIndex+1, length(room.playingIndexList))
+            Enum.at(room.playingIndexList, nextIndex)
         end
     end
 

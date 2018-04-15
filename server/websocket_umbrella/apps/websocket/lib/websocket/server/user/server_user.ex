@@ -26,7 +26,10 @@ defmodule Websocket.ServerUser do
             position: integer,
             readyStatus: boolean,
             
-            roomPid: pid
+            roomPid: pid,
+
+            # 牌信息
+            poker: Websocket.Poker.t
             
         }
 
@@ -43,7 +46,9 @@ defmodule Websocket.ServerUser do
             roomOwner: false,
             position: -1,
             readyStatus: false,
-            roomPid: nil
+            roomPid: nil,
+
+            poker: nil
             )
     end
 
