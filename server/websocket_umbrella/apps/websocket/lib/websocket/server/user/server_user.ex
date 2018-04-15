@@ -57,10 +57,6 @@ defmodule Websocket.ServerUser do
         Entity.get_attribute(pid, User)
     end
 
-    def update_seat(pid, value) do
-        Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :position, value})
-    end
-
     def update_info(pid, key, value) do
         Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, key, value})
     end
@@ -70,11 +66,15 @@ defmodule Websocket.ServerUser do
         # Entity.call_behaviour(pid, DefaultBehaviour, {:update_info, :channelPid, nil})
     end
 
+
     defmodule DefaultBehaviour do
         use Entice.Entity.Behaviour
         require Logger
         alias Websocket.ServerUser.User
         alias Entice.Entity
+
+        use Websocket.ServerUser_In
+        use Websocket.ServerUser_Out
 
         def init(entity, args) do
             entity = put_attribute(entity, args)
@@ -85,7 +85,7 @@ defmodule Websocket.ServerUser do
         
         def terminate(reason,
         %Entity{attributes: %{User => user}} = entity) do
-            leave_room(user)
+            send(get_room_pid(user.roomId), {:leaveRoom, user.uid})
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             user server exit reason:#{inspect reason} \nuser:#{inspect get_attribute(entity, User)}"
             {:ok, entity}
@@ -102,105 +102,9 @@ defmodule Websocket.ServerUser do
             {:ok, get_attribute(entity, User), entity}
         end
 
-        def handle_event({:joinLobby, channelPid}, entity) do
-            {:ok, entity |> update_user(:roomId, WebsocketWeb.HallRoomChannel.get_lobby_name()) |> update_user(:channelPid, channelPid)}
-        end
-
-        def handle_event({:join, roomId, channelPid}, entity) do
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            receive msg join #{inspect roomId} "
-            user = entity |> get_attribute(User)
-            entity = put_attribute(entity, %{user | channelPid: channelPid})
-            send(get_room_pid(roomId), {:join, user})
-            {:ok, entity}
-        end
-
-        # 自己受到的joined 消息
-        def handle_event({:joined, %User{uid: uid} = newUser},
-        %Entity{attributes: %{User => %{uid: uid} = user}} = entity) do
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            self receive joined msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
-            {:ok, entity}
-        end
-
-        def handle_event({:joined, %User{} = newUser},
+        def handle_event(:user_changed,
         %Entity{attributes: %{User => user}} = entity) do
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            others receive joined msg. #{inspect user.uid} receive #{inspect newUser.uid} join room"
-            user = get_attribute(entity, User)
-            send(user.channelPid, {:joined, newUser})
-            {:ok, entity}
-        end
-
-        def handle_event({:joinSuccess, roomId} = msg,
-        %Entity{attributes: %{User => user}} = entity) do
-            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            joinSuccess roomId:#{inspect roomId}, user:#{inspect user}"
-            entity = update_user(entity, :roomId, roomId)
-            seat = Websocket.ServerRoom.get_seat(Websocket.RoomManager.get_room_pid(roomId), user.uid)
-            entity = update_user(entity, :position, seat)
-            # roomPid
-            send(user.channelPid, msg)
-            {:ok, entity}
-        end
-
-        def handle_event(:leaveRoom,
-        %Entity{attributes: %{User => user}} = entity) do
-            leave_room(user)
-            {:ok, entity}
-        end
-
-        def handle_event(:leavedRoom,
-        %Entity{attributes: %{User => user}} = entity) do
-            channelPid = user.channelPid
-            entity = clear_room_info(entity)
-            send(channelPid, :leavedRoom)
-            {:ok, entity}
-        end
-
-        def handle_event(:user_updated,
-        %Entity{attributes: %{User => user}} = entity) do
-            send(user.channelPid, :user_updated)
-            {:ok, entity}
-        end
-
-        def handle_event(:dissolveRoom,
-        %Entity{attributes: %{User => user}} = entity) do
-            send(get_room_pid(user.roomId), {:dissolveRoom, user.uid})
-            {:ok, entity}
-        end
-
-        def handle_event(:dissolvedRoom,
-        %Entity{attributes: %{User => user}} = entity) do
-            channelPid = user.channelPid
-            entity = clear_room_info(entity)
-            send(channelPid, :leavedRoom)
-            {:ok, entity}
-        end
-
-        def handle_event(:ready,
-        %Entity{attributes: %{User => user}} = entity) do
-            entity = update_user(entity, :readyStatus, true)
-            send(get_room_pid(user.roomId), {:ready, user.uid})
-            {:ok, entity}
-        end
-
-        def handle_event(:cancelReady,
-        %Entity{attributes: %{User => user}} = entity) do
-            entity = update_user(entity, :readyStatus, false)
-            send(get_room_pid(user.roomId), {:cancelReady, user.uid})
-            {:ok, entity}
-        end
-
-        def handle_event({:readyed, uid},
-        %Entity{attributes: %{User => user}} = entity) do
-            send(user.channelPid, {:readyed, uid})
-            {:ok, entity}
-        end
-
-        def handle_event({:canceledReady, uid},
-        %Entity{attributes: %{User => user}} = entity) do
-            send(user.channelPid, :canceledReady)
+            send(user.channelPid, :user_changed)
             {:ok, entity}
         end
 
@@ -210,21 +114,8 @@ defmodule Websocket.ServerUser do
             entity = entity |> put_attribute(user)
         end
 
-        defp leave_room(user) do
-            send(get_room_pid(user.roomId), {:leaveRoom, user.uid})
-        end
-
         defp get_room_pid(roomId) do
             Websocket.RoomManager.get_room_pid(roomId)
-        end
-
-        defp clear_room_info(entity) do
-            entity |> update_user(:channelPid, nil)
-            |> update_user(:roomPid, nil)
-            |> update_user(:roomId, "")
-            |> update_user(:position, -1)
-            |> update_user(:readyStatus, false)
-            |> update_user(:roomOwner, false)
         end
 
     end

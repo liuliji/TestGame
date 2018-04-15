@@ -8,16 +8,16 @@
     //
     //
 
+
+    "ID_C2S_START_GAME":{
+        "intro":"开始游戏"
+    },
+
     // 增加离开房间接口
     "ID_C2S_LEAVE_ROOM":{
         "intro":"离开房间"
     },
     
-
-
-    "ID_C2S_CANCEL_READY":{
-        "intro":"取消准备"
-    },
 
     // 离开房间成功接口，监听到此消息后，客户端才可真正离开房间
     // 每当用户有变动的时候 客户端的每个用户都会收到 ID_S2C_ROOM_INFO 的消息
@@ -36,15 +36,12 @@
         }
     },
 
-
-
-    "ID_S2C_CANCEL_READY":{
-        "intro":"有人取消准备了",
+    "ID_S2C_GAME_STARTED":{
+        "intro":"开始游戏",
         "return":{
-            "uid":"da4f87d98-as2d156"
+            "poker":"$model.poker"
         }
     },
-
 
 
     // ----------- 新增接口 end -------------
