@@ -5,11 +5,11 @@ defmodule WebsocketWeb.RoomsChannel_Out do
     defmacro __using__(_) do
         quote do
             
-            def handle_info({:joined, newPid}, socket) do
-                newUser = Websocket.ServerUser.user_info(newPid)
-                Phoenix.Channel.push(socket, "ID_S2C_JOIN_ROOM", get_client_user(newUser))
-                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            def handle_info({:joined, newUid}, socket) do
+                newUser = Websocket.ServerUser.user_info(Websocket.UserManager.get_user_pid(newUid))
+                Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 newUser joined newUser:#{inspect newUser}"
+                Phoenix.Channel.push(socket, "ID_S2C_JOIN_ROOM", get_client_user(newUser))
                 {:noreply, socket}
             end
         

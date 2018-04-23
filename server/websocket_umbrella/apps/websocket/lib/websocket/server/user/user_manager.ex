@@ -28,12 +28,20 @@ defmodule Websocket.UserManager do
         GenServer.call(__MODULE__, {:start_user, {uid, userName, socketPid}})
     end
 
+    def get_user_pid(uid) do
+        GenServer.call(__MODULE__, {:get_pid, uid})
+    end
+
 
     # ------------------ Callback ----------------
 
     def handle_call({:start_user, {uid, userName, socketPid}}, _from, state) do
         {:ok, pid}  = Websocket.ServerUser.start(uid, userName, socketPid)
-        {:reply, pid, state}
+        {:reply, pid, state |> Map.put(uid, pid)}
+    end
+
+    def handle_call({:get_pid, uid}, _from, state) do
+        {:reply, state |> Map.get(uid), state}
     end
 
 end
