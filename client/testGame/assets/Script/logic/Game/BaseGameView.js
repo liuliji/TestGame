@@ -72,7 +72,7 @@ cc.Class({
         this.playerAry[0].setPlayerInfo(selfData, true);
         // 初始化其他玩家
         App.UserManager.foreachOtherUser(function (userData) {
-            debugger;
+            // debugger;
             if (userData){
                 var position = userData.position;
                 this.playerMgr[position].setPlayerInfo(userData, false);

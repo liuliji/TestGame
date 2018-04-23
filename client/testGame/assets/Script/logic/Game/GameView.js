@@ -23,6 +23,7 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         this._super();
+        App.MsgDispatcher.setCanProcessMsg(false);
         // 先动态获取当前页面的所有控件
         this.getNodes();
         // 基本的初始化操作
@@ -58,7 +59,7 @@ cc.Class({
 
     // 动态获取控件
     getNodes: function () {
-        debugger;
+        // debugger;
         // 开始游戏按钮
         this.btnStart = null;
         var btnStart = sgm.MethodsUtils.getNodeChildObject(this.node,'bottomLayer?btnStart');
@@ -92,6 +93,7 @@ cc.Class({
 
     // 玩家加入房间
     onPlayerJoin: function (event) {
+        debugger;
         var userData = event.detail;
         Log.debug('玩家加入房间：' + JSON.stringify(userData));
         if (!userData){
@@ -114,8 +116,7 @@ cc.Class({
         App.UIManager.showWindow(enViewType.GameMenuUI);
     },
 
-    // called every frame, uncomment this function to activate update callback
-    // update: function (dt) {
-
-    // },
+    update: function (dt) {
+        App.MsgDispatcher.processMessage(this);
+    },
 });

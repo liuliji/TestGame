@@ -22,7 +22,7 @@ function oncreateRoom(args) {
  * @param args 房间ID
  */
 function onRoomInfoOnLobby(args) {
-    debugger;
+    // debugger;
     var roomId = args.room.room.roomId;// 房间ID
     // var content = args.content;// 房间内容
     App.UserManager.setRoom(args.room.room);
