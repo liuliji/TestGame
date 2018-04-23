@@ -8,7 +8,7 @@ defmodule Websocket.ServerUser_Out do
     defmacro __using__(_) do
         quote do
             # 自己受到的joined 消息
-            def handle_event({:joined, _newUid},
+            def handle_event({:joined, uid},
             %Entity{attributes: %{User => %{uid: uid} = user}} = entity) do
                 {:ok, entity}
             end
