@@ -13,8 +13,10 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 {:noreply, socket}
             end
         
-            def handle_info({:joinSuccess, {roomId, _pos, _roomOwner}}, socket) do
+            def handle_info({:joinSuccess, {roomId, _pos, _roomOwner} = msg}, socket) do
                 socket = socket |> Socket.assign(:roomId, roomId)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                joinSuccess  #{inspect msg}"
                 bd_room_info(socket)
                 {:noreply, socket}
             end

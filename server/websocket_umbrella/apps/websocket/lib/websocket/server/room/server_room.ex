@@ -168,7 +168,7 @@ defmodule Websocket.ServerRoom do
                 send(pid, {:joinSuccess, {room.roomId, pos, roomOwner}})
                 send(self(), {:notify_all, {:joined, uid}})
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                join room #{inspect entity}"
+                joined room #{inspect entity}"
                 {:ok, entity}
             end
 

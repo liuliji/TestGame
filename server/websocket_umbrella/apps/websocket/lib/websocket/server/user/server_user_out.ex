@@ -10,12 +10,16 @@ defmodule Websocket.ServerUser_Out do
             # 自己受到的joined 消息
             def handle_event({:joined, uid},
             %Entity{attributes: %{User => %{uid: uid} = user}} = entity) do
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                自己受到自己 joined的消息 #{uid} entity:#{inspect entity}"
                 {:ok, entity}
             end
 
             def handle_event({:joined, newUid},
             %Entity{attributes: %{User => user}} = entity) do
                 user = get_attribute(entity, User)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                收到别人加入房间的消息 #{newUid}. entity:#{inspect entity}"
                 send(user.channelPid, {:joined, newUid})
                 {:ok, entity}
             end
