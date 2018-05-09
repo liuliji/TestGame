@@ -255,8 +255,8 @@ module.exports = cc.Class({
                              * 并跳出循环，进行下次的循环，这样能够尽量减少循环的次数
                              */
                             if (func && func.name == funcName){
-                                // this.chan.on(eventName,handleFuncs[funcName]);
-                                this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
+                                this.chan.on(eventName,handleFuncs[funcName]);
+                                // this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
                                 break;
                             }
                         }
@@ -276,6 +276,7 @@ module.exports = cc.Class({
      * @param args 消息内容
      */
     sendMsg: function (msgId,args) {
+        debugger;
         var App = require('App');
         if (this.chan) {
             /**
@@ -293,7 +294,11 @@ module.exports = cc.Class({
                     }
                 }.bind(this))
                 .receive("error", (reasons) => console.log("create failed", reasons))
-                .receive("timeout", () => console.log("Networking issue. Still waiting..."));
+                .receive("timeout", function () {
+                    debugger;
+                    console.log("Networking issue. Still waiting...");
+                }.bind(this));
+                // .receive("timeout", () => console.log("Networking issue. Still waiting..."));
         } else {
             Log.debug('当前socket的channel为空');
         }
