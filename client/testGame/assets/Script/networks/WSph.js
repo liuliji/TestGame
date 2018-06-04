@@ -12,7 +12,7 @@ module.exports = cc.Class({
     properties: {
         socket: null,// 当前类的socket属性，初始化后，会只想Socket的一个对象
         chan: null,// socket的channel
-        events:null,// 消息回调
+        events: null,// 消息回调
         type: 1,// 连接的channel类型，1为lobby，2为大厅
     },
 
@@ -40,8 +40,8 @@ module.exports = cc.Class({
              * 调用processMessage方法，将所有收到的消息都处理一遍，
              */
             return function (args) {
-                if (context && context.pushMsg){
-                    context.pushMsg(self,args);
+                if (context && context.pushMsg) {
+                    context.pushMsg(self, args);
                 }
             }
         };
@@ -52,7 +52,7 @@ module.exports = cc.Class({
      * @param id 事件ID
      * @param cb 事件回调
      */
-    registerEventListener: function (id,cb) {
+    registerEventListener: function (id, cb) {
         this.events[id] = cb;
     },
 
@@ -61,7 +61,7 @@ module.exports = cc.Class({
      * @param uid 玩家的ID
      * @param channel 想要连接到哪个channel
      */
-    connect: function (uid,channel,type) {
+    connect: function (uid, channel, type) {
         /**
          * 如果socket已经存在，就将channel置空，同时，断开当前的socket连接，
          * 重新建立连接
@@ -78,7 +78,7 @@ module.exports = cc.Class({
          * 创建socket连接，并发起连接请求
          */
         // this.socket = new Socket("ws://192.168.99.244:4000/socket", {params: {user_name: uid}});
-        this.socket = new Socket("ws://localhost:4000/socket", {params: {userName: uid}});
+        this.socket = new Socket("ws://localhost:4000/socket", { params: { userName: uid } });
         /**
          * 设置socket的事件监听
          */
@@ -98,7 +98,7 @@ module.exports = cc.Class({
      * socket连接成功
      */
     onSocketConnectSuccess: function () {
-        if (this.events['socket_success']){
+        if (this.events['socket_success']) {
             this.events['socket_success'](this.type);
         }
     },
@@ -109,7 +109,7 @@ module.exports = cc.Class({
      */
     onSocketConnectError: function (msg) {
         Log.debug('创建socket连接失败：' + JSON.stringify(msg));
-        if (this.events['socket_error']){
+        if (this.events['socket_error']) {
             this.events['socket_error']();
         }
     },
@@ -118,7 +118,7 @@ module.exports = cc.Class({
      * 断开socket连接
      */
     onSocketClose: function () {
-        if (this.events['socket_close']){
+        if (this.events['socket_close']) {
             this.events['socket_close']();
         }
     },
@@ -130,8 +130,8 @@ module.exports = cc.Class({
      */
     switchChannel: function (channel) {
         // debugger;
-        if (this.chan){
-            this.chan.leave().receive("ok",function () {
+        if (this.chan) {
+            this.chan.leave().receive("ok", function () {
                 this.createChannelAndRegistEvent(channel);
             }.bind(this));
         } else {
@@ -147,7 +147,7 @@ module.exports = cc.Class({
     createChannelAndRegistEvent: function (channel) {
         // debugger;
 
-        if (channel){
+        if (channel) {
             /**
              * 设置链接成功的回调方法
              */
@@ -164,14 +164,14 @@ module.exports = cc.Class({
                 .receive("ok",
                     function (msg) {// channel连接成功
                         // debugger;
-                        this.onSwitchSuccess(msg,channel)
+                        this.onSwitchSuccess(msg, channel)
                     }.bind(this))
                 .receive("error", function (reason) {// channel连接失败
-                    this.onJoinError(reason,channel)
-                }.bind(this) )
+                    this.onJoinError(reason, channel)
+                }.bind(this))
                 .receive("timeout", function () {// channel连接超时
                     this.onJoinTimeOut(channel);
-                }.bind(this) );
+                }.bind(this));
         } else {
             // debugger;
             console.log('未设置要连接到哪个channel');
@@ -184,12 +184,12 @@ module.exports = cc.Class({
      * 切换channel成功回调
      * @param msg
      */
-    onSwitchSuccess: function (msg,channel) {
+    onSwitchSuccess: function (msg, channel) {
         // debugger;
         Log.debug('切换channel成功消息：' + JSON.stringify(msg));
         Log.debug('切换channel成功channel————' + channel);
-        if (this.events['join_success']){
-            this.events['join_success'](msg,channel);
+        if (this.events['join_success']) {
+            this.events['join_success'](msg, channel);
         }
     },
 
@@ -198,8 +198,8 @@ module.exports = cc.Class({
      * @param msg 失败信息
      * @param channel 要加入的channel
      */
-    onJoinError: function (msg,channel) {
-        if (this.events['join_error']){
+    onJoinError: function (msg, channel) {
+        if (this.events['join_error']) {
             this.events['join_error'](msg);
         }
     },
@@ -209,12 +209,12 @@ module.exports = cc.Class({
      * @param channel
      */
     onJoinTimeOut: function (channel) {
-        if (this.events['join_timeout']){
+        if (this.events['join_timeout']) {
             this.events['join_timeout'](channel);
         }
     },
     // 断开连接
-    onDisconnected: function(data){
+    onDisconnected: function (data) {
         console.log('connect disconnected: ' + JSON.stringify(data));
     },
     /*****************************channel事件监听结束***************************/
@@ -228,34 +228,34 @@ module.exports = cc.Class({
         var App = require('App');
         var recvs = ProtoCfg.recv;
         var handles = ProtoCfg.handle;
-        if (this.chan){
+        if (this.chan) {
             // 依次获取每个文件
-            for (let handleObj in recvs){
+            for (let handleObj in recvs) {
                 // debugger;
                 var handleFuncs = {};
-                for (let id in handles){// 将所有的回调方法都放到handleFunc里面
-                    for (let key in handles[id]){
+                for (let id in handles) {// 将所有的回调方法都放到handleFunc里面
+                    for (let key in handles[id]) {
                         handleFuncs[key] = handles[id][key];
                     }
                 }
                 // debugger;
                 // 有处理函数，才进行事件监听
-                if (handleFuncs && Object.getOwnPropertyNames(handleFuncs).length){
+                if (handleFuncs && Object.getOwnPropertyNames(handleFuncs).length) {
                     // 取出每个文件对应的方法的结构体
                     var handleEvents = recvs[handleObj];
                     // debugger;
                     // 取出每个方法，并绑定回调
-                    for (let i = handleEvents.length - 1; i >= 0; i --){
+                    for (let i = handleEvents.length - 1; i >= 0; i--) {
                         var eventName = handleEvents[i]['id'];
                         var funcName = handleEvents[i]['function'];
-                        for (let j in handleFuncs){
+                        for (let j in handleFuncs) {
                             let func = handleFuncs[j];
                             /**
                              * 找到方法后，就直接注册，然后从数组中删除该方法，
                              * 并跳出循环，进行下次的循环，这样能够尽量减少循环的次数
                              */
-                            if (func && func.name == funcName){
-                                this.chan.on(eventName,handleFuncs[funcName]);
+                            if (func && func.name == funcName) {
+                                this.chan.on(eventName, handleFuncs[funcName]);
                                 // this.chan.on(eventName,handleFuncs[funcName].bindMsg(App.MsgDispatcher));
                                 break;
                             }
@@ -275,22 +275,22 @@ module.exports = cc.Class({
      * @param msgId 消息ID
      * @param args 消息内容
      */
-    sendMsg: function (msgId,args) {
+    sendMsg: function (msgId, args) {
         debugger;
         var App = require('App');
         if (this.chan) {
             /**
-             * 第一个字段，第二个字段是消息，第三个，感觉应该是消息内容的长度
+             * 第一个字段，第二个字段是消息，第三个，超时时间(毫秒)
              */
             this.chan.push(msgId, args, 10000)
                 .receive("ok", function (message) {
                     // debugger;
                     console.log("created message", message);
-                    if (msgId == 'ID_C2S_CREATE_ROOM'){
-                        App.UIManager.emit('create_room',message);
+                    if (msgId == 'ID_C2S_CREATE_ROOM') {
+                        App.UIManager.emit('create_room', message);
                     }
-                    if (msgId == 'ID_S2C_JOIN_ROOM'){
-                        App.UIManager.emit('join_room_ok',message);
+                    if (msgId == 'ID_S2C_JOIN_ROOM') {
+                        App.UIManager.emit('join_room_ok', message);
                     }
                 }.bind(this))
                 .receive("error", (reasons) => console.log("create failed", reasons))
@@ -298,7 +298,7 @@ module.exports = cc.Class({
                     debugger;
                     console.log("Networking issue. Still waiting...");
                 }.bind(this));
-                // .receive("timeout", () => console.log("Networking issue. Still waiting..."));
+            // .receive("timeout", () => console.log("Networking issue. Still waiting..."));
         } else {
             Log.debug('当前socket的channel为空');
         }
