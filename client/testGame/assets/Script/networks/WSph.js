@@ -276,7 +276,7 @@ module.exports = cc.Class({
      * @param args 消息内容
      */
     sendMsg: function (msgId, args) {
-        debugger;
+        // debugger;
         var App = require('App');
         if (this.chan) {
 
