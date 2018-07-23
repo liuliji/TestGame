@@ -25,9 +25,13 @@ cc.Class({
      * 初始化加载挂在玩家身上的节点
      */
     loadNode: function () {
-        var nameLabel = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?nameLabel',cc.Label);
+        var nameLabel = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?nameLabel', cc.Label);
         if (nameLabel) {// 结束时，自己出去的牌的节点
             this.nameLabel = nameLabel;
+        }
+        var readyNode = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?icon_ready');
+        if (readyNode) {// 结束时，自己出去的牌的节点
+            this.readyNode = readyNode;
         }
     },
 
@@ -36,10 +40,32 @@ cc.Class({
         this._super();
         this.node.active = false;
     },
+
+    /**
+     * 设置玩家的基本信息
+     */
     setPlayerInfo: function (userData) {
         // debugger;
         this.node.active = true;
         this.nameLabel.string = userData.userName;
+        if (userData.readyStatus) {
+            this.readyNode.active = true;
+        } else {
+            this.readyNode.active = false;
+        }
+    },
+
+    /**
+     * 设置玩家的ready状态
+     */
+    setPlayerReady: function (ready) {
+        if (this.readyNode) {// 存在准备按钮
+            if (ready) {
+                this.readyNode.active = true;
+            } else {
+                this.readyNode.active = false;
+            }
+        }
     }
 
     // called every frame, uncomment this function to activate update callback

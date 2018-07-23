@@ -52,7 +52,7 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
-    // debugger;
+    debugger;
     App.UIManager.hideAwait();
     var room = args.room;// 房间ID
     App.UserManager.setRoom(room);
@@ -95,7 +95,11 @@ function onDeleteRoom(args) {
 function onReady(args) {
     debugger;
     App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
-    App.UIManager.emit(Event.AGS_READY, args);
+    var userData = App.UserManager.getOtherUser(args.position);
+    if (userData) {
+        userData.readyStatus = true;
+    }
+    App.UIManager.emit(Event.AGS_READY, args.position);
 }
 
 

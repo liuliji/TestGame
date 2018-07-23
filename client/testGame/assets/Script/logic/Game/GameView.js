@@ -110,9 +110,41 @@ cc.Class({
         Log.debug('玩家加入房间：' + JSON.stringify(args));
     },
 
+    /**
+     * 玩家点击准备按钮
+     */
     onPlayerReady: function (event) {
-        var args = event.detail;
+        var position = event.detail;
+        var userData = App.UserManager.getOtherUser(position);
+        if (userData) {// 设置玩家已准备
+            this.playerAry[i].setPlayerReady(userData.readyStatus);
+        }
+        if (this.isAllReady) {
+            this.btnStart.active = true;
+        } else {
+            this.btnStart.active = false;
+        }
         Log.debug('有玩家点击了准备按钮');
+    },
+
+    /**
+     * 判断是否所有的玩家都已经准备好了
+     */
+    isAllReady: function () {
+        var allReady = true;
+        var selfData = App.UserManager.getSelf();
+        if (selfData && selfData.roomOwner) {
+            App.UserManager.foreachOtherUser(function (userData) {
+                if (userData) {
+                    if (userData.readyStatus == false) {
+                        allReady = false;
+                    }
+                }
+            }.bind(this));
+            return allReady;
+        } else {
+            return false;
+        }
     },
 
     /**
