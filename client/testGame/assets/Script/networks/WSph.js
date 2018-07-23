@@ -279,26 +279,31 @@ module.exports = cc.Class({
         debugger;
         var App = require('App');
         if (this.chan) {
+
             /**
              * 第一个字段，第二个字段是消息，第三个，超时时间(毫秒)
              */
-            this.chan.push(msgId, args, 10000)
-                .receive("ok", function (message) {
-                    // debugger;
-                    console.log("created message", message);
-                    if (msgId == 'ID_C2S_CREATE_ROOM') {
-                        App.UIManager.emit('create_room', message);
-                    }
-                    if (msgId == 'ID_S2C_JOIN_ROOM') {
-                        App.UIManager.emit('join_room_ok', message);
-                    }
-                }.bind(this))
-                .receive("error", (reasons) => console.log("create failed", reasons))
-                .receive("timeout", function () {
-                    debugger;
-                    console.log("Networking issue. Still waiting...");
-                }.bind(this));
-            // .receive("timeout", () => console.log("Networking issue. Still waiting..."));
+            this.chan.push(msgId, args);
+            // /**
+            //  * 第一个字段，第二个字段是消息，第三个，超时时间(毫秒)
+            //  */
+            // this.chan.push(msgId, args, 10000)
+            //     .receive("ok", function (message) {
+            //         // debugger;
+            //         console.log("created message", message);
+            //         if (msgId == 'ID_C2S_CREATE_ROOM') {
+            //             App.UIManager.emit('create_room', message);
+            //         }
+            //         if (msgId == 'ID_S2C_JOIN_ROOM') {
+            //             App.UIManager.emit('join_room_ok', message);
+            //         }
+            //     }.bind(this))
+            //     .receive("error", (reasons) => console.log("create failed", reasons))
+            //     .receive("timeout", function () {
+            //         debugger;
+            //         console.log("Networking issue. Still waiting...");
+            //     }.bind(this));
+            // // .receive("timeout", () => console.log("Networking issue. Still waiting..."));
         } else {
             Log.debug('当前socket的channel为空');
         }
