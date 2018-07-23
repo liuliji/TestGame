@@ -21,7 +21,7 @@ function onDeleteRoom(roomId) {
     var msg = {
         roomId: roomId,
     };
-    App.Socket.sendMsg('ID_C2S_DELETE_ROOM',msg);
+    App.Socket.sendMsg('ID_C2S_DELETE_ROOM', msg);
 }
 
 /**
@@ -32,9 +32,20 @@ function onRoomTalk(roomId) {
 
 }
 
+/**
+ * 玩家点击准备
+ */
 function onReady() {
     var msg = {};
-    App.Socket.sendMsg('ID_C2S_READY',msg);
+    App.Socket.sendMsg('ID_C2S_READY', msg);
+}
+
+/**
+ * 房主点击开始游戏
+ */
+function onStart() {
+    var msg = {};
+    App.Socket.sendMsg('', msg);
 }
 
 module.exports = {

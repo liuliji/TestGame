@@ -25,26 +25,26 @@ var Consts = require('Consts');
  */
 function onJoinRoom(args) {
     debugger;
-    Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args) );
+    Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args));
     var userData = App.UserManager.setOtherUser(args);
     userData.setPlayerInfo(args);
     userData.userName = args.userName;
-    if (args.position >= 0){
+    if (args.position >= 0) {
         userData.position = args.position;
     } else {
         userData.position = 0;
     }
 
-    App.UIManager.emit(Event.AGS_JOIN_ROOM,userData);
+    App.UIManager.emit(Event.AGS_JOIN_ROOM, userData);
 }
 
 /**
- *
+ * 在房间中说话
  * @param args
  */
 function onTalk(args) {
 
-    App.UIManager.emit(Event.AGS_TALK,args);
+    App.UIManager.emit(Event.AGS_TALK, args);
 }
 
 /**
@@ -64,8 +64,8 @@ function onRoomInfo(args) {
 
     // 设置其他玩家的信息
     var users = args.users;
-    for (var i = 0; i < users.length; i ++){
-        if (users[i].position != selfData.position){
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].position != selfData.position) {
             let userData = App.UserManager.setOtherUser(users[i]);
             userData.setPlayerInfo(users[i]);
         }
@@ -83,6 +83,7 @@ function onDeleteRoom(args) {
     // debugger;
     var content = args.content;
     Log.debug('删除房间信息：' + content);
+    App.UserManager.removeAllOtherUser();
     App.Socket.switchChannel('lobby');
 }
 
@@ -92,7 +93,9 @@ function onDeleteRoom(args) {
  * @param args
  */
 function onReady(args) {
+    debugger;
     App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
+    App.UIManager.emit(Event.AGS_READY, args);
 }
 
 

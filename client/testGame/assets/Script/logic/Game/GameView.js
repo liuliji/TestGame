@@ -34,17 +34,17 @@ cc.Class({
 
     gameInit: function () {
         // 显示房间号
-        if (this.roomIdLabel){
+        if (this.roomIdLabel) {
             var roomObj = App.UserManager.getRoom();
-            if (roomObj){
+            if (roomObj) {
                 this.roomIdLabel.string = roomObj.roomId;
             }
         }
         var selfData = App.UserManager.getSelf();
-        if (!selfData){
+        if (!selfData) {
             return;
         }
-        if (!selfData.roomOwner && !selfData.readyStatus){
+        if (!selfData.roomOwner && !selfData.readyStatus) {
             this.setReadyIsShow(true);
         } else {
             this.setReadyIsShow(false);
@@ -53,8 +53,9 @@ cc.Class({
 
     // 游戏时间注册
     gameEventRegist: function () {
-        this.node.on(Event.AGS_JOIN_ROOM,this.onPlayerJoin.bind(this));
-        this.node.on(Event.AGS_TALK,this.onPlayerTalk.bind(this));
+        this.node.on(Event.AGS_JOIN_ROOM, this.onPlayerJoin.bind(this));
+        this.node.on(Event.AGS_TALK, this.onPlayerTalk.bind(this));
+        this.node.on(Event.AGS_READY, this.onPlayerReady.bind(this));
     },
 
     // 动态获取控件
@@ -62,14 +63,14 @@ cc.Class({
         // debugger;
         // 开始游戏按钮
         this.btnStart = null;
-        var btnStart = sgm.MethodsUtils.getNodeChildObject(this.node,'bottomLayer?btnStart');
-        if (btnStart){
+        var btnStart = sgm.MethodsUtils.getNodeChildObject(this.node, 'bottomLayer?btnStart');
+        if (btnStart) {
             this.btnStart = btnStart;
         }
         // 准备按钮
         this.btnReady = null;
-        var btnReady = sgm.MethodsUtils.getNodeChildObject(this.node,'bottomLayer?btnReady');
-        if (btnReady){
+        var btnReady = sgm.MethodsUtils.getNodeChildObject(this.node, 'bottomLayer?btnReady');
+        if (btnReady) {
             this.btnReady = btnReady;
         }
     },
@@ -86,7 +87,7 @@ cc.Class({
     },
 
     setReadyIsShow: function (isShow) {
-        if (this.btnReady){
+        if (this.btnReady) {
             this.btnReady.active = isShow;
         }
     },
@@ -96,7 +97,7 @@ cc.Class({
         debugger;
         var userData = event.detail;
         Log.debug('玩家加入房间：' + JSON.stringify(userData));
-        if (!userData){
+        if (!userData) {
             return;
         }
         // 初始化自己信息
@@ -107,6 +108,11 @@ cc.Class({
     onPlayerTalk: function (event) {
         var args = event.detail;
         Log.debug('玩家加入房间：' + JSON.stringify(args));
+    },
+
+    onPlayerReady: function (event) {
+        var args = event.detail;
+        Log.debug('有玩家点击了准备按钮');
     },
 
     /**
