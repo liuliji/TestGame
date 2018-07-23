@@ -52,7 +52,14 @@ defmodule Websocket.ServerUser_Out do
 
             def handle_event({:readyed, uid},
             %Entity{attributes: %{User => user}} = entity) do
-                send(user.channelPid, {:readyed, user.position})
+                position = if uid == user.uid do
+                    user.position
+                else
+                    Websocket.ServerUser.user_info(Websocket.UserManager.get_user_pid(uid)).position
+                end
+                send(user.channelPid, {:readyed, position})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                #{inspect user.uid} send: position #{inspect position} ready"
                 {:ok, entity}
             end
         
