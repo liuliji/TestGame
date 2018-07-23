@@ -33,8 +33,8 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 {:noreply, socket}
             end
         
-            def handle_info({:readyed, uid}, socket) do
-                Phoenix.Channel.push(socket, "ID_S2C_READY", %{uid: uid})
+            def handle_info({:readyed, position}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_READY", %{position: position})
                 {:noreply, socket}
             end
         

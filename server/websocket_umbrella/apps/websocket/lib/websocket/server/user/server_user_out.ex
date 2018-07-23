@@ -52,7 +52,7 @@ defmodule Websocket.ServerUser_Out do
 
             def handle_event({:readyed, uid},
             %Entity{attributes: %{User => user}} = entity) do
-                send(user.channelPid, {:readyed, uid})
+                send(user.channelPid, {:readyed, user.position})
                 {:ok, entity}
             end
         
