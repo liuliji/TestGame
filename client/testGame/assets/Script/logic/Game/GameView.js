@@ -115,7 +115,7 @@ cc.Class({
     onPlayerReady: function (event) {
         // debugger;
         var position = event.detail;
-        var userData = App.UserManager.getOtherUser(position);
+        var userData = App.UserManager.getAllUserData(position);
         if (userData) {// 设置玩家已准备
             this.playerAry[i].setPlayerReady(userData.readyStatus);
         }
