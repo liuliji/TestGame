@@ -43,15 +43,16 @@ function onReady() {
 /**
  * 房主点击开始游戏
  */
-function onStart() {
+function onStartGame() {
     var msg = {};
-    App.Socket.sendMsg('', msg);
+    App.Socket.sendMsg('ID_C2S_START_GAME', msg);
 }
 
 module.exports = {
     'onRoomTalk': onRoomTalk,// 说话、聊天
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onReady': onReady,// 准备
+    'onStartGame': onStartGame,// 房主点击开始游戏
 }
 
 

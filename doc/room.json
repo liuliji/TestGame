@@ -78,6 +78,10 @@
     "ID_C2S_READY":{
         "intro":"准备"
     },
+    "ID_C2S_START_GAME":{
+        "intro":"开始游戏"
+    },
+
 
     //---------------------------- S2C -----------------
 
@@ -138,6 +142,13 @@
         "intro":"有人准备了",
         "return":{
             "uid":"da4f87d98-as2d156"
+        }
+    },
+    
+    "ID_S2C_GAME_STARTED":{
+        "intro":"开始游戏",
+        "return":{
+            "poker":"$model.poker"
         }
     },
 

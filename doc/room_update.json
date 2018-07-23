@@ -8,11 +8,6 @@
     //
     //
 
-
-    "ID_C2S_START_GAME":{
-        "intro":"开始游戏"
-    },
-
     // 增加离开房间接口
     "ID_C2S_LEAVE_ROOM":{
         "intro":"离开房间"
@@ -36,12 +31,6 @@
         }
     },
 
-    "ID_S2C_GAME_STARTED":{
-        "intro":"开始游戏",
-        "return":{
-            "poker":"$model.poker"
-        }
-    },
 
 
     // ----------- 新增接口 end -------------

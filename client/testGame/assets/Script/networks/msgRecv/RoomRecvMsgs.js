@@ -24,7 +24,7 @@ var Consts = require('Consts');
  * @param args 房间ID
  */
 function onJoinRoom(args) {
-    debugger;
+    // debugger;
     Log.debug('加入房间onJoinRoom————args ' + JSON.stringify(args));
     var userData = App.UserManager.setOtherUser(args);
     userData.setPlayerInfo(args);
@@ -52,7 +52,7 @@ function onTalk(args) {
  * @param args
  */
 function onRoomInfo(args) {
-    debugger;
+    // debugger;
     App.UIManager.hideAwait();
     var room = args.room;// 房间ID
     App.UserManager.setRoom(room);
@@ -93,13 +93,20 @@ function onDeleteRoom(args) {
  * @param args
  */
 function onReady(args) {
-    debugger;
     App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
     var userData = App.UserManager.getOtherUser(args.position);
     if (userData) {
         userData.readyStatus = true;
     }
     App.UIManager.emit(Event.AGS_READY, args.position);
+}
+
+/**
+ * 游戏开始
+ */
+function onStartGame(args) {
+    debugger;
+    Log.debug('房主点击了开始游戏');
 }
 
 
@@ -110,5 +117,6 @@ module.exports = {
     'onRoomInfo': onRoomInfo,// 加入房间成功，服务器给返回的房间信息
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onReady': onReady,// 玩家准备
+    'onStartGame': onStartGame,// 房主点击开始游戏
 }
 

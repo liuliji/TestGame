@@ -83,7 +83,7 @@ cc.Class({
 
     // 开始
     onStart: function () {
-
+        RoomSendMsgs.onStartGame();
     },
 
     setReadyIsShow: function (isShow) {
@@ -94,7 +94,6 @@ cc.Class({
 
     // 玩家加入房间
     onPlayerJoin: function (event) {
-        debugger;
         var userData = event.detail;
         Log.debug('玩家加入房间：' + JSON.stringify(userData));
         if (!userData) {
@@ -114,12 +113,13 @@ cc.Class({
      * 玩家点击准备按钮
      */
     onPlayerReady: function (event) {
+        // debugger;
         var position = event.detail;
         var userData = App.UserManager.getOtherUser(position);
         if (userData) {// 设置玩家已准备
             this.playerAry[i].setPlayerReady(userData.readyStatus);
         }
-        if (this.isAllReady) {
+        if (this.isAllReady()) {
             this.btnStart.active = true;
         } else {
             this.btnStart.active = false;
