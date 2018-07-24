@@ -117,7 +117,9 @@ cc.Class({
         var position = event.detail;
         var userData = App.UserManager.getAllUserData(position);
         if (userData) {// 设置玩家已准备
-            this.playerAry[i].setPlayerReady(userData.readyStatus);
+        
+            this.playerAry[position].setPlayerReady(userData.readyStatus);
+            
         }
         if (this.isAllReady()) {
             this.btnStart.active = true;

@@ -224,7 +224,7 @@ defmodule Websocket.ServerRoom do
             all_poker = Poker.init_all_poker()
             Enum.reduce(room.users, all_poker, fn
                 {pos, %{pid: pid}}, all_poker ->
-                    {poker, all_poker} = Poker.random(all_poker)
+                    {poker, all_poker} = Poker.random_poker(all_poker)
                     send(pid, {:fapai, poker})
                     room = %{room | playingIndexList: [pos | room.playingIndexList]}
                     all_poker
