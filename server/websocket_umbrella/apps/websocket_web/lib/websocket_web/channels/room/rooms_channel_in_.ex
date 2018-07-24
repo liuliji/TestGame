@@ -25,6 +25,8 @@ defmodule WebsocketWeb.RoomsChannel_In do
 
             def handle_in("ID_C2S_START_GAME", _msg, socket) do
                 send(get_user_pid(socket), :startGame)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                startGame"
                 {:noreply, socket}
             end
 

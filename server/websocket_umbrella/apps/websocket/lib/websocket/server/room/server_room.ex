@@ -217,10 +217,12 @@ defmodule Websocket.ServerRoom do
             {:ok, entity}
         end
 
-        def handle_event({:startGame, uid},
+        def handle_event(:startGame,
         %Entity{attributes: %{Room => room}} = entity) do
             # 按照我们现在的设计 ，开始游戏之前是应该检查一下 seat中的用户和users中的用户是否一致的。
             #check_user_(entity)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            startGame"
             all_poker = Poker.init_all_poker()
             Enum.reduce(room.users, all_poker, fn
                 {pos, %{pid: pid}}, all_poker ->
@@ -230,7 +232,7 @@ defmodule Websocket.ServerRoom do
                     all_poker
                 _, all_poker -> all_poker end)
             room = %{room | playingIndexList: :lists.sort(room.playingIndexList)}
-            send(self(), :next_talk)
+            # send(self(), :next_talk)
             
             {:ok, entity |> put_attribute(room)}
         end
