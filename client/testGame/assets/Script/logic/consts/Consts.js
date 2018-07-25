@@ -382,19 +382,10 @@ var PY_OPREATE_TYPE = { //刨幺当前操作
     'PEOPLE_TWO_JIAO_DI_ZHU': 9 //二人斗地主 叫地主
 };
 
+var CARD_SCALE = {// 卡牌缩放的大小
+    'OTHER': 0.8,// 别人的卡牌大小
+    'SELF': 1.0,// 自己的卡牌大小
 
-var SHORT_CHAT_TYPE = {// 短语类型 [0 合理不，1 不合理，2 让我来，3 你管，4 单，5 对，6 龙，7 放他，8 沉底]
-    HLB: 0,// 合理不
-    BHL: 1,// 不合理
-    RWL: 2,// 让我来
-    NG: 3,// 你管
-    DAN: 4,// 单
-    DUI: 5,// 对
-    LONG: 6,// 龙
-    FT: 7,// 放他
-    CD: 8,// 沉底
-    DIS_SNOW: 9,// 不雪牌
-    SNOW: 10,// 雪牌
 }
 
 /**
@@ -425,6 +416,6 @@ module.exports = {
 
     'PY_OPREATE_TYPE': PY_OPREATE_TYPE,// 刨幺操作类型
     'PyBgScale': PyBgScale,// 刨幺缩放比例
-    'SHORT_CHAT_TYPE': SHORT_CHAT_TYPE,// 短语类型
     'PyCreateRoomInfo': PyCreateRoomInfo,// 刨幺房间玩法信息
+    'CARD_SCALE': CARD_SCALE,// 卡牌缩放的大小
 };
