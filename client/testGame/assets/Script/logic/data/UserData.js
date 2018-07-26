@@ -7,15 +7,16 @@
  ************************************************************************/
 var BaseUserData = require('BaseUserData');
 var UserData = cc.Class({
-    name:'UserData',
+    name: 'UserData',
     extends: BaseUserData,
     properties: {
+        pokers: [],// 玩家手中的牌
+
+
         agent: 0,//代理权限 0没有权限,1有权限
         diZhuStatus: 0,//\玩家是否叫地主
         diZhu: false,//\ 玩家是否是地主
         xiaFen: 0,//\ 下分数字
-        cards: [],//\ 玩家手牌
-        paiArray: [],// 玩家出去的牌
         winType: 0,//\ 输赢结果
         // win: 0, // 赢的次数
         paiCount: 0,//\ 玩家手中牌数
@@ -46,8 +47,6 @@ var UserData = cc.Class({
         this.diZhu = info.diZhu || false;//\ 玩家是否是地主
         // Log.warn('UserData设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
         this.xiaFen = info.xiaFen || 0;//\ 下分数字
-        this.cards = info.cards || [];//\ 玩家手牌
-        this.paiArray = info.paiArray || [];// 玩家出去的牌
         this.winType = info.winType || 0;//\ 输赢结果
         this.win = info.win || 0; // 赢的次数
         this.paiCount = info.paiCount || 0;//\ 玩家手中牌数
@@ -100,7 +99,6 @@ var UserData = cc.Class({
         this.zhuangStatus = info.zhuangStatus || 0;//\玩家是否抢庄
         this.zhuang = info.zhuang || false;//\ 玩家是否是庄家
         this.xiaFen = info.xiaFen || 0;//\ 下分数字
-        this.cards = info.cards || [];//\ 玩家手牌
         this.tou = info.tou || [];//\ 头牌
         this.wei = info.wei || [];//\ 尾牌
         this.winType = info.winType || 0;//\ 输赢结果
@@ -134,9 +132,7 @@ var UserData = cc.Class({
             Log.debug("-----庄------UserData 设置玩家信息 设置庄 " + this.userName);
         }
 
-        this.cards = info.cardArray || info.cards || [];//玩家手牌
         this.paiCount = info.paiCount || 0;//\ 玩家手中牌数
-        this.paiArray = info.paiArray || [];// 玩家出去的牌
         this.diZhu = info.diZhu || false;// 是否是地主
         // Log.warn('setPlayerInfo设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
         this.diZhuStatus = info.diZhuStatus || 0;//是否叫地主(1叫地主,2不叫地主)
@@ -176,7 +172,6 @@ var UserData = cc.Class({
         this.zhuangStatus = 0;//\玩家是否抢庄
         this.zhuang = false;//\ 玩家是否是庄家
         this.xiaFen = 0;//\ 下分数字
-        this.cards = [];//\ 玩家手牌
         this.tou = [];//\ 头牌(小)
         this.wei = [];//\ 尾牌(大)
         this.winType = 0;//\ 输赢结果
@@ -186,7 +181,6 @@ var UserData = cc.Class({
         this.voiceMsg = null;//语音消息记录(指保存一条)
         this.paiCount = 0;//\ 玩家手中牌数
         this.chuPaiStatus = 0;// 玩家出牌状态
-        this.paiArray = [];
         this.diZhuStatus = 0;//\玩家是否叫地主
         this.diZhu = false;//\ 玩家是否是地主
         // Log.warn('reset设置地主:'+this.userName+'\t是否是地主:'+this.diZhu);
@@ -206,36 +200,36 @@ var UserData = cc.Class({
      * @param args
      */
     syncPlayerData: function (args) {
-        if (typeof(args.uid) !== 'undefined') {
+        if (typeof (args.uid) !== 'undefined') {
             this.uid = args.uid;// 玩家id
         }
-        if (typeof(args.userName) !== 'undefined') {
+        if (typeof (args.userName) !== 'undefined') {
             this.userName = args.userName;// 玩家昵称
         }
-        if (typeof(this.sex) !== 'undefined') {
+        if (typeof (this.sex) !== 'undefined') {
             this.sex = args.sex;// 性别
         }
-        if (typeof(args.image) !== 'undefined') {
+        if (typeof (args.image) !== 'undefined') {
             this.image = args.image;// 头像
         }
-        if (typeof(args.ip ) !== 'undefined') {
+        if (typeof (args.ip) !== 'undefined') {
             this.ip = args.ip || ''; // 玩家ip
         }
 
-        if (typeof(args.longitude) !== 'undefined') {
+        if (typeof (args.longitude) !== 'undefined') {
             this.longitude = args.longitude; //< 玩家坐标经度
         }
-        if (typeof(args.latitude) !== 'undefined') {
+        if (typeof (args.latitude) !== 'undefined') {
             this.latitude = args.latitude;   //< 玩家坐标纬度
         }
-        if (typeof(args.place) !== 'undefined') {
+        if (typeof (args.place) !== 'undefined') {
             this.place = args.place; // 玩家的地理位置信息
         }
 
-        if (typeof(args.total) !== 'undefined') {
+        if (typeof (args.total) !== 'undefined') {
             this.total = args.total;//< 玩的局数
         }
-        if (typeof(this.win) !== 'undefined') {
+        if (typeof (this.win) !== 'undefined') {
             this.win = args.win;//< 胜利次数
         }
     },
@@ -244,7 +238,6 @@ var UserData = cc.Class({
      * @param args
      */
     setMPData: function (args) {
-        this.cards = args.cardArray || [];//玩家手牌
         this.isMPIcon = true;//明牌图标
         // Log.warn('设置明牌数据 名字:'+this.userName+' 是否明牌:'+this.isMPIcon);
     },

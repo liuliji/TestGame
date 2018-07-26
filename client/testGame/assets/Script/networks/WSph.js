@@ -153,7 +153,7 @@ module.exports = cc.Class({
              */
             this.chan = this.socket.channel(channel);
             // this.chan.on("server_msg", this.onMessage.bind(this));// 监听new_msg消息
-            this.chan.onError(() => console.log("there was an error!"));
+            this.chan.onError(() => Log.warn("there was an error!"));
             this.chan.onClose(() => console.log("the channel has gone away gracefully"));
             this.chan.onClose(this.onDisconnected.bind(this));
 

@@ -56,6 +56,7 @@ cc.Class({
         this.node.on(Event.AGS_JOIN_ROOM, this.onPlayerJoin.bind(this));
         this.node.on(Event.AGS_TALK, this.onPlayerTalk.bind(this));
         this.node.on(Event.AGS_READY, this.onPlayerReady.bind(this));
+        this.node.on(Event.AGS_FAPAI, this.onFaPai.bind(this));
     },
 
     // 动态获取控件
@@ -117,9 +118,9 @@ cc.Class({
         var position = event.detail;
         var userData = App.UserManager.getAllUserData(position);
         if (userData) {// 设置玩家已准备
-        
+
             this.playerAry[position].setPlayerReady(userData.readyStatus);
-            
+
         }
         if (this.isAllReady()) {
             this.btnStart.active = true;
@@ -127,6 +128,21 @@ cc.Class({
             this.btnStart.active = false;
         }
         Log.debug('有玩家点击了准备按钮');
+    },
+
+    /**
+     * 发牌消息
+     */
+    onFaPai: function () {
+        App.UserManager.foreachAllUser(function (userData) {
+            if (userData) {
+                var position = userData.position;
+                var player = this.playerMgr[position];
+                if (player) {
+                    player.sendCard(userData.pokers);
+                }
+            }
+        }.bind(this));
     },
 
     /**

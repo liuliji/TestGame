@@ -14,7 +14,7 @@ var App = require('App');
  */
 function oncreateRoom(args) {
 
-    App.UIManager.emit('create_room',args);
+    App.UIManager.emit('create_room', args);
 }
 
 /**
@@ -36,7 +36,7 @@ function onRoomInfoOnLobby(args) {
  */
 function onTalk(args) {
 
-    App.UIManager.emit('talk',args);
+    App.UIManager.emit('talk', args);
 }
 
 /**
@@ -59,6 +59,7 @@ function onCreateRoomFailed(args) {
     var code = args.code;// 错误码
     var reason = args.reason;// 错误原因
 }
+
 
 
 module.exports = {

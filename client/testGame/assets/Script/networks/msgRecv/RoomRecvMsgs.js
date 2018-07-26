@@ -109,6 +109,23 @@ function onStartGame(args) {
     Log.debug('房主点击了开始游戏');
 }
 
+/**
+ * 发牌
+ */
+function onFaPai(args) {
+    var pokers = args.pokers;
+    var selfData = App.UserManager.getSelf();
+    if (selfData) {
+        selfData.pokers = pokers;
+    }
+    App.UserManager.foreachOtherUser(function (userData) {
+        if (userData) {
+            userData.pokers = [0, 0, 0];
+        }
+    });
+    App.UIManager.emit(Event.AGS_FAPAI);
+}
+
 
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
@@ -118,5 +135,6 @@ module.exports = {
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onReady': onReady,// 玩家准备
     'onStartGame': onStartGame,// 房主点击开始游戏
+    'onFaPai': onFaPai,// 发牌
 }
 

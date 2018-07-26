@@ -115,6 +115,11 @@ module.exports = {
                 'function': 'onStartGame',
                 'desc': '开始游戏',
             },
+            {
+                'id': 'ID_S2C_FAPAI',
+                'function': 'onFaPai',
+                'desc': '发牌',
+            },
         ],
     }
 
