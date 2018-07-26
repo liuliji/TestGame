@@ -45,7 +45,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
 
             def handle_info(:fapai, socket) do
                 uinfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
-                Phoenix.Channel.push(socket, "ID_S2C_FAPAI", %{poker: uinfo.poker |> Map.from_struct})
+                Phoenix.Channel.push(socket, "ID_S2C_FAPAI", %{poker: uinfo.poker |> poker_to_client})
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 pokerInfo:#{inspect uinfo.poker}"
                 {:noreply, socket}
@@ -64,6 +64,10 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                     users: userList
                 }
                 Phoenix.Channel.push(socket, "ID_S2C_ROOM_INFO", result)
+            end
+
+            defp poker_to_client(%Websocket.Poker{} = poker) do
+                Websocket.PokerAdapter.parse(poker)
             end
             
         end

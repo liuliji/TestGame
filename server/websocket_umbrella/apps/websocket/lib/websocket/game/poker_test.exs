@@ -20,4 +20,15 @@ defmodule PokerTest do
 
         IO.puts "\n最大值：" <> Websocket.Poker.poker_string(max_poker)
     end
+
+    def test_adapter() do
+        cards = Websocket.Poker.init_all_poker()
+        {poker, cards} = Websocket.Poker.random_poker(cards)
+        single_poker = poker.pokers |> List.first
+        IO.puts single_poker
+        IO.puts Websocket.PokerAdapter.to_client(single_poker)
+        IO.puts(inspect poker)
+        IO.puts(Websocket.Poker.poker_string(poker))
+        IO.puts(inspect Websocket.PokerAdapter.to_client(poker))
+    end
 end

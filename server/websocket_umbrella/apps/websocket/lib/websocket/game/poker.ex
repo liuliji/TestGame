@@ -72,7 +72,7 @@ defmodule Websocket.Poker do
     ### ------------------ 计算牌的类型 start-------------------------
 
     defp caculate_poker_type_(%Poker{type: type, pokers: [<<ps1, pc1>> | [<<ps1, pc2>> | [<<ps1, pc3>> | []]]]} = poker) do
-        %{poker | type: @baozi, extra: ps1}
+        %{poker | type: @baozi, extra: caculate_size(ps1)}
     end
 
     # 这里的顺子 少了 123
@@ -107,7 +107,7 @@ defmodule Websocket.Poker do
                 %{poker | type: @shunzi}
             end
         else if (ps1 == ps2 || ps2 == ps3) do    # 这是排过序的  所以不用比较 ps1 == ps3
-            %{poker | type: @duizi, extra: ps2}
+            %{poker | type: @duizi, extra: caculate_size(ps2)}
         else
             %{poker | type: @danpai}
         end
@@ -215,7 +215,14 @@ defmodule Websocket.Poker do
         type1 < type2
     end
 
-    ### ------------------ 比较牌的大小 start-------------------------
+    ### ------------------ 比较牌的大小 end-------------------------
 
+    defp caculate_size(?M) do
+        1
+    end
+
+    defp caculate_size(poker_size) do
+        poker_size - ?A + 1 + 1
+    end
 
 end
