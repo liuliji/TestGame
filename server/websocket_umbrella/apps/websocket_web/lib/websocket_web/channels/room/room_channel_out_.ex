@@ -67,7 +67,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
             end
 
             defp poker_to_client(%Websocket.Poker{} = poker) do
-                Websocket.PokerAdapter.parse(poker)
+                Websocket.PokerAdapter.to_client(poker)
             end
             
         end
