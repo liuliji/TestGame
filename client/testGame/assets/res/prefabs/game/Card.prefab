@@ -99,7 +99,9 @@
       "__id__": 1
     },
     "_enabled": true,
-    "gameAtlas": null
+    "gameAtlas": {
+      "__uuid__": "2699e732-6467-4c6d-8439-75415f01b200"
+    }
   },
   {
     "__type__": "cc.PrefabInfo",

@@ -128,12 +128,13 @@ cc.Class({
             var value = cards[i];
             var card = cc.instantiate(this.cardPrefab);
             if (card) {// 创建扑克牌，并设置扑克牌的值
-                cardCom = card.getComponent('Card');
+                var cardCom = card.getComponent('Card');
                 card.setScale(cardScale);
                 cardCom.setCard(value);
                 // 根据缩放值，设置卡牌的位置
                 card.setPosition(this.startNode.position.x + i * card.width * cardScale, 0);
                 this.cards.push(card);
+                this.node.addChild(card);
             }
 
         }

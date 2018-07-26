@@ -113,7 +113,7 @@ function onStartGame(args) {
  * 发牌
  */
 function onFaPai(args) {
-    var pokers = args.pokers;
+    var pokers = args.poker.pokers;
     var selfData = App.UserManager.getSelf();
     if (selfData) {
         selfData.pokers = pokers;

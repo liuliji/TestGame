@@ -134,6 +134,8 @@ cc.Class({
      * 发牌消息
      */
     onFaPai: function () {
+        this.btnStart.active = false;
+        this.btnReady.active = false;
         App.UserManager.foreachAllUser(function (userData) {
             if (userData) {
                 var position = userData.position;
