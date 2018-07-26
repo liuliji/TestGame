@@ -16,10 +16,10 @@ defmodule Websocket.PokerAdapter do
     def to_client(%Websocket.Poker{}=poker) do
         poker
         |> Map.from_struct
-        |> Enum.map(fn
-            {:type, _} = item -> item
-            {:extra, _} = item -> item
-            {:pokers, pokers} -> {:pokers, to_client(pokers)}
+        |> Enum.reduce(%{}, fn
+            {:type, value} = item, acc -> acc |> Map.put_new(:type, value)
+            {:extra, value} = item, acc -> acc |> Map.put_new(:extra, value)
+            {:pokers, pokers}, acc -> acc |> Map.put_new(:pokers, to_client(pokers))
         end)
     end
 
