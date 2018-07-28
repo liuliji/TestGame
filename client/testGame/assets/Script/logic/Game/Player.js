@@ -51,6 +51,12 @@ cc.Class({
         if (startNode) {
             this.startNode = startNode;
         }
+        // 房主icon
+        var roomOwnerNode = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?roomOwner');
+        if (roomOwnerNode) {
+            this.roomOwnerNode = roomOwnerNode;
+        }
+
     },
 
     /**
@@ -82,6 +88,11 @@ cc.Class({
             this.readyNode.active = true;
         } else {
             this.readyNode.active = false;
+        }
+        if (userData.roomOwner) {
+            this.roomOwnerNode.active = true;
+        } else {
+            this.roomOwnerNode.active = false;
         }
     },
 

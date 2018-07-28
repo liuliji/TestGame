@@ -102,6 +102,12 @@ cc.Class({
         }
         // 初始化自己信息
         this.playerAry[userData.position].setPlayerInfo(userData, true);
+        /**
+         * 如果有人准备了，这个时候，又有人进入房间的话，那么房主的准备按钮就需要隐藏掉，
+         * 这里使用统一的逻辑进行处理，判断玩家是否都准备了，同时，根据房间的状态、是否是第一局
+         * 等信息进行判断，直接对开始和准备按钮进行显示和隐藏
+         */
+        this.isAllReady();
     },
 
     // 玩家说话
@@ -122,11 +128,7 @@ cc.Class({
             this.playerAry[position].setPlayerReady(userData.readyStatus);
 
         }
-        if (this.isAllReady()) {
-            this.btnStart.active = true;
-        } else {
-            this.btnStart.active = false;
-        }
+        this.isAllReady();
         Log.debug('有玩家点击了准备按钮');
     },
 
@@ -138,10 +140,13 @@ cc.Class({
         this.btnReady.active = false;
         App.UserManager.foreachAllUser(function (userData) {
             if (userData) {
+                // 给玩家发牌
                 var position = userData.position;
                 var player = this.playerMgr[position];
                 if (player) {
                     player.sendCard(userData.pokers);
+                    // 隐藏已准备图标
+                    player.setPlayerReady(false)
                 }
             }
         }.bind(this));
@@ -161,10 +166,24 @@ cc.Class({
                     }
                 }
             }.bind(this));
-            return allReady;
-        } else {
-            return false;
         }
+        if (selfData && selfData.roomOwner) {// 自己如果是房主的话
+            if (allReady) {
+                this.btnStart.active = true;
+            } else {
+                this.btnStart.active = false;
+            }
+        } else {// 自己不是房主的话
+            if (selfData.readyStatus == true) {// 自己已经准备了，就全都隐藏
+                this.btnStart.active = false;
+                this.btnReady.active = false;
+            } else {// 自己还么准备就只显示准备按钮
+                this.btnStart.active = false;
+                this.btnReady.active = true;
+            }
+
+        }
+
     },
 
     /**

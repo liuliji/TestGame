@@ -368,24 +368,9 @@ var CARD_TYPE = { //牌类型
     'KIING_ONE': 7 // 单王
 };
 
-
-
-var PY_OPREATE_TYPE = { //刨幺当前操作
-    'READY': 0, //准备
-    'JIAO_DI_ZHU': 1, //叫地主
-    'CHU_PAI': 2, //出牌
-    'JIAO_FEN': 3, //叫分
-    'QIANG_DI_ZHU': 4, //抢地主
-    'TI_NO_YES': 5, //踢|不踢
-    'GEN_NO_YES': 6, //跟|不跟
-    'FAN_TI_NO_YES': 7, //反踢|不反踢
-    'PEOPLE_TWO_QIANG_DI_ZHU': 8, //二人斗地主 抢地主
-    'PEOPLE_TWO_JIAO_DI_ZHU': 9 //二人斗地主 叫地主
-};
-
 var CARD_SCALE = {// 卡牌缩放的大小
-    'OTHER': 0.8,// 别人的卡牌大小
-    'SELF': 1.0,// 自己的卡牌大小
+    'OTHER': 0.6,// 别人的卡牌大小
+    'SELF': 0.8,// 自己的卡牌大小
 
 }
 
@@ -415,7 +400,6 @@ module.exports = {
     'DISSOLVE_TYPE': DISSOLVE_TYPE,//解散房间类型
     'CARD_TYPE': CARD_TYPE,// 牌类型
 
-    'PY_OPREATE_TYPE': PY_OPREATE_TYPE,// 刨幺操作类型
     'PyBgScale': PyBgScale,// 刨幺缩放比例
     'PyCreateRoomInfo': PyCreateRoomInfo,// 刨幺房间玩法信息
     'CARD_SCALE': CARD_SCALE,// 卡牌缩放的大小
