@@ -4705,7 +4705,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "buttonCompare",
+    "_name": "buttonWatch",
     "_objFlags": 0,
     "_parent": {
       "__id__": 147
@@ -4728,7 +4728,7 @@
     "_prefab": {
       "__id__": 155
     },
-    "_id": "06A2Jr+QdB66bdse5w31zC",
+    "_id": "11xJT+98REOKFrmeNv3Dk0",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -4782,7 +4782,7 @@
     "_prefab": {
       "__id__": 151
     },
-    "_id": "98JAJdJEVHwIAGjMUMTxA/",
+    "_id": "77irEa+XBKPoFa0wdYewtD",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -4834,7 +4834,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "比牌",
+    "_N$string": "看牌",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -4848,7 +4848,7 @@
     "asset": {
       "__uuid__": "fd404ede-684d-4ac2-b249-fcb6ba2f8299"
     },
-    "fileId": "98JAJdJEVHwIAGjMUMTxA/",
+    "fileId": "77irEa+XBKPoFa0wdYewtD",
     "sync": false
   },
   {
@@ -4908,7 +4908,7 @@
       }
     ],
     "_N$interactable": true,
-    "_N$enableAutoGrayEffect": false,
+    "_N$enableAutoGrayEffect": true,
     "_N$normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -4935,9 +4935,11 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
-    "component": "",
-    "handler": "",
+    "target": {
+      "__id__": 5
+    },
+    "component": "GameView",
+    "handler": "onWatch",
     "customEventData": ""
   },
   {
@@ -4948,12 +4950,12 @@
     "asset": {
       "__uuid__": "fd404ede-684d-4ac2-b249-fcb6ba2f8299"
     },
-    "fileId": "06A2Jr+QdB66bdse5w31zC",
+    "fileId": "11xJT+98REOKFrmeNv3Dk0",
     "sync": false
   },
   {
     "__type__": "cc.Node",
-    "_name": "buttonWatch",
+    "_name": "buttonBet",
     "_objFlags": 0,
     "_parent": {
       "__id__": 147
@@ -4976,7 +4978,7 @@
     "_prefab": {
       "__id__": 163
     },
-    "_id": "11xJT+98REOKFrmeNv3Dk0",
+    "_id": "06A2Jr+QdB66bdse5w31zC",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -5030,7 +5032,7 @@
     "_prefab": {
       "__id__": 159
     },
-    "_id": "77irEa+XBKPoFa0wdYewtD",
+    "_id": "98JAJdJEVHwIAGjMUMTxA/",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -5082,7 +5084,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "看牌",
+    "_N$string": "押注",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -5096,7 +5098,7 @@
     "asset": {
       "__uuid__": "fd404ede-684d-4ac2-b249-fcb6ba2f8299"
     },
-    "fileId": "77irEa+XBKPoFa0wdYewtD",
+    "fileId": "98JAJdJEVHwIAGjMUMTxA/",
     "sync": false
   },
   {
@@ -5156,7 +5158,7 @@
       }
     ],
     "_N$interactable": true,
-    "_N$enableAutoGrayEffect": false,
+    "_N$enableAutoGrayEffect": true,
     "_N$normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -5183,9 +5185,11 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
-    "component": "",
-    "handler": "",
+    "target": {
+      "__id__": 5
+    },
+    "component": "GameView",
+    "handler": "onBet",
     "customEventData": ""
   },
   {
@@ -5196,7 +5200,7 @@
     "asset": {
       "__uuid__": "fd404ede-684d-4ac2-b249-fcb6ba2f8299"
     },
-    "fileId": "11xJT+98REOKFrmeNv3Dk0",
+    "fileId": "06A2Jr+QdB66bdse5w31zC",
     "sync": false
   },
   {
@@ -5404,7 +5408,7 @@
       }
     ],
     "_N$interactable": true,
-    "_N$enableAutoGrayEffect": false,
+    "_N$enableAutoGrayEffect": true,
     "_N$normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -5431,9 +5435,11 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
-    "component": "",
-    "handler": "",
+    "target": {
+      "__id__": 5
+    },
+    "component": "GameView",
+    "handler": "onGiveUp",
     "customEventData": ""
   },
   {
@@ -5652,7 +5658,7 @@
       }
     ],
     "_N$interactable": true,
-    "_N$enableAutoGrayEffect": false,
+    "_N$enableAutoGrayEffect": true,
     "_N$normalColor": {
       "__type__": "cc.Color",
       "r": 214,
@@ -5679,9 +5685,11 @@
   },
   {
     "__type__": "cc.ClickEvent",
-    "target": null,
-    "component": "",
-    "handler": "",
+    "target": {
+      "__id__": 5
+    },
+    "component": "GameView",
+    "handler": "onOpen",
     "customEventData": ""
   },
   {
@@ -5771,7 +5779,7 @@
     "_enabled": true,
     "isAlignOnce": true,
     "_target": null,
-    "_alignFlags": 44,
+    "_alignFlags": 40,
     "_left": 0,
     "_right": 0,
     "_top": 0,

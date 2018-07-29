@@ -24,15 +24,26 @@ cc.Class({
     onLoad: function () {
         this._super();
         App.MsgDispatcher.setCanProcessMsg(false);
+        this.gameInit();
+    },
+
+    gameInit: function () {
+        // 数据初始化
+        this.initValue();
         // 先动态获取当前页面的所有控件
         this.getNodes();
         // 基本的初始化操作
-        this.gameInit();
+        this.basicInit();
         // 注册事件监听
         this.gameEventRegist();
     },
 
-    gameInit: function () {
+    // 数据初始化
+    initValue: function () {
+        this.operateOffset = 100;// 操作面板的偏移量
+    },
+
+    basicInit: function () {
         // 显示房间号
         if (this.roomIdLabel) {
             var roomObj = App.UserManager.getRoom();
@@ -74,6 +85,40 @@ cc.Class({
         if (btnReady) {
             this.btnReady = btnReady;
         }
+        // 操作面板
+        this.operateLayer = null;
+        var operateLayer = sgm.MethodsUtils.getNodeChildObject(this.node, 'operateLayer');
+        if (operateLayer) {
+            this.operateLayer = operateLayer;
+            var winSize = cc.director.getWinSize();
+            var winHeight = winSize.height;
+            var height = this.operateLayer.height;
+            this.operateLayer.setPositionY(- winHeight / 2 - height / 2 - this.operateOffset);
+
+        }
+        // 操作面板上的按钮
+        this.buttonWatch = null;// 看牌
+        var buttonWatch = sgm.MethodsUtils.getNodeChildObject(this.node, 'operateLayer?layout?buttonWatch', cc.Button);
+        if (buttonWatch) {
+            this.buttonWatch = buttonWatch;
+        }
+        this.buttonBet = null;// 押注
+        var buttonBet = sgm.MethodsUtils.getNodeChildObject(this.node, 'operateLayer?layout?buttonBet', cc.Button);
+        if (buttonBet) {
+            this.buttonBet = buttonBet;
+        }
+        this.buttonGiveUp = null;// 扣牌
+        var buttonGiveUp = sgm.MethodsUtils.getNodeChildObject(this.node, 'operateLayer?layout?buttonGiveUp', cc.Button);
+        if (buttonGiveUp) {
+            this.buttonGiveUp = buttonGiveUp;
+        }
+        this.buttonOpen = null;// 开牌
+        var buttonOpen = sgm.MethodsUtils.getNodeChildObject(this.node, 'operateLayer?layout?buttonOpen', cc.Button);
+        if (buttonOpen) {
+            this.buttonOpen = buttonOpen;
+            // this.buttonOpen.interactable = false;
+        }
+
     },
 
     // 准备
@@ -191,6 +236,26 @@ cc.Class({
      */
     onGameMenu: function () {
         App.UIManager.showWindow(enViewType.GameMenuUI);
+    },
+
+    // 看牌
+    onWatch: function () {
+
+    },
+
+    // 押注
+    onBet: function () {
+
+    },
+
+    // 扣牌
+    onGiveUp: function () {
+
+    },
+
+    // 开牌
+    onOpen: function () {
+
     },
 
     update: function (dt) {
