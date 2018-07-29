@@ -240,7 +240,17 @@ cc.Class({
             this.buttonOpen.interactable = false;
         }
 
-        this.moveUpOperateLayer();
+        var actionPositions = args.actionPositions;
+        var selfData = App.UserManager.getSelf();
+        if (selfData) {
+            if (selfData.position == actionPositions) {
+                this.moveUpOperateLayer();
+            }
+        } else {
+            this.moveDownOperateLayer();
+        }
+
+
     },
 
     // 操作面板移动
@@ -250,11 +260,29 @@ cc.Class({
         var height = this.operateLayer.height;
 
         this.operateLayer.stopAllActions();
-        this.operateLayer.setPositionY(- winHeight / 2 - height / 2 - this.operateOffset);
+        // this.operateLayer.setPositionY(- winHeight / 2 - height / 2 - this.operateOffset);
 
         var mov1 = cc.moveTo(0.5, new cc.Vec2(0, - winHeight / 2 + height / 2));
         var calF = cc.callFunc(function () {
             this.operateLayer.setPosition(new cc.Vec2(0, - winHeight / 2 + height / 2));
+        }, this);
+
+        var seq = cc.sequence(mov1, calF);
+        this.operateLayer.runAction(seq);
+    },
+
+    // 操作面板移出
+    moveDownOperateLayer: function () {
+        var winSize = cc.director.getWinSize();
+        var winHeight = winSize.height;
+        var height = this.operateLayer.height;
+
+        this.operateLayer.stopAllActions();
+        this.operateLayer.setPositionY(- winHeight / 2 + height / 2);
+
+        var mov1 = cc.moveTo(0.5, new cc.Vec2(0, - winHeight / 2 - height / 2 - this.operateOffset));
+        var calF = cc.callFunc(function () {
+            this.operateLayer.setPosition(new cc.Vec2(0, - winHeight / 2 - height / 2 - this.operateOffset));
         }, this);
 
         var seq = cc.sequence(mov1, calF);
