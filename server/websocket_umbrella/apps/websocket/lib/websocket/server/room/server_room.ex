@@ -228,19 +228,30 @@ defmodule Websocket.ServerRoom do
                 {pos, %{pid: pid}}, all_poker ->
                     {poker, all_poker} = Poker.random_poker(all_poker)
                     send(pid, {:fapai, poker})
-                    room = %{room | playingIndexList: [pos | room.playingIndexList]}
                     all_poker
-                _, all_poker -> all_poker end)
-            room = %{room | playingIndexList: :lists.sort(room.playingIndexList)}
-            # send(self(), :next_talk)
+                _, all_poker -> all_poker
+            end)
+
+            playingIndexList = Enum.reduce(room.users, room.playingIndexList, fn
+                {pos, %{pid: pid}}, list ->
+                    [pos | list]
+                _, list -> list
+            end)
+
+            room = %{room | playingIndexList: :lists.sort(playingIndexList)}
+            send(self(), :next_talk)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            send self next_talk #{inspect room}"
             
             {:ok, entity |> put_attribute(room)}
         end
 
         def handle_event(:next_talk,
         %Entity{attributes: %{Room => room}} = entity) do
-            currIndex = if (room.currIndex == -1) do
-                :random.uniform(length(room.playingIndexList)-1)
+            Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+            receive next_talk"
+            currIndex = if (room.currIndex == -1) do   
+                Enum.random(room.playingIndexList)
             else
                 rem(room.currIndex+1, length(room.playingIndexList))
             end
@@ -248,7 +259,7 @@ defmodule Websocket.ServerRoom do
             room = %{room | currIndex: currIndex}
             pos =  Enum.at(room.playingIndexList, currIndex)
             user = Map.get(room.users, pos)
-            send(user.pid, :next_talk)
+            # send(user.pid, :next_talk)
             {:ok, entity |> put_attribute(room)}
         end
 

@@ -1,5 +1,8 @@
 defmodule Websocket.PokerAdapter do
 
+    def to_client(0) do
+        0
+    end
 
     def to_client(<<?M, pc>>) do
         1+(pc-?1)*13
