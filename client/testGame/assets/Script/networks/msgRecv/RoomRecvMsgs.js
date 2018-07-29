@@ -126,6 +126,11 @@ function onFaPai(args) {
     App.UIManager.emit(Event.AGS_FAPAI);
 }
 
+function onActionInfo(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_ACTION_INFO, args);
+}
+
 
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
@@ -136,5 +141,6 @@ module.exports = {
     'onReady': onReady,// 玩家准备
     'onStartGame': onStartGame,// 房主点击开始游戏
     'onFaPai': onFaPai,// 发牌
+    'onActionInfo': onActionInfo,// 用户可以选择的操作信息
 }
 

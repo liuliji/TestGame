@@ -68,6 +68,7 @@ cc.Class({
         this.node.on(Event.AGS_TALK, this.onPlayerTalk.bind(this));
         this.node.on(Event.AGS_READY, this.onPlayerReady.bind(this));
         this.node.on(Event.AGS_FAPAI, this.onFaPai.bind(this));
+        this.node.on(Event.AGS_ACTION_INFO, this.onActionInfo.bind(this));
     },
 
     // 动态获取控件
@@ -195,6 +196,82 @@ cc.Class({
                 }
             }
         }.bind(this));
+    },
+
+    /**
+     * 玩家操作信息
+     */
+    onActionInfo: function (event) {
+        var args = event.detail;
+        var actions = args.actions;
+        var position = args.position;
+
+        var actionAry = [];
+        // 开始遍历，处理玩家可以进行那些操作
+        for (var i = 0; i < actions.length; i++) {
+            actionAry.push(actions[i].aId);
+        }
+
+        // 看牌
+        if (this.inArray(actionAry, 0)) {
+            this.buttonWatch.interactable = true;
+        } else {
+            this.buttonWatch.interactable = false;
+        }
+
+        // 押注
+        if (this.inArray(actionAry, 1)) {
+            this.buttonBet.interactable = true;
+        } else {
+            this.buttonBet.interactable = false;
+        }
+
+        // 扣牌
+        if (this.inArray(actionAry, 2)) {
+            this.buttonGiveUp.interactable = true;
+        } else {
+            this.buttonGiveUp.interactable = false;
+        }
+
+        // 开牌
+        if (this.inArray(actionAry, 3)) {
+            this.buttonOpen.interactable = true;
+        } else {
+            this.buttonOpen.interactable = false;
+        }
+
+        this.moveUpOperateLayer();
+    },
+
+    // 操作面板移动
+    moveUpOperateLayer: function () {
+        var winSize = cc.director.getWinSize();
+        var winHeight = winSize.height;
+        var height = this.operateLayer.height;
+
+        this.operateLayer.stopAllActions();
+        this.operateLayer.setPositionY(- winHeight / 2 - height / 2 - this.operateOffset);
+
+        var mov1 = cc.moveTo(0.5, new cc.Vec2(0, - winHeight / 2 + height / 2));
+        var calF = cc.callFunc(function () {
+            this.operateLayer.setPosition(new cc.Vec2(0, - winHeight / 2 + height / 2));
+        }, this);
+
+        var seq = cc.sequence(mov1, calF);
+        this.operateLayer.runAction(seq);
+    },
+
+    //判断数组中是否存在某个变量
+    inArray: function (array, value) {
+        for (var i = 0; i < array.length; i++) {
+
+            if (array[i] == value) {
+
+                return true;
+
+            }
+
+        } return false;
     },
 
     /**

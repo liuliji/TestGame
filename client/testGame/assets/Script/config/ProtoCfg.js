@@ -120,6 +120,11 @@ module.exports = {
                 'function': 'onFaPai',
                 'desc': '发牌',
             },
+            {
+                'id': 'ID_S2C_ACTION_INFO',
+                'function': 'onActionInfo',
+                'desc': '用户可以选择的操作信息',
+            },
         ],
     }
 

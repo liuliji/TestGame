@@ -247,6 +247,7 @@ var AgreementEvent = {
     AGS_READY: 'emitReady',// 有玩家点击了准备
     AGS_START: 'emitStart',// 房主点击了开始游戏
     AGS_FAPAI: 'emitFaPai',// 发牌消息
+    AGS_ACTION_INFO: 'emitActionInfo',// 玩家操作信息
 
 }
 

@@ -152,6 +152,24 @@
         }
     },
 
+    "ID_S2C_ACTION_INFO":{
+        "intro": "用户可以选择的操作信息",
+        "return": {
+            "actionPosition": 1,
+            "actions":[
+                // 详细请看 ./model/actions.json actions 字段
+                {
+                    "aId": 1,
+                    "aText": "看牌"
+                },
+                {
+                    "aId": 2,
+                    "aText": "押注"
+                }
+            ]
+        }
+    },
+
 
 
 }
