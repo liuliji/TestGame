@@ -4,6 +4,19 @@ defmodule WebsocketWeb.RoomsChannel_Out do
 
     defmacro __using__(_) do
         quote do
+
+            defp actions() do
+                [
+                    %{
+                        "aId": 1,
+                        "aText": "看牌"
+                    },
+                    %{
+                        "aId": 2,
+                        "aText": "押注"
+                    }
+                ]
+            end
             
             def handle_info({:joined, newUid}, socket) do
                 newUser = Websocket.ServerUser.user_info(Websocket.UserManager.get_user_pid(newUid))
@@ -45,7 +58,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
 
             def handle_info(:fapai, socket) do
                 uinfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
-                Phoenix.Channel.push(socket, "ID_S2C_FAPAI", %{poker: uinfo.poker |> poker_to_client})
+                Phoenix.Channel.push(socket, "ID_S2C_ACTION_INFO", %{actions: actions})
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 pokerInfo:#{inspect uinfo.poker}"
                 {:noreply, socket}
