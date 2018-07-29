@@ -1,6 +1,50 @@
 {
     // ----------- 新增接口 start -------------
     
+    // 玩游戏 流程
+    // 1. 房主 点击开始，玩游戏 正式开始
+    // 2. 每个用户收到 行为信息，就是他能干什么。行为信息有三个，看牌、弃牌、说话用户的位置
+    // 3. 客户端的每个用户都可以进行相应的操作，但是 当前用户position和说话用户position不符的话，不能发言，就是说只能弃牌或者看牌。
+    // 4. 当说话用户说话之后，重新返回第二步。
+    // 5. 开牌逻辑 之后再说。。。
+
+    "ID_S2C_ACTION_INFO":{
+        "intro": "用户可以选择的操作信息",
+        "return": {
+            "actionPosition": 1,
+            "actions":[
+                // 详细请看 ./model/actions.json actions 字段
+                {
+                    "aId": 1,
+                    "aText": "看牌"
+                },
+                {
+                    "aId": 2,
+                    "aText": "押注"
+                }
+            ]
+        }
+    },
+
+    "ID_C2S_ACTION_EXECUTE":{
+        "intro": "用户执行了什么操作",
+        "params": {
+            // 详细请看 ./model/actions.json commit 字段
+            "aId": 1
+        }
+    }, 
+
+    "ID_S2C_ACTION_KANPAI":{
+        "intro": "返回用户的牌信息",
+        "return":{
+            "poker": "$model#{./model/poker.json}",
+            "introPoker":"该字段不返回，用来解释poker字段。poker 字段返回的是一个model，model的详细信息描述在 ./model/poker.json文件中"
+        }
+    },
+
+
+
+
     // 加入房间流程
     // 1. 创建房间 返回房间信息
     // 2. (房主)加入房间，1. 返回给加入房间的用户 当前房间的信息 和 玩家的信息。 2. 广播给其他用户，某个用户加入了房间（广播单个用户的信息，还是 所有用户信息）
