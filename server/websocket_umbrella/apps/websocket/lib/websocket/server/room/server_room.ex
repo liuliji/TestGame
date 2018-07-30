@@ -85,13 +85,6 @@ defmodule Websocket.ServerRoom do
             {:ok, entity}
         end
 
-        def handle_call({:joinRoom, uid},
-        %Entity{
-            attributes: %{users: users} = attr
-        } = entity) do
-            {:ok, %{}, entity}
-        end
-
         def terminate(reason, entity,
         %Entity{attributes: %{Room => room}} = entity) do
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
