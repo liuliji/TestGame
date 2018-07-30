@@ -2,6 +2,7 @@ defmodule WebsocketWeb.HallRoomChannel do
     use Phoenix.Channel
     require Logger
     alias Phoenix.Socket
+    alias Websocket.ServerRoom, as: ServerRoom
 
     @room_name "lobby"
 
@@ -15,9 +16,6 @@ defmodule WebsocketWeb.HallRoomChannel do
     def join(@room_name = room_name, msg, socket) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         #{socket.id} join channel #{room_name} msg:#{inspect msg}"
-
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        socket pid #{inspect self()}, #{inspect socket.channel_pid}"
         # send(self(), {:afterJoin, msg})
         socket = socket |> Socket.assign(:roomId, room_name)
         send(get_user_pid(socket), {:joinLobby, self()})
@@ -28,26 +26,26 @@ defmodule WebsocketWeb.HallRoomChannel do
         roomId = UUID.uuid4
         # 这里创建的room这个进程，所以当这个进程关闭的时候，这里创建的所有room进程都会关闭。
         # 这时候呢 我们就应该用roomManager来创建这个进程
-        case Websocket.RoomManager.create_room(%{roomId: roomId}) do
-            {:ok} ->
+        ret = Websocket.RoomSupervisor.new_room(roomId)
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        ret : #{inspect ret}"
+            # {:error, msg} ->
+                # Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAILED", %{code: -1, reason: msg})
+                # {:noreply, socket}
+            # roomPid ->
                 Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_INFO", %{roomId: roomId})
                 {:noreply, socket}
-            {:error, msg} ->
-                Websocket.ServerRoom.del_room(roomId)
-                Phoenix.Channel.push(socket, "ID_S2C_CREATE_ROOM_FAILED", %{code: -1, reason: msg})
-                {:noreply, socket}
-        end
     end
 
     def handle_in("ID_C2S_JOIN_ROOM_ON_LOBBY", %{"roomId" => roomId} = msg, socket) do
-        case Websocket.RoomManager.get_room_pid(roomId) do
+        case Websocket.RoomSupervisor.find_room(roomId) do
             nil ->
                 Logger.debug "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
                 房间不存在 #{inspect msg}"
                 {:noreply, socket}
             roomPid ->
-                room = Websocket.ServerRoom.room_info(roomPid)
-                if (Websocket.ServerRoom.get_seat(roomPid, get_user_uid(socket)) >= 0) do
+                room = ServerRoom.room_info(roomPid)
+                if (ServerRoom.get_seat(roomPid, get_user_uid(socket)) >= 0) do
                     # 这里需要占座，假装有人
                     roomInfo = %{room: Map.from_struct(room) |> Map.delete(:users) |> Map.delete(:pid)}
                     Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}

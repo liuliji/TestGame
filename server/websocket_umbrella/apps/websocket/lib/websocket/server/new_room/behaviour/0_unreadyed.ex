@@ -1,6 +1,6 @@
 defmodule Websocket.ServerRoom.UnreadyedBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     use Entice.Entity.Behaviour
@@ -127,7 +127,7 @@ defmodule Websocket.ServerRoom.UnreadyedBehaviour do
             {pos, nil} -> false
             {pos, _} -> true
         end)
-        |> map_size
+        |> length
     end
 
     defp get_seat_(users, uid) do

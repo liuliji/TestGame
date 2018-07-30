@@ -52,10 +52,17 @@ defmodule Websocket.ServerUser do
             )
     end
 
-    def start(uid, userName, socketPid) do
-        {:ok, pid} = Entity.start(uid)
+    def start_link(uid, userName, socketPid) do
+        {:ok, pid} = Entity.start()
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        start user uid:#{uid} uname:#{userName}"
+        Registry.register(Websocket.Application.user_registry_name, uid, pid)
         Entity.put_behaviour(pid, DefaultBehaviour, %User{uid: uid, userName: userName, pid: pid, socketPid: socketPid})
         {:ok, pid}
+    end
+
+    defp via_tuple(uid) do
+        {:via, Registry, {Websocket.UserRegistry, uid}}
     end
 
     def user_info(pid) do
@@ -90,7 +97,7 @@ defmodule Websocket.ServerUser do
         
         def terminate(reason,
         %Entity{attributes: %{User => user}} = entity) do
-            send(get_room_pid(user.roomId), {:leaveRoom, user.uid})
+            # send(get_room_pid(user.roomId), {:leaveRoom, user.uid})
             Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
             user server exit reason:#{inspect reason} \nuser:#{inspect get_attribute(entity, User)}"
             {:ok, entity}
@@ -99,7 +106,7 @@ defmodule Websocket.ServerUser do
         def handle_event({:DOWN, _, _, _, reason} = msg, entity) do
             Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             user client disconnected #{inspect msg}. entity: #{inspect entity}"
-            {:stop, %{reason: "client disconnect"}, entity}
+            {:stop_process, {:shutdown, "user client disconnected"}, entity}
         end
 
         def handle_call({:update_info, key, value}, entity) do
@@ -120,7 +127,7 @@ defmodule Websocket.ServerUser do
         end
 
         defp get_room_pid(roomId) do
-            Websocket.RoomManager.get_room_pid(roomId)
+            Websocket.RoomSupervisor.find_room(roomId)
         end
 
     end

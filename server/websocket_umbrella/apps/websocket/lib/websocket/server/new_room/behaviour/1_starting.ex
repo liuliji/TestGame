@@ -1,6 +1,7 @@
 defmodule Websocket.ServerRoom.StartingBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
+    alias Websocket.Poker
     require Logger
 
     use Entice.Entity.Behaviour
@@ -30,6 +31,10 @@ defmodule Websocket.ServerRoom.StartingBehaviour do
 
         room = %{room | playingIndexList: :lists.sort(playingIndexList)}
         
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        started game.
+        roominfo:#{inspect room}"
+
         {:become, Websocket.ServerRoom.PlayingBehaviour, :ok, entity |> put_attribute(room)}
     end
 end

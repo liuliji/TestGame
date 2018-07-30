@@ -1,6 +1,6 @@
 defmodule Websocket.ServerRoom.EndingBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     use Entice.Entity.Behaviour
@@ -12,6 +12,6 @@ defmodule Websocket.ServerRoom.EndingBehaviour do
 
     def handle_event(msg,
     %Entity{attributes: %{Room => room}} = entity) do
-        {:become, Websocket.ServerRoom.EndedingBehaviour, :ok, entity}
+        {:become, Websocket.ServerRoom.EndedBehaviour, :ok, entity}
     end
 end

@@ -55,7 +55,7 @@ defmodule Websocket.ServerUser_Out do
                 position = if uid == user.uid do
                     user.position
                 else
-                    Websocket.ServerUser.user_info(Websocket.UserManager.get_user_pid(uid)).position
+                    Websocket.ServerUser.user_info(Websocket.UserSupervisor.find_user(uid)).position
                 end
                 send(user.channelPid, {:readyed, position})
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
@@ -74,6 +74,12 @@ defmodule Websocket.ServerUser_Out do
                 user = %{user | poker: poker}
                 send(user.channelPid, :fapai)
                 {:ok, entity |> put_attribute(user)}
+            end
+
+            def handle_event({:next_talk, pos} = msg,
+            %Entity{attributes: %{User => user}} = entity) do
+                send(user.channelPid, msg)
+                {:ok, entity}
             end
 
             #------------

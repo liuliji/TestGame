@@ -39,12 +39,12 @@ defmodule WebsocketWeb.UserSocket do
         :error
       _ ->
         uid = UUID.uuid4();
-        pid = Websocket.UserManager.start_user(uid, userName, self())
+        pid = Websocket.UserSupervisor.new_user(uid, userName, self())
         socket = socket |> assign(:uid, uid)
                         |> assign(:pid, pid)
                         |> assign(:userName, userName)
         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        userName:#{inspect userName} connect, pid:#{inspect pid}, socketPid:#{inspect self()}"
+        userName:#{inspect userName} connect, uid:#{uid}, pid:#{inspect pid}, socketPid:#{inspect self()}"
         {:ok, socket}
     end  
   end

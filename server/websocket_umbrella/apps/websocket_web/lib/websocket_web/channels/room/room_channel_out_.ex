@@ -19,7 +19,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
             end
             
             def handle_info({:joined, newUid}, socket) do
-                newUser = Websocket.ServerUser.user_info(Websocket.UserManager.get_user_pid(newUid))
+                newUser = Websocket.ServerUser.user_info(Websocket.UserSupervisor.find_user(newUid))
                 Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 newUser joined newUser:#{inspect newUser}"
                 Phoenix.Channel.push(socket, "ID_S2C_JOIN_ROOM", get_client_user(newUser))
@@ -57,24 +57,33 @@ defmodule WebsocketWeb.RoomsChannel_Out do
             end
 
             def handle_info(:fapai, socket) do
+                ret_poker = %{poker: default_poker |> poker_to_client}
+                
+                Phoenix.Channel.push(socket, "ID_S2C_FAPAI", ret_poker)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_FAPAI:#{inspect ret_poker}"
+                
+                {:noreply, socket}
+            end
+
+            def handle_info({:next_talk, pos}, socket) do
                 uinfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
                 room_info = socket |> get_user_roomPid |> Websocket.ServerRoom.room_info 
-                ret_poker = %{poker: default_poker |> poker_to_client}
+
                 ret_actions = %{
                     actions: actions,
                     actionPositions: room_info.currIndex
                 }
-                Phoenix.Channel.push(socket, "ID_S2C_FAPAI", ret_poker)
-                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                ID_S2C_FAPAI:#{inspect ret_poker}"
+
                 Phoenix.Channel.push(socket, "ID_S2C_ACTION_INFO", ret_actions)
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 ID_S2C_ACTION_INFO:#{inspect ret_actions}"
+
                 {:noreply, socket}
             end
 
             defp bd_room_info(socket) do
-                userList = Websocket.ServerRoom.get_users(get_user_roomPid(socket))
+                userList = Websocket.ServerRoom.users(get_user_roomPid(socket))
                     |> Enum.map(fn user_item -> get_client_user(user_item) end)
         
                 userSelf = get_client_user(Websocket.ServerUser.user_info(get_user_pid(socket)))

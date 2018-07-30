@@ -1,6 +1,6 @@
 defmodule Websocket.ServerRoom.PlayingBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     use Entice.Entity.Behaviour
@@ -24,7 +24,7 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         room = %{room | currIndex: currIndex}
         pos =  Enum.at(room.playingIndexList, currIndex)
         user = Map.get(room.users, pos)
-        send(:notify_all, :next_talk)
+        send(self(), {:notify_all, {:next_talk, pos}})
         # send(user.pid, :next_talk)
         {:ok, entity |> put_attribute(room)}
     end

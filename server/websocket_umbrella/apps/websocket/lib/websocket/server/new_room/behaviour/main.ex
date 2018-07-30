@@ -1,6 +1,6 @@
 defmodule Websocket.ServerRoom.MainBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     use Entice.Entity.Behaviour
@@ -10,6 +10,7 @@ defmodule Websocket.ServerRoom.MainBehaviour do
     def init(entity, %Room{} = args) do
         Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
         init room #{inspect args}"
+        Entity.put_behaviour(self(), UnreadyedBehaviour, :ok)
         entity = put_attribute(entity, args)
         {:ok, entity}
     end
@@ -32,22 +33,5 @@ defmodule Websocket.ServerRoom.MainBehaviour do
         {:ok, entity}
     end
 
-    # ----------------- some method start---------------
-    def get_seat(pid, uid) do
-        case Entity.call_behaviour(pid, UnreadyedBehaviour, {:takeSeat, uid}) do
-            {:error, :not_found} ->
-                -1
-            ret ->
-                ret
-        end
-    end
-
-    def remove_seat(pid, uid) when is_bitstring(uid) do
-        Entity.call_behaviour(pid, DefaultBehaviour, {:removeSeat, uid})
-    end
-
-    def remove_seat(pid, pos) when is_integer(pos) do
-        Entity.call_behaviour(pid, DefaultBehaviour, {:removeSeat, pos})
-    end
-    # ----------------- some method end---------------
+    
 end

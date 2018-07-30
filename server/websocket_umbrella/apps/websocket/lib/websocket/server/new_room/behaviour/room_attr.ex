@@ -1,7 +1,7 @@
 defmodule Websocket.ServerRoom.RoomAttr do
-    # use Websocket.ServerRoom2, :behaviour_header
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    # use Websocket.ServerRoom, :behaviour_header
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     alias Entice.Entity
@@ -12,6 +12,16 @@ defmodule Websocket.ServerRoom.RoomAttr do
 
     def room_info(pid) do
         Entity.get_attribute(pid, Room)
+    end
+
+    def users(pid) do
+        roomInfo = Entity.get_attribute(pid, Room)
+        roomInfo.users
+        |> Enum.filter(fn
+            {pos, nil} -> false
+            {pos, _} -> true
+        end)
+        |> Enum.map(fn {pos, %{pid: pid}} -> Websocket.ServerUser.user_info(pid) end)
     end
 
 

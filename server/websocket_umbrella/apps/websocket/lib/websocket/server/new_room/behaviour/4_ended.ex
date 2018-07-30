@@ -1,6 +1,6 @@
 defmodule Websocket.ServerRoom.EndedBehaviour do
-    alias Websocket.ServerRoom2, as: ServerRoom
-    alias Websocket.ServerRoom2.Room
+    alias Websocket.ServerRoom, as: ServerRoom
+    alias Websocket.ServerRoom.Room
     require Logger
 
     use Entice.Entity.Behaviour

@@ -1,4 +1,4 @@
-defmodule Websocket.ServerRoom do
+defmodule Websocket.ServerRoom2 do
     require Logger
     alias Entice.Entity
     alias Websocket.ServerRoom.Room
@@ -91,7 +91,6 @@ defmodule Websocket.ServerRoom do
             destory room  reason:#{inspect reason}, entity: #{inspect entity}"
 
             send(self(), {:notify_all, :dissolvedRoom})
-            Websocket.RoomManager.delete_room(room.roomId)
             {:ok, entity}
         end
 

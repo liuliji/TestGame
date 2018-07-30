@@ -2,6 +2,11 @@ defmodule Websocket.UserManager do
     use GenServer
     require Logger
 
+
+    @moduledoc """
+    the module is deprecated.
+    """
+
     @doc """
     User struct.
     :uid, :roomId, :userName, :socketId
@@ -36,7 +41,7 @@ defmodule Websocket.UserManager do
     # ------------------ Callback ----------------
 
     def handle_call({:start_user, {uid, userName, socketPid}}, _from, state) do
-        {:ok, pid}  = Websocket.ServerUser.start(uid, userName, socketPid)
+        {:ok, pid}  = Websocket.ServerUser.start_link(uid, userName, socketPid)
         {:reply, pid, state |> Map.put(uid, pid)}
     end
 

@@ -1,7 +1,7 @@
 defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
-    alias Websocket.RoomManager
+    alias Websocket.RoomSupervisor
 
     use WebsocketWeb.RoomsChannel_In
     use WebsocketWeb.RoomsChannel_Out
@@ -9,7 +9,7 @@ defmodule WebsocketWeb.RoomsChannel do
     def get_user_uid(socket), do: socket.assigns.uid
     def get_user_pid(socket), do: socket.assigns.pid
     def get_user_roomId(socket), do: socket.assigns.roomId
-    def get_user_roomPid(socket), do: RoomManager.get_room_pid(socket.assigns.roomId)
+    def get_user_roomPid(socket), do: RoomSupervisor.find_room(socket.assigns.roomId)
 
     ## ----------- Callbacks start----------------
     # channel 也可以通过message来认证 是否用户有权限加入该房间
@@ -39,7 +39,6 @@ defmodule WebsocketWeb.RoomsChannel do
     end
 
     def handle_in("ID_C2S_DELETE_ROOM", %{"roomId" => roomId} = msg, socket) do
-        room = Websocket.RoomManager.get_room(%{roomId: roomId})
         Phoenix.Channel.broadcast!(socket, "ID_S2C_DELETE_ROOM", %{content: "room was deleted"})
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         user #{inspect socket.assigns.uid} delete room"

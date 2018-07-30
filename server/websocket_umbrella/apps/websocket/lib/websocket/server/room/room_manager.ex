@@ -2,6 +2,10 @@ defmodule Websocket.RoomManager do
     use Agent, export: __MODULE__
     require Logger
 
+    @moduledoc """
+    the module is deprecated.
+    """
+
     defmodule Room do
         defstruct(
             roomId: "",
@@ -23,7 +27,7 @@ defmodule Websocket.RoomManager do
             Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
             create_room #{inspect roomId}"
             {Agent.update(__MODULE__, fn state -> 
-                {:ok, roomPid} = Websocket.ServerRoom.new_room(roomId)
+                {:ok, roomPid} = Websocket.RoomSupervisor.new_room(roomId)
                 state |> Map.put(roomId, %Room{roomId: roomId, roomPid: roomPid})
             end)}
         end

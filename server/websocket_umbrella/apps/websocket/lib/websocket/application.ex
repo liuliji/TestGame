@@ -13,16 +13,19 @@ defmodule Websocket.Application do
   @room_registry_name :room_registry
   def room_registry_name, do: @room_registry_name
 
+  @user_registry_name :user_registry
+  def user_registry_name, do: @user_registry_name
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
     Logger.debug "start #{__MODULE__}"
 
     Supervisor.start_link([
-      supervisor(Websocket.RoomManager, []),
-      supervisor(Websocket.UserManager, []),
-
-      supervisor(Registry, [keys: :unique, name: @room_registry_name]),
+      supervisor(Registry, [[keys: :unique, name: @room_registry_name]], id: @room_registry_name),
       supervisor(Websocket.RoomSupervisor, []),
+
+      supervisor(Registry, [[keys: :unique, name: @user_registry_name]], id: @user_registry_name),
+      supervisor(Websocket.UserSupervisor, []),
       
     ], strategy: :one_for_one, name: Websocket.Supervisor)
   end
