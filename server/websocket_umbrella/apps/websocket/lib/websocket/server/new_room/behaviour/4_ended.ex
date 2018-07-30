@@ -1,4 +1,4 @@
-defmodule Websocket.ServerRoom.EndingBehaviour do
+defmodule Websocket.ServerRoom.EndedBehaviour do
     alias Websocket.ServerRoom2, as: ServerRoom
     alias Websocket.ServerRoom2.Room
     require Logger
