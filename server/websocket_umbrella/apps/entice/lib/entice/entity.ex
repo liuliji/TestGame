@@ -14,13 +14,15 @@ defmodule Entice.Entity do
   def start, do: start(UUID.uuid4())
   def start(entity_id), do: start(entity_id, %{})
 
+  def start(opts) when is_list(opts), do: start(UUID.uuid4(), %{}, opts)
+
   def start(entity_id, attributes) when is_list(attributes) do
     start(entity_id, attributes |> Enum.into(%{}, fn x -> {x.__struct__, x} end))
   end
 
   @doc "Starts a new entity with attached attribute management behaviour"
-  def start(entity_id, attributes) when is_map(attributes) do
-    {:ok, pid} = start_plain(entity_id, attributes)
+  def start(entity_id, attributes, opts \\ []) when is_map(attributes) do
+    {:ok, pid} = start_plain(entity_id, attributes, opts)
     pid |> Attribute.register()
     # if anyone asks, it was Et's idea
     pid |> Suicide.register()
@@ -28,8 +30,8 @@ defmodule Entice.Entity do
   end
 
   @doc "Starts an empty entity (just the ID and process, no attributes, no behaviours, no coordination). Mainly for testing"
-  def start_plain(entity_id \\ UUID.uuid4(), attributes \\ %{}) do
-    {:ok, pid} = SyncEvent.start_link(%Entity{id: entity_id, attributes: attributes})
+  def start_plain(entity_id \\ UUID.uuid4(), attributes \\ %{}, opts \\ []) do
+    {:ok, pid} = SyncEvent.start_link(%Entity{id: entity_id, attributes: attributes}, opts)
   end
 
   def stop(entity_id), do: Process.exit(entity_id, :kill)

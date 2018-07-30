@@ -11,8 +11,8 @@ defmodule Entice.Utils.SyncEvent do
 
       {:become_handler, new_handler :: atom, args :: term}
   """
-  use Behaviour
   use GenServer
+  use Behaviour
   import Set
 
   # Handler API
