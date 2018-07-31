@@ -13,6 +13,7 @@ var enViewType = require('Consts').enViewType;
 var enWinShowType = require('UIWindowDef').enWinShowType;
 var RoomSendMsgs = require('RoomSendMsgs');
 var enMsgType = require('UIWindowDef').enMsgType;
+var Event = require('Consts').AgreementEvent;
 
 cc.Class({
     extends: UIWindow,
@@ -44,6 +45,7 @@ cc.Class({
 
     gameInit: function () {
         this.getNodes();
+        this.initBet();
 
     },
 
@@ -118,15 +120,51 @@ cc.Class({
 
     },
 
+    // 筹码面板移出视图
+    betMoveOut: function () {
+        var winSize = cc.winSize;
+        var betH = this.betBg.height;
+        var betW = this.betBg.width;
+
+        //动画
+        var mov1 = cc.moveTo(0.5, new cc.Vec2(winSize.width / 2 + betW, - winSize.height / 2 + betH / 2));
+        var callF = cc.callFunc(function () {
+            this.betBg.setPosition(winSize.width / 2 + betW, - winSize.height / 2 + betH / 2);
+            App.UIManager.hideWindow(this.windowID);
+        }, this);
+
+        var seq = cc.sequence(mov1, callF);
+        this.betBg.stopAllActions();
+        this.betBg.runAction(seq);
+    },
+
     // 下注按钮点击事件
     betOK: function () {
-
+        RoomSendMsgs.onActionExecute(1, 1);
+        this.betMoveOut();
+        App.UIManager.emit(Event.AGS_HIDE_OPERATE);
     },
 
     // 清空筹码
     betClean: function () {
-
+        this.betLabel.string = '1';
     },
 
+    // 下注按钮点击
+    betClick: function (object, value) {
+        var button = object.target;
+        var sum;
+        if (button != this.bet4) {
+            var value = parseInt(value);
+            var value1 = parseInt(this.betLabel.string);
+            sum = value + value1;
+            if (sum > 20) {
+                sum = 20;
+            }
+        } else {// 点击了最大
+            sum = 20;
+        }
+        this.betLabel.string = '' + sum;
+    }
 
 });

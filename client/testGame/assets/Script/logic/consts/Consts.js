@@ -248,6 +248,7 @@ var AgreementEvent = {
     AGS_START: 'emitStart',// 房主点击了开始游戏
     AGS_FAPAI: 'emitFaPai',// 发牌消息
     AGS_ACTION_INFO: 'emitActionInfo',// 玩家操作信息
+    AGS_HIDE_OPERATE: 'emitHideOperate',// 玩家下注
 
 }
 

@@ -69,6 +69,7 @@ cc.Class({
         this.node.on(Event.AGS_READY, this.onPlayerReady.bind(this));
         this.node.on(Event.AGS_FAPAI, this.onFaPai.bind(this));
         this.node.on(Event.AGS_ACTION_INFO, this.onActionInfo.bind(this));
+        this.node.on(Event.AGS_HIDE_OPERATE, this.onHideOperate.bind(this));
     },
 
     // 动态获取控件
@@ -351,8 +352,7 @@ cc.Class({
 
     // 押注
     onBet: function () {
-        RoomSendMsgs.onActionExecute(1, 1);
-        this.moveDownOperateLayer();
+        App.UIManager.showWindow(enViewType.BetUI);
     },
 
     // 扣牌
@@ -364,6 +364,10 @@ cc.Class({
     // 开牌
     onOpen: function () {
         RoomSendMsgs.onActionExecute(1);
+        this.moveDownOperateLayer();
+    },
+
+    onHideOperate: function () {
         this.moveDownOperateLayer();
     },
 
