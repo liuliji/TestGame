@@ -8,31 +8,7 @@
     // 4. 当说话用户说话之后，重新返回第二步。
     // 5. 开牌逻辑 之后再说。。。
 
-    "ID_S2C_ACTION_INFO":{
-        "intro": "用户可以选择的操作信息",
-        "return": {
-            "actionPosition": 1,
-            "actions":[
-                // 详细请看 ./model/actions.json actions 字段
-                {
-                    "aId": 1,
-                    "aText": "看牌"
-                },
-                {
-                    "aId": 2,
-                    "aText": "押注"
-                }
-            ]
-        }
-    },
-
-    "ID_C2S_ACTION_EXECUTE":{
-        "intro": "用户执行了什么操作",
-        "params": {
-            // 详细请看 ./model/actions.json commit 字段
-            "aId": 1
-        }
-    }, 
+    
 
     "ID_S2C_ACTION_KANPAI":{
         "intro": "返回用户的牌信息",

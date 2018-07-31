@@ -43,6 +43,11 @@ module.exports = {
                 'function': 'onStartGame',
                 'desc': '房主开始游戏',
             },
+            {
+                'id': 'ID_C2S_ACTION_EXECUTE',
+                'function': 'onActionExecute',
+                'desc': '用户执行了什么操作',
+            },
 
         ],
     },

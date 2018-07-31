@@ -48,11 +48,23 @@ function onStartGame() {
     App.Socket.sendMsg('ID_C2S_START_GAME', msg);
 }
 
+/**
+ * 
+ */
+function onActionExecute(aId, count = 0) {
+    var msg = {
+        aId: aId,
+        count: count,
+    };
+    App.Socket.sendMsg('ID_C2S_START_GAME', msg);
+}
+
 module.exports = {
     'onRoomTalk': onRoomTalk,// 说话、聊天
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onReady': onReady,// 准备
     'onStartGame': onStartGame,// 房主点击开始游戏
+    'onActionExecute': onActionExecute,// 玩家进行了什么操作
 }
 
 

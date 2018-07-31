@@ -105,7 +105,6 @@ function onReady(args) {
  * 游戏开始
  */
 function onStartGame(args) {
-    debugger;
     Log.debug('房主点击了开始游戏');
 }
 
@@ -127,7 +126,6 @@ function onFaPai(args) {
 }
 
 function onActionInfo(args) {
-    debugger;
     App.UIManager.emit(Event.AGS_ACTION_INFO, args);
 }
 

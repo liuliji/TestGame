@@ -345,22 +345,26 @@ cc.Class({
 
     // 看牌
     onWatch: function () {
-
+        RoomSendMsgs.onActionExecute(1);
+        this.moveDownOperateLayer();
     },
 
     // 押注
     onBet: function () {
-
+        RoomSendMsgs.onActionExecute(1, 1);
+        this.moveDownOperateLayer();
     },
 
     // 扣牌
     onGiveUp: function () {
-
+        RoomSendMsgs.onActionExecute(1);
+        this.moveDownOperateLayer();
     },
 
     // 开牌
     onOpen: function () {
-
+        RoomSendMsgs.onActionExecute(1);
+        this.moveDownOperateLayer();
     },
 
     update: function (dt) {
