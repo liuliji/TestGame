@@ -23,7 +23,7 @@ var enViewType = {
     PlayerActionUI: 20006,//动作(休，跟，大。。。)
     SettlementCardUI: 20007,//分派
     RomLandlordUI: 20008,//\ 抢地主
-    BetJettonUI: 20009,//下注
+    BetUI: 20009,//下注
     HelpUI: 20010,//\ 帮助视图
 
     DarknessCardUI: 20012,//摸牌

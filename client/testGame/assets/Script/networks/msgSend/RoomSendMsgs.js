@@ -56,7 +56,7 @@ function onActionExecute(aId, count = 0) {
         aId: aId,
         count: count,
     };
-    App.Socket.sendMsg('ID_C2S_START_GAME', msg);
+    App.Socket.sendMsg('ID_C2S_ACTION_EXECUTE', msg);
 }
 
 module.exports = {
