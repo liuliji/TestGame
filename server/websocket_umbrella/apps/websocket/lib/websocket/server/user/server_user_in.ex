@@ -51,10 +51,16 @@ defmodule Websocket.ServerUser_In do
             %Entity{attributes: %{User => user}} = entity) do
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 startGame userOwner?:#{inspect user.roomOwner}"
-                # if user.roomOwner do
+                if user.roomOwner do
                     send(get_room_pid(user.roomId), :startGame)                    
-                # end
+                end
 
+                {:ok, entity}
+            end
+
+            def handle_event({:action, msg},
+            %Entity{attributes: %{User => user}} = entity) do
+                send(get_room_pid(user.roomId), {:action, msg |> Map.put("uid", user.uid)})
                 {:ok, entity}
             end
 

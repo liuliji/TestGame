@@ -69,9 +69,9 @@ defmodule WebsocketWeb.HallRoomChannel do
     intercept ["ID_C2S_LOBBY_TALK", "ID_S2C_JOIN_LOBBY_ROOM"]
     # handle_out can't reply
     # replies can only be sent from a `handle_in/3` callback
-    def handle_out("ID_S2C_TALK", msg, socket) do
+    def handle_out("ID_C2S_LOBBY_TALK", msg, socket) do
         Logger.debug "#{inspect socket.id} handle out talk topic, msg:#{inspect msg}"
-        Phoenix.Channel.push socket, "ID_S2C_TALK", msg
+        Phoenix.Channel.push socket, "ID_C2S_LOBBY_TALK", msg
         {:noreply, socket}
     end
 

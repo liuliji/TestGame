@@ -82,6 +82,23 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 {:noreply, socket}
             end
 
+            def handle_info({:self_kanpai, %Websocket.Poker{} = poker}, socket) do
+                ret_poker = %{poker: poker |> poker_to_client}
+                
+                Phoenix.Channel.push(socket, "ID_S2C_KANPAI", ret_poker)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_KANPAI:#{inspect ret_poker}"
+                
+                {:noreply, socket}
+            end
+
+            def handle_info({:other_kanpai, tar_user_pos}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_OTHERS_KANPAI", %{pos: tar_user_pos})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_OTHERS_KANPAI:#{inspect tar_user_pos}"
+                {:noreply, socket}
+            end
+
             defp bd_room_info(socket) do
                 userList = Websocket.ServerRoom.users(get_user_roomPid(socket))
                     |> Enum.map(fn user_item -> get_client_user(user_item) end)

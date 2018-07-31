@@ -82,6 +82,47 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
+            def handle_event({:kanpai, tar_user_pos},
+            %Entity{attributes: %{User => user}} = entity) do
+                if (tar_user_pos == user.position) do
+                    send(user.channelPid, {:self_kanpai, user.poker})
+                else
+                    send(user.channelPid, {:other_kanpai, tar_user_pos})
+                end
+                
+                {:ok, entity}
+            end
+
+            def handle_event({:yazhu, tar_user_pos, count},
+            %Entity{attributes: %{User => user}} = entity) do
+                if (tar_user_pos == user.position) do
+                    send(user.channelPid, {:self_yazhu, count})
+                else
+                    send(user.channelPid, {:other_yazhu, tar_user_pos, count})
+                end
+                {:ok, entity}
+            end
+
+            def handle_event({:qipai, tar_user_pos},
+            %Entity{attributes: %{User => user}} = entity) do
+                if (tar_user_pos == user.position) do
+                    send(user.channelPid, :self_qipai)
+                else
+                    send(user.channelPid, {:other_qipai, tar_user_pos})
+                end
+                send(user.channelPid, :qipai)
+                {:ok, entity}
+            end
+
+            def handle_event({:kaipai, tar_user_pos},
+            %Entity{attributes: %{User => user}} = entity) do
+                if (tar_user_pos == user.position) do
+                    send(user.channelPid, :self_kaipai)
+                else
+                    send(user.channelPid, {:other_kaipai, tar_user_pos})
+                end
+                {:ok, entity}
+            end
             #------------
 
             defp clear_room_info_(entity) do

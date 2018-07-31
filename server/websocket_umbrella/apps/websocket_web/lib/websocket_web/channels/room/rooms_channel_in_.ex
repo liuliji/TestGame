@@ -30,6 +30,13 @@ defmodule WebsocketWeb.RoomsChannel_In do
                 {:noreply, socket}
             end
 
+            def handle_in("ID_C2S_ACTION_EXECUTE", %{"aId" => aId} = msg, socket) do
+                send(get_user_pid(socket), {:action, msg})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                user action:#{inspect msg}"
+                {:noreply, socket}
+            end
+
         end
     end
 end

@@ -10,8 +10,8 @@ defmodule Websocket.ServerRoom.EndingBehaviour do
         {:ok, entity}
     end
 
-    def handle_event(msg,
-    %Entity{attributes: %{Room => room}} = entity) do
-        {:become, Websocket.ServerRoom.EndedBehaviour, :ok, entity}
-    end
+    # def handle_event(msg,
+    # %Entity{attributes: %{Room => room}} = entity) do
+    #     {:become, Websocket.ServerRoom.EndedBehaviour, :ok, entity}
+    # end
 end
