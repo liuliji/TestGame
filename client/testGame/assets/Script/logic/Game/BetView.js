@@ -140,7 +140,7 @@ cc.Class({
 
     // 下注按钮点击事件
     betOK: function () {
-        RoomSendMsgs.onActionExecute(1, 1);
+        RoomSendMsgs.onActionExecute(2, parseInt(this.betLabel.string));
         this.betMoveOut();
         App.UIManager.emit(Event.AGS_HIDE_OPERATE);
     },

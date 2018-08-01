@@ -346,8 +346,9 @@ cc.Class({
 
     // 看牌
     onWatch: function () {
+        this.buttonWatch.interactable = false;
         RoomSendMsgs.onActionExecute(1);
-        this.moveDownOperateLayer();
+        // this.moveDownOperateLayer();
     },
 
     // 押注
@@ -357,13 +358,13 @@ cc.Class({
 
     // 扣牌
     onGiveUp: function () {
-        RoomSendMsgs.onActionExecute(1);
+        RoomSendMsgs.onActionExecute(3);
         this.moveDownOperateLayer();
     },
 
     // 开牌
     onOpen: function () {
-        RoomSendMsgs.onActionExecute(1);
+        RoomSendMsgs.onActionExecute(4);
         this.moveDownOperateLayer();
     },
 
