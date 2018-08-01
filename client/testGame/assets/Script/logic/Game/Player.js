@@ -151,6 +151,38 @@ cc.Class({
         }
     },
 
+    rmCards: function () {
+        for (var i = this.cards.length - 1; i >= 0; i--) {
+            if (this.cards[i]) {
+                this.cards[i].destroy();
+            }
+        }
+        this.cards = [];
+    },
+
+    // 看牌
+    watchCard: function (cards) {
+        // 扑克牌数目和看牌的牌的数据不一致，就删除重新创建扑克牌
+        if (cards.length != this.cards.length) {
+            this.rmCards();
+            this.sendCard(cards);
+        }
+        // 执行扑克牌看牌动画
+        var cardScale = CARD_SCALE.SELF;
+        if (this.isSelf) {
+            cardScale = CARD_SCALE.SELF;
+        } else {
+            cardScale = CARD_SCALE.OTHER;
+        }
+        for (var i = 0; i < cards.length; i++) {
+            let card = this.cards[i];
+            if (card) {
+                var cardCom = card.getComponent('Card');
+                cardCom.watchCard(cards[i], cardScale);
+            }
+        }
+    }
+
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
 

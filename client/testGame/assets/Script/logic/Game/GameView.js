@@ -368,8 +368,22 @@ cc.Class({
         this.moveDownOperateLayer();
     },
 
+    // 隐藏操作面板
     onHideOperate: function () {
         this.moveDownOperateLayer();
+    },
+
+    // 测试按钮
+    testButton: function () {
+        var selfData = App.UserManager.getSelf();
+        if (!selfData) {
+            return;
+        }
+        var selfPlayer = this.playerMgr[selfData.position];
+        if (!selfPlayer) {
+            return;
+        }
+        selfPlayer.watchCard([1, 2, 3]);
     },
 
     update: function (dt) {
