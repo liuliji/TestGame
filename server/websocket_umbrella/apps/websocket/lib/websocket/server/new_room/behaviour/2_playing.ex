@@ -18,13 +18,16 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
 
     def handle_event(:next_talk,
     %Entity{attributes: %{Room => room}} = entity) do
-        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        receive next_talk"
         currIndex = next_index(room.currIndex, length(room.playingIndexList))
 
         room = %{room | currIndex: currIndex}
+
         pos =  Enum.at(room.playingIndexList, currIndex)
         user = Map.get(room.users, pos)
+
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        #{inspect currIndex} #{pos}"
+
         send(self(), {:notify_all, {:next_talk, pos}})
         # send(user.pid, :next_talk)
         {:ok, entity |> put_attribute(room)}
@@ -73,6 +76,7 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         playingIndexList = room.playingIndexList |> List.delete(pos)
         currIndex = last_index(room.currIndex, length(playingIndexList))
         send(self(), {:notify_all, {:qipai, pos}})
+        send(self(), :next_talk)
         %{room |
             currIndex: currIndex,
             playingIndexList: playingIndexList

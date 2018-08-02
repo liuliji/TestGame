@@ -28,8 +28,11 @@ defmodule Websocket.ServerUser_Out do
             %Entity{attributes: %{User => user}} = entity) do
                 Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 joinSuccess roomId:#{inspect roomId}, user:#{inspect user}"
-                entity = entity |> update_user(:roomId, roomId) |> update_user(:position, pos) |> update_user(:roomOwner, roomOwner)
-                # roomPid
+                entity = entity
+                |> update_user(:roomId, roomId)
+                |> update_user(:position, pos)
+                |> update_user(:roomOwner, roomOwner)
+                |> update_user(:roomPid, Websocket.RoomSupervisor.find_room(roomId))
                 send(user.channelPid, msg)
                 {:ok, entity}
             end
@@ -97,6 +100,7 @@ defmodule Websocket.ServerUser_Out do
             %Entity{attributes: %{User => %{curMoney: curMoney} = user}} = entity) when count <= curMoney do
                 user = if (tar_user_pos == user.position) do
                     send(user.channelPid, {:self_yazhu, count})
+                    send(user.roomPid, :next_talk)
                     %{user | curMoney: curMoney-count}
                 else
                     send(user.channelPid, {:other_yazhu, tar_user_pos, count})

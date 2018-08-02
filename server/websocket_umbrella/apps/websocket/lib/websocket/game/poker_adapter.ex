@@ -1,15 +1,15 @@
 defmodule Websocket.PokerAdapter do
 
     def to_client(0) do
-        0
+        "0"
     end
 
     def to_client(<<?M, pc>>) do
-        1+(pc-?1)*13
+        "#{1+(pc-?1)*13}"
     end
 
     def to_client(<<ps, pc>>) do
-        ps+1+1-?A+(pc-?1)*13
+        "#{ps+1+1-?A+(pc-?1)*13}"
     end
 
     def to_client(pokers) when is_list(pokers) do

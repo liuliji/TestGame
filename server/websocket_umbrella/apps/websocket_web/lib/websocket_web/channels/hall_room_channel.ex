@@ -23,7 +23,8 @@ defmodule WebsocketWeb.HallRoomChannel do
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
-        roomId = UUID.uuid4
+        # roomId = UUID.uuid4
+        roomId = "#{Enum.random(1..100)}"
         # 这里创建的room这个进程，所以当这个进程关闭的时候，这里创建的所有room进程都会关闭。
         # 这时候呢 我们就应该用roomManager来创建这个进程
         ret = Websocket.RoomSupervisor.new_room(roomId)
