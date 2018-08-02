@@ -214,28 +214,28 @@ cc.Class({
         }
 
         // 看牌
-        if (this.inArray(actionAry, 0)) {
+        if (this.inArray(actionAry, 1)) {
             this.buttonWatch.interactable = true;
         } else {
             this.buttonWatch.interactable = false;
         }
 
         // 押注
-        if (this.inArray(actionAry, 1)) {
+        if (this.inArray(actionAry, 2)) {
             this.buttonBet.interactable = true;
         } else {
             this.buttonBet.interactable = false;
         }
 
         // 扣牌
-        if (this.inArray(actionAry, 2)) {
+        if (this.inArray(actionAry, 3)) {
             this.buttonGiveUp.interactable = true;
         } else {
             this.buttonGiveUp.interactable = false;
         }
 
         // 开牌
-        if (this.inArray(actionAry, 3)) {
+        if (this.inArray(actionAry, 4)) {
             this.buttonOpen.interactable = true;
         } else {
             this.buttonOpen.interactable = false;

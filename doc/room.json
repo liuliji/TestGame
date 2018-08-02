@@ -197,5 +197,66 @@
         }
     },
 
+    "ID_S2C_KANPAI":{
+        "intro": "返回用户的牌信息",
+        "return":{
+            "poker": "$model#{./model/poker.json}",
+            "introPoker":"该字段不返回，用来解释poker字段。poker 字段返回的是一个model，model的详细信息描述在 ./model/poker.json文件中"
+        }
+    },
+
+    "ID_S2C_OTHERS_KANPAI": {
+        "intro": "别人看牌了",
+        "return": {
+            "pos": 1
+        }
+    },
+
+    "ID_S2C_YAZHU": {
+        "intro": "押注",
+        "return": {
+            "count": 10
+        }
+    },
+
+    "ID_S2C_OTHERS_YAZHU": {
+        "intro": "别人押注了",
+        "return": {
+            "count": 10,
+            "pos": 1
+        }
+    },
+    
+    "ID_S2C_YAZHU_FAILED": {
+        "intro": "押注失败",
+        "return": {
+            "msg": "钱不够"
+        }
+    },
+    
+    "ID_S2C_QIPAI": {
+        "intro": "弃牌"
+    },
+
+    "ID_S2C_OTHERS_QIPAI": {
+        "intro": "别人弃牌",
+        "return": {
+            "pos": 1
+        }
+    },
+    
+    "ID_S2C_GAME_RESULT": {
+        "intro": "开牌",
+        "return": {
+            "users": [
+                {
+                    "curMoney": 100,
+                    "deltaMoney": -20
+                    //还有其他许多属性
+                }
+            ]
+        }
+    },
+
 
 }
