@@ -37,6 +37,13 @@ defmodule WebsocketWeb.RoomsChannel_In do
                 {:noreply, socket}
             end
 
+            def handle_in("ID_C2S_NEXT_TALK", msg, socket) do
+                send(get_user_pid(socket), {:next_talk_from_client, msg})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                next_talk_from_client:#{inspect msg}"
+                {:noreply, socket}
+            end
+
         end
     end
 end

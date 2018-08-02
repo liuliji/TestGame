@@ -14,8 +14,28 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                     %{
                         "aId": 2,
                         "aText": "押注"
+                    },
+                    %{
+                        "aId": 3,
+                        "aText": "弃牌"
+                    },
+                    %{
+                        "aId": 4,
+                        "aText": "开牌"
                     }
                 ]
+            end
+
+            defp get_actions(tar_pos, self_pos) when tar_pos == self_pos do
+                actions()
+            end
+
+            defp get_actions(_, _) do
+                actions()
+                |> Enum.filter(fn
+                    {:aId, 1} -> true
+                    _ -> false
+                end)
             end
             
             def handle_info({:joined, newUid}, socket) do
@@ -71,8 +91,8 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 room_info = socket |> get_user_roomPid |> Websocket.ServerRoom.room_info 
 
                 ret_actions = %{
-                    actions: actions,
-                    actionPositions: room_info.currIndex
+                    actions: get_actions(pos, uinfo.position),
+                    actionPositions: Enum.at(room_info.playingIndexList, room_info.currIndex)
                 }
 
                 Phoenix.Channel.push(socket, "ID_S2C_ACTION_INFO", ret_actions)
@@ -98,6 +118,69 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 ID_S2C_OTHERS_KANPAI:#{inspect tar_user_pos}"
                 {:noreply, socket}
             end
+
+            def handle_info({:self_yazhu_failed, msg}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_YAZHU_FAILED", %{msg: msg})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_YAZHU_FAILED:#{inspect msg}"
+                {:noreply, socket}
+            end
+
+            def handle_info({:self_yazhu, count}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_YAZHU", %{count: count})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_YAZHU:#{inspect count}"
+                {:noreply, socket}
+            end
+
+            def handle_info({:other_yazhu, tar_user_pos, count}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_OTHERS_YAZHU", %{count: count, pos: tar_user_pos})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_OTHERS_YAZHU: count:#{inspect count}, pos:#{tar_user_pos}"
+                {:noreply, socket}
+            end
+
+            def handle_info(:self_qipai, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_QIPAI", %{})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_QIPAI"
+                {:noreply, socket}
+            end
+
+            def handle_info({:other_qipai, tar_user_pos}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_OTHERS_QIPAI", %{pos: tar_user_pos})
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                ID_S2C_OTHERS_QIPAI: pos:#{tar_user_pos}"
+                {:noreply, socket}
+            end
+
+            def handle_info(:kaipai, socket) do
+                bd_game_result(socket)
+                {:noreply, socket}
+            end
+
+            defp bd_game_result(socket) do
+                userList =
+                Websocket.ServerRoom.users(get_user_roomPid(socket))
+                |> Enum.map(fn
+                    user_item -> 
+                        user_item
+                        |> get_client_user
+                        |> Map.put(:deltaMoney, user_item.curMoney - user_item.originMoney)
+                        |> Map.delete(:originMoney)
+                end)
+                
+                result = %{
+                    users: userList
+                }
+
+                Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
+                ID_S2C_GAME_RESULT: #{inspect result}"
+
+                Phoenix.Channel.push(socket, "ID_S2C_GAME_RESULT", result)
+            end
+
+            
 
             defp bd_room_info(socket) do
                 userList = Websocket.ServerRoom.users(get_user_roomPid(socket))

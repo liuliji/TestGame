@@ -102,11 +102,11 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ----------------- Terminate end ----------------
 
     defp get_client_user(%Websocket.ServerUser.User{} = user) do
-        user |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:socketPid) |> Map.delete(:roomPid) |> Map.delete(:channelPid)
+        user |> Map.from_struct |> Map.take([:uid, :userName, :curMoney, :online, :roomId, :roomOwner, :position, :readyStatus])
     end
 
     defp get_client_room(%Websocket.ServerRoom.Room{} = room) do
-        room |> Map.from_struct |> Map.delete(:pid) |> Map.delete(:users)
+        room |> Map.from_struct |> Map.take([:roomId])
     end
 
 end

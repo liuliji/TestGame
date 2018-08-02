@@ -6,6 +6,11 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
     use Entice.Entity.Behaviour
     alias Entice.Entity
 
+    @action_kanpai 1
+    @action_yazhu 2
+    @action_qipai 3
+    @action_kaipai 4
+
     def init(entity, :ok) do
         send(self(), :next_talk)
         {:ok, entity}
@@ -15,11 +20,7 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
     %Entity{attributes: %{Room => room}} = entity) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         receive next_talk"
-        currIndex = if (room.currIndex == -1) do   
-            Enum.random(room.playingIndexList)
-        else
-            rem(room.currIndex+1, length(room.playingIndexList))
-        end
+        currIndex = next_index(room.currIndex, length(room.playingIndexList))
 
         room = %{room | currIndex: currIndex}
         pos =  Enum.at(room.playingIndexList, currIndex)
@@ -52,30 +53,35 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         end
     end
 
-    defp handle_actions_(%{"aId" => 1}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_kanpai}, user_pid, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        aId: 1."
+        aId: #{@action_kanpai}."
         send(self(), {:notify_all, {:kanpai, pos}})
         room
     end
 
-    defp handle_actions_(%{"aId" => 2, "count" => count}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_yazhu, "count" => count}, user_pid, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        aId：2."
+        aId：#{@action_yazhu}."
         send(self(), {:notify_all, {:yazhu, pos, count}})
         room
     end
 
-    defp handle_actions_(%{"aId" => 3}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_qipai}, user_pid, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        aId：3."
+        aId：#{@action_qipai}."
+        playingIndexList = room.playingIndexList |> List.delete(pos)
+        currIndex = last_index(room.currIndex, length(playingIndexList))
         send(self(), {:notify_all, {:qipai, pos}})
-        room
+        %{room |
+            currIndex: currIndex,
+            playingIndexList: playingIndexList
+        }
     end
 
-    defp handle_actions_(%{"aId" => 4}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_kaipai}, user_pid, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-        aId：4."
+        aId：#{@action_kaipai}."
         send(self(), {:notify_all, {:kaipai, pos}})
         room
     end
@@ -84,4 +90,22 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
     # %Entity{attributes: %{Room => room}} = entity) do
     #     {:become, Websocket.ServerRoom.EndingBehaviour, :ok, entity}
     # end
+
+    defp next_index(-1, list_size) do
+        :random.uniform(list_size) - 1
+    end
+    
+    defp next_index(curIndex, list_size) do
+        rem(curIndex+1, list_size)
+    end
+
+
+    # 注意这是删除当前发言用户之后的 找到上一个用户 作为这轮的发言用户
+    defp last_index(0, list_size) do
+        list_size - 1
+    end
+
+    defp last_index(curIndex, list_size) do
+        curIndex - 1
+    end
 end

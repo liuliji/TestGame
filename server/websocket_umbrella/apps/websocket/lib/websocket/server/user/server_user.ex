@@ -15,6 +15,8 @@ defmodule Websocket.ServerUser do
             uid: String.t,
             userName: String.t,
             online: boolean,
+            curMoney: integer,
+            originMoney: integer,
 
             pid: pid,
             socketPid: pid,
@@ -36,6 +38,8 @@ defmodule Websocket.ServerUser do
         defstruct(
             uid: "",
             userName: "",
+            curMoney: 0,
+            originMoney: 100,
             online: true,
             pid: nil,
             socketPid: nil,

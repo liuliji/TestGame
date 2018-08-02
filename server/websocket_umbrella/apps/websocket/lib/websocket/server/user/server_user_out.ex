@@ -71,7 +71,7 @@ defmodule Websocket.ServerUser_Out do
 
             def handle_event({:fapai, %Poker{} = poker},
             %Entity{attributes: %{User => user}} = entity) do
-                user = %{user | poker: poker}
+                user = %{user | poker: poker, curMoney: user.originMoney}
                 send(user.channelPid, :fapai)
                 {:ok, entity |> put_attribute(user)}
             end
@@ -94,12 +94,20 @@ defmodule Websocket.ServerUser_Out do
             end
 
             def handle_event({:yazhu, tar_user_pos, count},
-            %Entity{attributes: %{User => user}} = entity) do
-                if (tar_user_pos == user.position) do
+            %Entity{attributes: %{User => %{curMoney: curMoney} = user}} = entity) when count <= curMoney do
+                user = if (tar_user_pos == user.position) do
                     send(user.channelPid, {:self_yazhu, count})
+                    %{user | curMoney: curMoney-count}
                 else
                     send(user.channelPid, {:other_yazhu, tar_user_pos, count})
+                    user
                 end
+                {:ok, entity |> put_attribute(user)}
+            end
+
+            def handle_event({:yazhu, tar_user_pos, count},
+            %Entity{attributes: %{User => %{curMoney: curMoney} = user}} = entity) when count > curMoney do
+                send(user.channelPid, {:self_yazhu_failed, "Sorry, more than your own!!"})
                 {:ok, entity}
             end
 
@@ -117,9 +125,9 @@ defmodule Websocket.ServerUser_Out do
             def handle_event({:kaipai, tar_user_pos},
             %Entity{attributes: %{User => user}} = entity) do
                 if (tar_user_pos == user.position) do
-                    send(user.channelPid, :self_kaipai)
+                    send(user.channelPid, :kaipai)
                 else
-                    send(user.channelPid, {:other_kaipai, tar_user_pos})
+                    send(user.channelPid, :kaipai)
                 end
                 {:ok, entity}
             end

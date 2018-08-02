@@ -64,6 +64,20 @@ defmodule Websocket.ServerUser_In do
                 {:ok, entity}
             end
 
+            def handle_event(:next_talk_from_client,
+            %Entity{attributes: %{User => user}} = entity) do
+                if is_curr_user?(user) do
+                    send(get_room_pid(user.roomId), :next_talk)
+                end
+                {:ok, entity}
+            end
+
+            defp is_curr_user?(user) do
+                roomInfo = Websocket.ServerRoom.room_info(user.roomPid)
+                cur_pos = Enum.at(roomInfo.playingIndexList, roomInfo.currIndex)
+                user.position ==  cur_pos
+            end
+
         end
     end
 end
