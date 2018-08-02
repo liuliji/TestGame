@@ -383,11 +383,29 @@ cc.Class({
     },
     // 自己看牌
     onKanPai: function (event) {
-
+        var selfData = App.UserManager.getSelf();
+        if (!selfData) {
+            return;
+        }
+        var selfPlayer = this.playerMgr[selfData.position];
+        if (!selfPlayer) {
+            return;
+        }
+        selfPlayer.watchCard(selfData.pokers);
     },
     // 别人看牌
     onOtherKanPai: function (event) {
-
+        var args = event.detail;
+        var pos = args.pos;
+        var userData = App.UserManager.getAllUserData(pos);
+        if (!userData) {
+            return;
+        }
+        var player = this.playerMgr[userData.position];
+        if (!player) {
+            return;
+        }
+        player.otherWatchCard();
     },
     // 自己押注
     onYaZhu: function (event) {

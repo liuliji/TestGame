@@ -56,6 +56,11 @@ cc.Class({
         if (roomOwnerNode) {
             this.roomOwnerNode = roomOwnerNode;
         }
+        // 看牌节点
+        var watch = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?watch');
+        if (watch) {
+            this.watch = watch;
+        }
 
     },
 
@@ -181,6 +186,11 @@ cc.Class({
                 cardCom.watchCard(cards[i], cardScale);
             }
         }
+    },
+
+    // 其他人看牌
+    otherWatchCard: function () {
+        this.watch.active = true;
     }
 
     // called every frame, uncomment this function to activate update callback

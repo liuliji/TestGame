@@ -137,6 +137,15 @@ function onActionInfo(args) {
  */
 function onKanPai(args) {
     debugger;
+    var pokers = args.poker.pokers;
+    if (!pokers) {
+        return;
+    }
+    var selfData = App.UserManager.getSelf();
+    if (!selfData) {
+        return;
+    }
+    selfData.pokers = pokers;
     App.UIManager.emit(Event.AGS_KAN_PAI);
 }
 
@@ -145,7 +154,7 @@ function onKanPai(args) {
  */
 function onOtherKanPai(args) {
     debugger;
-    App.UIManager.emit(Event.AGS_OTHER_KAN_PAI);
+    App.UIManager.emit(Event.AGS_OTHER_KAN_PAI, args);
 }
 
 /**
