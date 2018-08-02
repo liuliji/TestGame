@@ -70,6 +70,15 @@ cc.Class({
         this.node.on(Event.AGS_FAPAI, this.onFaPai.bind(this));
         this.node.on(Event.AGS_ACTION_INFO, this.onActionInfo.bind(this));
         this.node.on(Event.AGS_HIDE_OPERATE, this.onHideOperate.bind(this));
+
+        this.node.on(Event.AGS_KAN_PAI, this.onKanPai.bind(this));
+        this.node.on(Event.AGS_OTHER_KAN_PAI, this.onOtherKanPai.bind(this));
+        this.node.on(Event.AGS_YA_ZHU, this.onYaZhu.bind(this));
+        this.node.on(Event.AGS_OTHER_YA_ZHU, this.onOtherYaZhu.bind(this));
+        this.node.on(Event.AGS_YA_ZHU_FAILED, this.onYaZhuFailed.bind(this));
+        this.node.on(Event.AGS_QI_PAI, this.onQiPai.bind(this));
+        this.node.on(Event.AGS_OTHER_QI_PAI, this.onOtherQiPai.bind(this));
+        this.node.on(Event.AGS_GAME_RESULT, this.onGameResule.bind(this));
     },
 
     // 动态获取控件
@@ -371,6 +380,38 @@ cc.Class({
     // 隐藏操作面板
     onHideOperate: function () {
         this.moveDownOperateLayer();
+    },
+    // 自己看牌
+    onKanPai: function (event) {
+
+    },
+    // 别人看牌
+    onOtherKanPai: function (event) {
+
+    },
+    // 自己押注
+    onYaZhu: function (event) {
+
+    },
+    // 别人押注
+    onOtherYaZhu: function (event) {
+
+    },
+    // 押注失败
+    onYaZhuFailed: function (event) {
+
+    },
+    // 自己弃牌
+    onQiPai: function (event) {
+
+    },
+    // 别人弃牌
+    onOtherQiPai: function (event) {
+
+    },
+    // 开牌
+    onGameResule: function (event) {
+
     },
 
     // 测试按钮

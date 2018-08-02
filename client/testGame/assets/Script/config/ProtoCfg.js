@@ -130,6 +130,46 @@ module.exports = {
                 'function': 'onActionInfo',
                 'desc': '用户可以选择的操作信息',
             },
+            {
+                'id': 'ID_S2C_KANPAI',
+                'function': 'onKanPai',
+                'desc': '自己看牌',
+            },
+            {
+                'id': 'ID_S2C_OTHERS_KANPAI',
+                'function': 'onOtherKanPai',
+                'desc': '其他人看牌',
+            },
+            {
+                'id': 'ID_S2C_YAZHU',
+                'function': 'onYaZhu',
+                'desc': '自己押注',
+            },
+            {
+                'id': 'ID_S2C_OTHERS_YAZHU',
+                'function': 'onOtherYaZhu',
+                'desc': '其他人押注',
+            },
+            {
+                'id': 'ID_S2C_YAZHU_FAILED',
+                'function': 'onYaZhuFailed',
+                'desc': '押注失败',
+            },
+            {
+                'id': 'ID_S2C_QIPAI',
+                'function': 'onQiPai',
+                'desc': '自己弃牌',
+            },
+            {
+                'id': 'ID_S2C_OTHERS_QIPAI',
+                'function': 'onOtherQiPai',
+                'desc': '其他人弃牌',
+            },
+            {
+                'id': 'ID_S2C_GAME_RESULT',
+                'function': 'onGameResult',
+                'desc': '开牌',
+            },
         ],
     }
 

@@ -249,7 +249,14 @@ var AgreementEvent = {
     AGS_FAPAI: 'emitFaPai',// 发牌消息
     AGS_ACTION_INFO: 'emitActionInfo',// 玩家操作信息
     AGS_HIDE_OPERATE: 'emitHideOperate',// 玩家下注
-
+    AGS_KAN_PAI: 'emitKanPai',// 看牌
+    AGS_OTHER_KAN_PAI: 'emitOtherKanPai',// 其他人看牌
+    AGS_YA_ZHU: 'emitYaZhu',// 自己押注
+    AGS_OTHER_YA_ZHU: 'emitOtherYaZhu',// 其他人押注
+    AGS_YA_ZHU_FAILED: 'emitYaZhuFailed',// 自己押注
+    AGS_QI_PAI: 'emitQiPai',// 弃牌
+    AGS_OTHER_QI_PAI: 'emitOtherQiPai',// 其他人弃牌
+    AGS_GAME_RESULT: 'emitGameResult',// 开牌
 }
 
 var PlayerBgScale = {

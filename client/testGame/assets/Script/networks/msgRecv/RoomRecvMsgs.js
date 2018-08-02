@@ -125,8 +125,75 @@ function onFaPai(args) {
     App.UIManager.emit(Event.AGS_FAPAI);
 }
 
+/**
+ * 操作信息
+ */
 function onActionInfo(args) {
     App.UIManager.emit(Event.AGS_ACTION_INFO, args);
+}
+
+/**
+ * 自己看牌
+ */
+function onKanPai(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_KAN_PAI);
+}
+
+/**
+ * 其他人看牌
+ */
+function onOtherKanPai(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_OTHER_KAN_PAI);
+}
+
+/**
+ * 自己押注
+ */
+function onYaZhu(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_YA_ZHU, args);
+}
+
+/**
+ * 其他人押注
+ */
+function onOtherYaZhu(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_OTHER_YA_ZHU, args);
+}
+
+/**
+ * 押注失败
+ */
+function onYaZhuFailed(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_YA_ZHU_FAILED);
+}
+
+/**
+ * 自己弃牌
+ */
+function onQiPai(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_QI_PAI);
+}
+
+/**
+ * 其他人弃牌
+ */
+function onOtherQiPai(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_OTHER_QI_PAI, args);
+}
+
+/**
+ * 开牌
+ */
+function onGameResult(args) {
+    debugger;
+    App.UIManager.emit(Event.AGS_GAME_RESULT, args);
 }
 
 
@@ -140,5 +207,13 @@ module.exports = {
     'onStartGame': onStartGame,// 房主点击开始游戏
     'onFaPai': onFaPai,// 发牌
     'onActionInfo': onActionInfo,// 用户可以选择的操作信息
+    'onKanPai': onKanPai,// 自己看牌
+    'onOtherKanPai': onOtherKanPai,// 其他人看牌
+    'onYaZhu': onYaZhu,// 自己押注
+    'onOtherYaZhu': onOtherYaZhu,// 其他人押注
+    'onYaZhuFailed': onYaZhuFailed,// 押注失败
+    'onQiPai': onQiPai,// 自己弃牌
+    'onOtherQiPai': onOtherQiPai,// 其他人弃牌
+    'onGameResult': onGameResult,// 开牌
 }
 
