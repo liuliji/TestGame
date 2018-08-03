@@ -54,7 +54,12 @@ cc.Class({
 
         var seq = cc.sequence(scale1, scale1CallF, scale2, scale2CallF);
         this.node.runAction(seq);
-    }
+    },
+
+    // 弃牌
+    onQiPai: function () {
+        this.node.getComponent(cc.Sprite).spriteFrame = this.gameAtlas.getSpriteFrame('Pink_Gray1');
+    },
 
     // update (dt) {},
 });

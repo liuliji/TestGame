@@ -191,7 +191,30 @@ cc.Class({
     // 其他人看牌
     otherWatchCard: function () {
         this.watch.active = true;
-    }
+    },
+
+    // 玩家弃牌
+    onQiPai: function () {
+        // // 扑克牌数目和看牌的牌的数据不一致，就删除重新创建扑克牌
+        // if (cards.length != 3) {
+        //     this.rmCards();
+        //     this.sendCard([0, 0, 0]);
+        // }
+        // 执行扑克牌看牌动画
+        var cardScale = CARD_SCALE.SELF;
+        if (this.isSelf) {
+            cardScale = CARD_SCALE.SELF;
+        } else {
+            cardScale = CARD_SCALE.OTHER;
+        }
+        for (var i = 0; i < this.cards.length; i++) {
+            let card = this.cards[i];
+            if (card) {
+                var cardCom = card.getComponent('Card');
+                cardCom.onQiPai();
+            }
+        }
+    },
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {

@@ -421,11 +421,29 @@ cc.Class({
     },
     // 自己弃牌
     onQiPai: function (event) {
-
+        var selfData = App.UserManager.getSelf();
+        if (!selfData) {
+            return;
+        }
+        var selfPlayer = this.playerMgr[selfData.position];
+        if (!selfPlayer) {
+            return;
+        }
+        selfPlayer.onQiPai();
     },
     // 别人弃牌
     onOtherQiPai: function (event) {
-
+        var args = event.detail;
+        var pos = args.pos;
+        var userData = App.UserManager.getAllUserData(pos);
+        if (!userData) {
+            return;
+        }
+        var player = this.playerMgr[userData.position];
+        if (!player) {
+            return;
+        }
+        player.onQiPai();
     },
     // 开牌
     onGameResule: function (event) {
