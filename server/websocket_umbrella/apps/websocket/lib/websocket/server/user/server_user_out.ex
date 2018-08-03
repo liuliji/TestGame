@@ -100,6 +100,7 @@ defmodule Websocket.ServerUser_Out do
             %Entity{attributes: %{User => %{curMoney: curMoney} = user}} = entity) when count <= curMoney do
                 user = if (tar_user_pos == user.position) do
                     send(user.channelPid, {:self_yazhu, count})
+                    Websocket.ServerRoom.jiazhu(user.roomPid, user.position, count)
                     send(user.roomPid, :next_talk)
                     %{user | curMoney: curMoney-count}
                 else
@@ -126,14 +127,16 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
-            def handle_event({:kaipai, tar_user_pos},
+            def handle_event({:kaipai, {success_user_pos, chips}},
             %Entity{attributes: %{User => user}} = entity) do
-                if (tar_user_pos == user.position) do
-                    send(user.channelPid, :kaipai)
+                user = 
+                if (success_user_pos == user.position) do
+                    %{user | curMoney: user.curMoney + chips}
                 else
-                    send(user.channelPid, :kaipai)
+                    user
                 end
-                {:ok, entity}
+                send(user.channelPid, :kaipai)
+                {:ok, entity |> put_attribute(user)}
             end
             #------------
 

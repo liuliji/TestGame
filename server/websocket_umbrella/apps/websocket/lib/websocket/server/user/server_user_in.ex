@@ -60,14 +60,9 @@ defmodule Websocket.ServerUser_In do
 
             def handle_event({:action, msg},
             %Entity{attributes: %{User => user}} = entity) do
-                send(get_room_pid(user.roomId), {:action, msg |> Map.put("uid", user.uid)})
-                {:ok, entity}
-            end
-
-            def handle_event(:next_talk_from_client,
-            %Entity{attributes: %{User => user}} = entity) do
-                if is_curr_user?(user) do
-                    send(get_room_pid(user.roomId), :next_talk)
+                # 是当前发言用户 或者 是看牌操作
+                if is_curr_user?(user) || msg["aId"] == 1 do
+                    send(get_room_pid(user.roomId), {:action, msg |> Map.put("pos", user.position)})
                 end
                 {:ok, entity}
             end

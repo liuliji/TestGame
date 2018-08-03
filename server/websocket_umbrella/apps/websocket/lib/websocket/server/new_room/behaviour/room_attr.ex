@@ -14,14 +14,25 @@ defmodule Websocket.ServerRoom.RoomAttr do
         Entity.get_attribute(pid, Room)
     end
 
-    def users(pid) do
+    def users(pid) when is_pid(pid) do
         roomInfo = Entity.get_attribute(pid, Room)
-        roomInfo.users
+        users(roomInfo)
+    end
+
+    def users(%Room{} = room) do
+        room.users
         |> Enum.filter(fn
             {pos, nil} -> false
             {pos, _} -> true
         end)
         |> Enum.map(fn {pos, %{pid: pid}} -> Websocket.ServerUser.user_info(pid) end)
+    end
+
+    def jiazhu(pid, pos, count) do
+        Entity.update_attribute(pid, Room, fn
+            %Room{chips: chips} = room -> 
+                %{room | chips: [{pos, count} | room.chips]}
+        end)
     end
 
 

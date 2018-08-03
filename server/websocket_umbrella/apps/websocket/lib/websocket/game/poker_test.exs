@@ -11,7 +11,7 @@ defmodule PokerTest do
         end)
 
         max_poker = Enum.reduce(poker_list, poker_list |> List.first, fn item, max ->
-            if Websocket.Poker.compare_pokers(item, max) do
+            if Websocket.Poker.compare_pokers?(item, max) do
                 max
             else
                 item
