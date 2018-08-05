@@ -12,12 +12,13 @@ var enViewType = require('Consts').enViewType;
 var Event = require('Consts').AgreementEvent;
 var Consts = require('Consts');
 var RoomSendMsgs = require('RoomSendMsgs');
+var ChipManager = require('ChipManager');// 筹码管理器，
 
 cc.Class({
     extends: BaseGameView,
 
     properties: {
-
+        chipPrefab: cc.Prefab,// 筹码的prefab
     },
 
     // use this for initialization
@@ -41,6 +42,7 @@ cc.Class({
     // 数据初始化
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
+        ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
     },
 
     basicInit: function () {
@@ -407,13 +409,55 @@ cc.Class({
         }
         player.otherWatchCard();
     },
+    // 创建筹码
+    onPlayerCreateChip: function (playerNode, value) {
+        var startP = playerNode.position;
+        var chipNumbers = [5, 2, 1];
+        for (var i = 0; i < chipNumbers.length; i++) {
+            var cNumber = chipNumbers[i];
+            var count = Math.floor(value / cNumber);
+            value = value % cNumber;
+            for (var j = 0; j < count; j++) {
+                var chipNode = ChipManager.getInstance().createChip();
+                var chip = chipNode.getComponent('Chip');
+                chip.setValue(cNumber);
+                var x = ChipManager.getInstance().seededRandom(-200, 200);
+                var y = ChipManager.getInstance().seededRandom(-100, 100);
+                var endP = new cc.Vec2(x, y);
+                this.node.addChild(chipNode);
+                chip.chipMove(startP, endP);
+            }
+        }
+
+    },
     // 自己押注
     onYaZhu: function (event) {
-
+        var args = event.detail;
+        var count = args.count;
+        var selfData = App.UserManager.getSelf();
+        if (!selfData) {
+            return;
+        }
+        var selfPlayer = this.playerMgr[selfData.position];
+        if (!selfPlayer) {
+            return;
+        }
+        this.onPlayerCreateChip(selfPlayer.node, count);
     },
     // 别人押注
     onOtherYaZhu: function (event) {
-
+        var args = event.detail;
+        var pos = args.pos;
+        var count = args.count;
+        var userData = App.UserManager.getAllUserData(pos);
+        if (!userData) {
+            return;
+        }
+        var player = this.playerMgr[userData.position];
+        if (!player) {
+            return;
+        }
+        this.onPlayerCreateChip(player.node, count);
     },
     // 押注失败
     onYaZhuFailed: function (event) {
