@@ -178,6 +178,7 @@ function onOtherYaZhu(args) {
  */
 function onYaZhuFailed(args) {
     debugger;
+    App.UIManager.addTips(' 下注失败 ' + args.msg, 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
     App.UIManager.emit(Event.AGS_YA_ZHU_FAILED);
 }
 
@@ -202,6 +203,7 @@ function onOtherQiPai(args) {
  */
 function onGameResult(args) {
     debugger;
+    var users = args.users;
     App.UIManager.emit(Event.AGS_GAME_RESULT, args);
 }
 

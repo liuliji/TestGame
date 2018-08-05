@@ -132,6 +132,13 @@ cc.Class({
             // this.buttonOpen.interactable = false;
         }
 
+        this.chipLayer = null;// 筹码节点
+        var chipLayer = sgm.MethodsUtils.getNodeChildObject(this.node, 'chipLayer');
+        if (chipLayer) {
+            this.chipLayer = chipLayer;
+            // this.buttonOpen.interactable = false;
+        }
+
     },
 
     // 准备
@@ -424,7 +431,7 @@ cc.Class({
                 var x = ChipManager.getInstance().seededRandom(-200, 200);
                 var y = ChipManager.getInstance().seededRandom(-100, 100);
                 var endP = new cc.Vec2(x, y);
-                this.node.addChild(chipNode);
+                this.chipLayer.addChild(chipNode);
                 chip.chipMove(startP, endP);
             }
         }

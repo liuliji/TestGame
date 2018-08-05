@@ -57,9 +57,9 @@ cc.Class({
             this.roomOwnerNode = roomOwnerNode;
         }
         // 看牌节点
-        var watch = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?watch');
-        if (watch) {
-            this.watch = watch;
+        var operateLabel = sgm.MethodsUtils.getNodeChildObject(this.node, 'header?operateLabel', cc.Label);
+        if (operateLabel) {
+            this.operateLabel = operateLabel;
         }
 
     },
@@ -190,7 +190,7 @@ cc.Class({
 
     // 其他人看牌
     otherWatchCard: function () {
-        this.watch.active = true;
+        this.operateLabel.string = '看牌';
     },
 
     // 玩家弃牌
@@ -214,6 +214,7 @@ cc.Class({
                 cardCom.onQiPai();
             }
         }
+        this.operateLabel.string = '扣牌';
     },
 
     // called every frame, uncomment this function to activate update callback
