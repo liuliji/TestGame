@@ -30,7 +30,7 @@ defmodule Websocket.Poker do
 
     def random_poker(list) do
         {pokers, list} = Enum.reduce(1..3, {[], list}, fn _,{result, l} ->
-            {item, l} = l |> List.pop_at(:random.uniform(length(l)-1))
+            {item, l} = l |> List.pop_at(:rand.uniform(length(l)-1))
             {[item | result], l}
         end)
         poker = %Poker{pokers: sort_poker_(pokers)}

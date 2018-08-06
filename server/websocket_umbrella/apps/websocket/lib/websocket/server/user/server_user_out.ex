@@ -123,7 +123,6 @@ defmodule Websocket.ServerUser_Out do
                 else
                     send(user.channelPid, {:other_qipai, tar_user_pos})
                 end
-                send(user.channelPid, :qipai)
                 {:ok, entity}
             end
 

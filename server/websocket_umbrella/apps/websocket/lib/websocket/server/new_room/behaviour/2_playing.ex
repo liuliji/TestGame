@@ -78,10 +78,17 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         }
     end
 
-    defp handle_actions_(%{"aId" => @action_kaipai}, _, _, room) do
+    defp handle_actions_(%{"aId" => @action_kaipai}, _, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         aId：#{@action_kaipai}."
-        users = Room.users(room)
+
+        users = room.users
+        |> Enum.filter(fn
+            {pos, nil} -> false
+            {pos, _} -> true
+        end)
+        |> Enum.map(fn {pos, %{pid: pid}} -> Websocket.ServerUser.user_info(pid) end)
+
         max_user = users
         |> Enum.reduce(List.first(users), fn
             %User{poker: poker1} = item1, %User{poker: poker2} = acc ->
