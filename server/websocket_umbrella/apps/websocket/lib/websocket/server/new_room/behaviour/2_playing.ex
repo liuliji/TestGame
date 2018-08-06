@@ -1,6 +1,7 @@
 defmodule Websocket.ServerRoom.PlayingBehaviour do
     alias Websocket.ServerRoom, as: ServerRoom
     alias Websocket.ServerRoom.Room
+    alias Websocket.ServerUser.User
     require Logger
 
     use Entice.Entity.Behaviour
@@ -13,6 +14,12 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
 
     def init(entity, :ok) do
         send(self(), :next_talk)
+        {:ok, entity}
+    end
+
+    def handle_event(:next_talk,
+    %Entity{attributes: %{Room => %{playingIndexList: playingIndexList} = room}} = entity) when length(playingIndexList) == 1 do
+        send(self(), {:action, %{"aId" => @action_kaipai}})
         {:ok, entity}
     end
 
@@ -33,44 +40,32 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         {:ok, entity |> put_attribute(room)}
     end
 
-    def handle_event({:action, %{"aId" => aId, "uid" => uid} = msg},
+    def handle_event({:action, %{"aId" => aId} = msg},
     %Entity{attributes: %{Room => room}} = entity) do
-        
-        pos = room.playingIndexList
-        |> Enum.at(room.currIndex)
-        
-        user_info_in_room = room.users |> Map.get(pos)
 
-        ret = 
-        if (uid == user_info_in_room.uid) do
-            room = handle_actions_(msg, user_info_in_room.pid, pos, room)
-            # if (aId == 4) do
-                # {:become, Websocket.ServerRoom.EndingBehaviour, :ok, entity}
-            # else
-                {:ok, entity |> put_attribute(room)}
-            # end
-        else
-            Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            not current active player. client uid:#{inspect uid}, cur uid:#{inspect user_info_in_room.uid}"
-            {:ok, entity}
-        end
+        room = handle_actions_(msg, Map.get(msg, "pos", -1), room)
+        # if (aId == 4) do
+            # {:become, Websocket.ServerRoom.EndingBehaviour, :ok, entity}
+        # else
+            {:ok, entity |> put_attribute(room)}
+        # end
     end
 
-    defp handle_actions_(%{"aId" => @action_kanpai}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_kanpai}, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         aId: #{@action_kanpai}."
         send(self(), {:notify_all, {:kanpai, pos}})
         room
     end
 
-    defp handle_actions_(%{"aId" => @action_yazhu, "count" => count}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_yazhu, "count" => count}, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         aId：#{@action_yazhu}."
         send(self(), {:notify_all, {:yazhu, pos, count}})
         room
     end
 
-    defp handle_actions_(%{"aId" => @action_qipai}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_qipai}, pos, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         aId：#{@action_qipai}."
         playingIndexList = room.playingIndexList |> List.delete(pos)
@@ -83,10 +78,29 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         }
     end
 
-    defp handle_actions_(%{"aId" => @action_kaipai}, user_pid, pos, room) do
+    defp handle_actions_(%{"aId" => @action_kaipai}, _, room) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         aId：#{@action_kaipai}."
-        send(self(), {:notify_all, {:kaipai, pos}})
+
+        users = room.users
+        |> Enum.filter(fn
+            {pos, nil} -> false
+            {pos, _} -> true
+        end)
+        |> Enum.map(fn {pos, %{pid: pid}} -> Websocket.ServerUser.user_info(pid) end)
+
+        max_user = users
+        |> Enum.reduce(List.first(users), fn
+            %User{poker: poker1} = item1, %User{poker: poker2} = acc ->
+                if Websocket.Poker.compare_pokers?(poker1, poker2) do
+                    acc
+                else
+                    item1
+                end
+        end)
+
+        chips = room.chips |> Enum.reduce(0, fn {_, count},acc -> acc+count end)
+        send(self(), {:notify_all, {:kaipai, {max_user.position, chips}}})
         room
     end
 

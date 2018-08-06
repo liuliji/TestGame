@@ -30,7 +30,7 @@ defmodule Websocket.Poker do
 
     def random_poker(list) do
         {pokers, list} = Enum.reduce(1..3, {[], list}, fn _,{result, l} ->
-            {item, l} = l |> List.pop_at(:random.uniform(length(l)-1))
+            {item, l} = l |> List.pop_at(:rand.uniform(length(l)-1))
             {[item | result], l}
         end)
         poker = %Poker{pokers: sort_poker_(pokers)}
@@ -54,7 +54,7 @@ defmodule Websocket.Poker do
     true p1 < p2
     false p1 > p2
     """
-    def compare_pokers(%Poker{}=p1, %Poker{}=p2) do
+    def compare_pokers?(%Poker{}=p1, %Poker{}=p2) do
         compare_pokers_(p1, p2)
     end
 
@@ -213,6 +213,13 @@ defmodule Websocket.Poker do
         %Poker{type: type2} = poker2) do
     
         type1 < type2
+    end
+
+    defp compare_pokers_(
+        %Poker{} = poker1,
+        %Poker{} = poker1) do
+    
+        true
     end
 
     ### ------------------ 比较牌的大小 end-------------------------

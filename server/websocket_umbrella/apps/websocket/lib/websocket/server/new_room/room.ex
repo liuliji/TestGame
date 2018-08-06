@@ -16,6 +16,7 @@ defmodule Websocket.ServerRoom do
                     4  => nil},
             playingIndexList: [],  #当前还在参与游戏的玩家座位号
             currIndex: -1,   # 当前发言玩家列表中的index
+            chips: [], # 筹码{pos, count} pos位置的玩家 加注 count
         )
     end
 
@@ -53,6 +54,8 @@ defmodule Websocket.ServerRoom do
     defdelegate room_info(pid), to: RoomAttr
 
     defdelegate users(pid), to: RoomAttr
+
+    defdelegate jiazhu(pid, pos, count), to: RoomAttr
 
     def get_seat(pid, uid) do
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
