@@ -217,6 +217,25 @@ cc.Class({
         this.operateLabel.string = '扣牌';
     },
 
+    // 比牌开始，隐藏自己的牌
+    biPaiHideCard: function () {
+        for (var i = 0; i < this.cards.length; i++) {
+            let card = this.cards[i];
+            if (card) {
+                card.active = false;
+            }
+        }
+    },
+    // 比牌结束，显示玩家的牌，并设置牌的显示
+    biPaiShowCard: function (pokers) {
+        for (var i = 0; i < this.cards.length; i++) {
+            let card = this.cards[i];
+            if (card) {
+                card.active = true;
+            }
+        }
+    },
+
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
 

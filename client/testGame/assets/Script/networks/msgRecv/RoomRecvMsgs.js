@@ -136,7 +136,7 @@ function onActionInfo(args) {
  * 自己看牌
  */
 function onKanPai(args) {
-    debugger;
+    // debugger;
     var pokers = args.poker.pokers;
     if (!pokers) {
         return;
@@ -153,7 +153,7 @@ function onKanPai(args) {
  * 其他人看牌
  */
 function onOtherKanPai(args) {
-    debugger;
+    // debugger;
     App.UIManager.emit(Event.AGS_OTHER_KAN_PAI, args);
 }
 
@@ -161,7 +161,7 @@ function onOtherKanPai(args) {
  * 自己押注
  */
 function onYaZhu(args) {
-    debugger;
+    // debugger;
     App.UIManager.emit(Event.AGS_YA_ZHU, args);
 }
 
@@ -169,7 +169,7 @@ function onYaZhu(args) {
  * 其他人押注
  */
 function onOtherYaZhu(args) {
-    debugger;
+    // debugger;
     App.UIManager.emit(Event.AGS_OTHER_YA_ZHU, args);
 }
 
@@ -177,7 +177,7 @@ function onOtherYaZhu(args) {
  * 押注失败
  */
 function onYaZhuFailed(args) {
-    debugger;
+    // debugger;
     App.UIManager.addTips(' 下注失败 ' + args.msg, 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
     App.UIManager.emit(Event.AGS_YA_ZHU_FAILED);
 }
@@ -186,7 +186,7 @@ function onYaZhuFailed(args) {
  * 自己弃牌
  */
 function onQiPai(args) {
-    debugger;
+    // debugger;
     App.UIManager.emit(Event.AGS_QI_PAI);
 }
 
@@ -194,7 +194,7 @@ function onQiPai(args) {
  * 其他人弃牌
  */
 function onOtherQiPai(args) {
-    debugger;
+    // debugger;
     App.UIManager.emit(Event.AGS_OTHER_QI_PAI, args);
 }
 
@@ -202,8 +202,15 @@ function onOtherQiPai(args) {
  * 开牌
  */
 function onGameResult(args) {
-    debugger;
+    // debugger;
     var users = args.users;
+    for (var i = 0; i < users.length; i++) {
+        let user = users[i];
+        let userData = App.UserManager.getAllUserData(user.position);
+        if (userData) {
+            userData.onSettleData(user);// 结算设置玩家数据
+        }
+    }
     App.UIManager.emit(Event.AGS_GAME_RESULT, args);
 }
 

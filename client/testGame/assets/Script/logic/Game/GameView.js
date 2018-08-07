@@ -498,6 +498,49 @@ cc.Class({
     },
     // 开牌
     onGameResule: function (event) {
+        var winPosition = -1;
+        App.UserManager.foreachAllUser(function (userData) {
+            if (userData.deltaMoney > 0) {
+                winPosition = userData.position;
+            }
+        }.bind(this));
+
+        // 开始做玩家比牌动画
+        var calF1 = cc.callFunc(function () {
+            // 先把玩家的牌隐藏
+            App.UserManager.foreachAllUser(function (userData) {
+                if (!userData) {
+                    return;
+                }
+                var player = this.playerMgr[userData.position];
+                if (!player) {
+                    return;
+                }
+                player.biPaiHideCard();
+            }.bind(this));
+        }, this);
+
+        var delayT = cc.delayTime(1.0);
+
+
+        var calF2 = cc.callFunc(function () {
+            // 再把玩家的牌显示出来
+            App.UserManager.foreachAllUser(function (userData) {
+                if (!userData) {
+                    return;
+                }
+                var player = this.playerMgr[userData.position];
+                if (!player) {
+                    return;
+                }
+                player.biPaiShowCard(userData.pokers);
+            }.bind(this));
+        }, this);
+
+
+        var seq = cc.sequence(calF1, delayT, calF2);
+        this.node.runAction(seq);
+
 
     },
 
