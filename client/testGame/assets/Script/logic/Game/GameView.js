@@ -13,12 +13,14 @@ var Event = require('Consts').AgreementEvent;
 var Consts = require('Consts');
 var RoomSendMsgs = require('RoomSendMsgs');
 var ChipManager = require('ChipManager');// 筹码管理器，
+var CARD_SCALE = Consts.CARD_SCALE;// 卡牌的缩放值
 
 cc.Class({
     extends: BaseGameView,
 
     properties: {
         chipPrefab: cc.Prefab,// 筹码的prefab
+        cardPrefab: cc.Prefab,// 扑克牌的prefab
     },
 
     // use this for initialization
@@ -520,10 +522,47 @@ cc.Class({
             }.bind(this));
         }, this);
 
-        var delayT = cc.delayTime(1.0);
-
+        /**
+         * 在每个玩家牌的位置创建几张牌，然后移动到屏幕中间，碰撞一下播放一个动画，
+         * 最后再飞回起始位置，然后再把玩家的牌显示出来，再播放筹码移动的特效，
+         * 完成本次结算
+         */
 
         var calF2 = cc.callFunc(function () {
+            // 再把玩家的牌显示出来
+            App.UserManager.foreachAllUser(function (userData) {
+                if (!userData) {
+                    return;
+                }
+                var player = this.playerMgr[userData.position];
+                if (!player) {
+                    return;
+                }
+                var startP = player.getCardP();
+                // var cards = [];
+                var cardScale = CARD_SCALE.OTHER;
+                for (var i = 0; i < 3; i++) {
+                    var card = cc.instantiate(this.cardPrefab);
+                    card.setPosition(new cc.Vec2(startP.x + (i - 1) * card.width * cardScale, startP.y));
+                    this.chipLayer.addChild(card);
+
+                    // 移动到中间
+                    var act1 = cc.moveTo(0.4, new cc.Vec2(0, 0));
+                    var delayT0 = cc.delayTime(0.5);
+                    var act2 = cc.moveTo(0.4, new cc.Vec2(startP.x + (i - 1) * card.width * cardScale, startP.y));
+                    var delayT1 = cc.delayTime(0.2);
+                    var rm = cc.removeSelf();
+                    var seq1 = cc.sequence(act1, delayT0, act2, delayT1, rm);
+                    card.runAction(seq1);
+                }
+            }.bind(this));
+        }, this);
+
+        var delayT = cc.delayTime(1.6);
+        var spaw1 = cc.spawn(calF2, delayT);
+
+        // 最后所有玩家的牌都显示出来
+        var calF_final = cc.callFunc(function () {
             // 再把玩家的牌显示出来
             App.UserManager.foreachAllUser(function (userData) {
                 if (!userData) {
@@ -537,8 +576,11 @@ cc.Class({
             }.bind(this));
         }, this);
 
+        var calF_chip = cc.callFunc(function () {
+            ChipManager.getInstance().chipMove(this.playerMgr[winPosition].node.position);
+        }, this);
 
-        var seq = cc.sequence(calF1, delayT, calF2);
+        var seq = cc.sequence(calF1, spaw1, calF_final, calF_chip);
         this.node.runAction(seq);
 
 

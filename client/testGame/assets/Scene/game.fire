@@ -6708,6 +6708,9 @@
     ],
     "chipPrefab": {
       "__uuid__": "135bb7b9-1384-47a0-92d0-4cb22d84f02a"
+    },
+    "cardPrefab": {
+      "__uuid__": "5b1f3cc4-dbcb-4e10-871b-7fd74ab11fed"
     }
   },
   {

@@ -55,6 +55,19 @@ var ChipManager = cc.Class({
         return chipNode;
     },
 
+    chipMove: function (p = new cc.Vec2(0, 0)) {
+        for (var i = 0; i < this.chipArray.length; i++) {
+            var chip = this.chipArray[i].node;
+
+            var act1 = cc.moveTo(0.5, p);
+            chip.runAction(act1);
+        }
+
+        setTimeout(() => {
+            this.clean();
+        }, 800);
+    },
+
 
     // 直接在某个位置创建筹码
     createChipWithPosition(value, p = new cc.Vec2(0, 0)) {

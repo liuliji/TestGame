@@ -156,6 +156,19 @@ cc.Class({
         }
     },
 
+    // 获取扑克牌的位置
+    getCardP: function () {
+        var cardScale = CARD_SCALE.SELF;
+        if (this.isSelf) {
+            cardScale = CARD_SCALE.SELF;
+        } else {
+            cardScale = CARD_SCALE.OTHER;
+        }
+        var x = this.startNode.position.x + this.cards[0].width * cardScale + this.node.position.x;
+        var y = 0 + this.node.position.y;
+        return new cc.Vec2(x, y);
+    },
+
     rmCards: function () {
         for (var i = this.cards.length - 1; i >= 0; i--) {
             if (this.cards[i]) {
