@@ -180,6 +180,27 @@ var exists = function (src, dst, callback) {
         }
     });
 };
+// 复制单个文件
+var copyFile = function (src, dest) {
+    fs.createReadStream(src).pipe(fs.createWriteStream(dest));
+}
+// 复制单个文件另一种方式
+var copyFile1 = function (src, dest) {
+    fs.readFile(src, 'utf-8', function (err, data) {
+        if (err) {
+            console.log("读取失败");
+        } else {
+            fs.writeFile(dest, data, 'utf8', function (error) {
+                if (error) {
+                    throw error;
+                } else {
+                    console.log("文件已保存");
+                }
+            });
+            return data;
+        }
+    });
+}
 /***********************************复制文件函数结束*****************************************/
 
 // Iterate res and src folder
@@ -206,3 +227,5 @@ fs.writeFile(destVersion, JSON.stringify(manifest), (err) => {
 // 复制目录，只需要复制src和res目录
 exists(src + 'src', dest + 'src', copy);
 exists(src + 'res', dest + 'res', copy);
+// 复制完成后，将project.manifest文件复制到项目目录中
+copyFile('remote-assets/project.manifest', 'assets/resources/project.manifest', copy);
