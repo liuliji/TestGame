@@ -41,11 +41,19 @@ cc.Class({
         this.gameEventRegist();
     },
 
+    start: function () {
+        ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+    },
+
     // 数据初始化
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
+<<<<<<< HEAD
         let ChipManager = require('ChipManager');// 筹码管理器，
         ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+=======
+        // ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+>>>>>>> ec3645351d8180575bde7c34b83f903cefac6c55
     },
 
     basicInit: function () {
