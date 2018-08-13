@@ -44,6 +44,7 @@ cc.Class({
     // 数据初始化
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
+        let ChipManager = require('ChipManager');// 筹码管理器，
         ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
     },
 

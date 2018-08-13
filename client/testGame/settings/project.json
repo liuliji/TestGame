@@ -19,10 +19,5 @@
   },
   "start-scene": "95dc2578-3bbb-4767-98f4-1a6ff7dd0d3d",
   "use-customize-simulator": false,
-  "use-project-simulator-setting": false,
-  "cocos-analytics": {
-    "enable": false,
-    "appID": "13798",
-    "appSecret": "959b3ac0037d0f3c2fdce94f8421a9b2"
-  }
+  "use-project-simulator-setting": false
 }
