@@ -41,10 +41,14 @@ cc.Class({
         this.gameEventRegist();
     },
 
+    start: function () {
+        ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+    },
+
     // 数据初始化
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
-        ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+        // ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
     },
 
     basicInit: function () {
