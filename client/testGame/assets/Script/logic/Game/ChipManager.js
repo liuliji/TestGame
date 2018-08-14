@@ -1,6 +1,8 @@
 var BaseClass = require('BaseClass');
 
 var ChipManager = cc.Class({
+    // extends: BaseClass,
+    // name: "ChipManager",
     extends: BaseClass,
 
     properties: {
@@ -9,17 +11,20 @@ var ChipManager = cc.Class({
         seed: 0,// 随机种子
     },
 
-    ctor: function () {
-        this.chipPool = new cc.NodePool();
-    },
+    // ctor: function () {
+    //     this.chipPool = new cc.NodePool();
+    //     // this._super();
+    // }, 
 
     // 将某个筹码push到数组中
     push: function (chip) {
+        
         this.chipArray.push(chip);
     },
 
     // 将game中的prefab传递给改对象
     setPrefab: function (chipPrefab) {
+        this.chipPool = new cc.NodePool();
         this.chipPrefab = chipPrefab;
     },
 
@@ -70,7 +75,7 @@ var ChipManager = cc.Class({
 
 
     // 直接在某个位置创建筹码
-    createChipWithPosition(value, p = new cc.Vec2(0, 0)) {
+    createChipWithPosition: function(value, p = new cc.Vec2(0, 0)) {
         var chipNode = this.createChip();
         chipNode.stopAllActions();
         chip.setPosition(p);
