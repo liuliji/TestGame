@@ -16,6 +16,8 @@
 
 使用一个AnalyzeInterceptor将cookie中的内容读出，除了要解析出auth_cookie，验证其正确性，并保存到ThreadLocal里面，还要取出并更新其他简单的cookie，如icon，username等。
 
+还是有几个问题的，修改信息，修改密码，像登陆成功一样的同样的处理，增加了一个Listener回调接口，统一处理，也就是统一更新下cache信息。
+
 拓展redis：包括后来的验证码的时效性，密码错误次数等等，全是用的redis。
 
 拓展权限管理：
@@ -24,4 +26,6 @@ user增加roles列，保存roles id list；增加roles表，表示角色信息�
 在程序启动的时候去加载所有的request表中的信息，就是加载所有的需要验证权限的请求。
 
 然后在AnalyzeInterceptor后增加一个AuthInterceptor。当请求来了之后，在AuthInterceptor中判断是否该请求在当前用户的权限列表中，如果没在就直接gg，在的话 继续。
+
+http://weixin.niurenqushi.com/article/2017-03-20/4794863.html
 
