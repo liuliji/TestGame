@@ -3,7 +3,7 @@ stat = fs.stat;
 var path = require('path');
 var crypto = require('crypto');
 
-var url = 'http://192.168.31.80:8080/update/'
+var url = 'http://192.168.0.105:8080/update/'
 var game = 'testGame';
 
 var manifest = {

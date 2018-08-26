@@ -580,7 +580,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "percent",
+    "_name": "loading",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -720,7 +720,9 @@
     "byteProgress": {
       "__id__": 14
     },
-    "loading": null,
+    "loading": {
+      "__id__": 15
+    },
     "_updating": false,
     "_canRetry": false,
     "_am": null
