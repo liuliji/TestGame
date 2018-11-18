@@ -65,7 +65,8 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 user left room #{inspect roomId}
                 userInfo:#{inspect user}"
-                {:stop, {:shutdown, "user_left"}, socket}
+                # {:stop, {:shutdown, "user_left"}, socket}
+                {:noreply, socket}
             end
         
             def handle_info(:user_changed, socket) do
