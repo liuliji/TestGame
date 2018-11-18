@@ -172,6 +172,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                         |> get_client_user
                         |> Map.put(:deltaMoney, user_item.curMoney - user_item.originMoney)
                         |> Map.delete(:originMoney)
+                        |> Map.put(:poker, user_item.poker |> Websocket.PokerAdapter.to_client)
                 end)
                 
                 result = %{
