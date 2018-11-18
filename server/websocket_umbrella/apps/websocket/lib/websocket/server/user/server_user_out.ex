@@ -45,6 +45,12 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
+            def handle_event({:othersLeavedRoom, pos},
+            %Entity{attributes: %{User => user}} = entity) do
+                send(user.channelPid, {:othersLeavedRoom, pos})
+                {:ok, entity}
+            end
+
             def handle_event(:dissolvedRoom,
             %Entity{attributes: %{User => user}} = entity) do
                 channelPid = user.channelPid

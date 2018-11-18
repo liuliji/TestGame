@@ -68,6 +68,11 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 # {:stop, {:shutdown, "user_left"}, socket}
                 {:noreply, socket}
             end
+
+            def handle_info({:othersLeavedRoom, pos}, socket) do
+                Phoenix.Channel.push(socket, "ID_S2C_OTHERS_LEAVE_ROOM", %{position: pos})
+                {:noreply, socket}
+            end
         
             def handle_info(:user_changed, socket) do
                 bd_room_info(socket)

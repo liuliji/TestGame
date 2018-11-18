@@ -69,7 +69,7 @@ defmodule Websocket.ServerRoom.UnreadyedBehaviour do
         room = %{room | users: room.users |> Map.put(pos, nil)}
         entity = put_attribute(entity, room)
         send(user.pid, :leavedRoom)
-        send(self(), {:notify_all, :user_changed})
+        send(self(), {:notify_all, {:othersLeavedRoom, pos}})
         {:ok, entity}
     end
 
