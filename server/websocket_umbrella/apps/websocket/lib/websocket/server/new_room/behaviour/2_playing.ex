@@ -40,15 +40,19 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
         {:ok, entity |> put_attribute(room)}
     end
 
+    def handle_event({:action, %{"aId" => @action_kaipai} = msg},
+    %Entity{attributes: %{Room => room}} = entity) do
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        aId：#{@action_kaipai}."
+
+        {:become, Websocket.ServerRoom.EndingBehaviour, {:ok, msg}, entity}
+    end
+
     def handle_event({:action, %{"aId" => aId} = msg},
     %Entity{attributes: %{Room => room}} = entity) do
 
         room = handle_actions_(msg, Map.get(msg, "pos", -1), room)
-        # if (aId == 4) do
-            # {:become, Websocket.ServerRoom.EndingBehaviour, :ok, entity}
-        # else
-            {:ok, entity |> put_attribute(room)}
-        # end
+        {:ok, entity |> put_attribute(room)}
     end
 
     defp handle_actions_(%{"aId" => @action_kanpai}, pos, room) do

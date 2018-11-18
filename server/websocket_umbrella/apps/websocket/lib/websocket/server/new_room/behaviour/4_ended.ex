@@ -6,12 +6,15 @@ defmodule Websocket.ServerRoom.EndedBehaviour do
     use Entice.Entity.Behaviour
     alias Entice.Entity
 
-    def init(entity, :ok) do
+    # 赢家的位置 和 房间的总筹码
+    def init(entity, {:ok, {winner_position, chips}}) do
+        send(self(), {:end_turns, {winner_position, chips}})
         {:ok, entity}
     end
 
-    # def handle_event(msg,
-    # %Entity{attributes: %{Room => room}} = entity) do
-    #     {:become, Websocket.ServerRoom.UnreadyedBehaviour, :ok, entity}
-    # end
+    def handle_event({:end_turns, {winner_position, chips}},
+    %Entity{attributes: %{Room => room}} = entity) do
+        send(self(), {:notify_all, {:kaipai, {winner_position, chips}}})
+        {:become, Websocket.ServerRoom.UnreadyedBehaviour, :ok, entity}
+    end
 end

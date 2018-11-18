@@ -58,7 +58,11 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 roomId = get_user_roomId(socket)
                 socket = socket |> Socket.assign(:roomId, roomId)
                 Phoenix.Channel.push(socket, "ID_S2C_LEAVE_ROOM_SUCCESS", %{roomId: roomId})
-                {:noreply, socket}
+                user = Websocket.UserSupervisor.find_user(get_user_uid(socket))
+                Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                user left room #{inspect roomId}
+                userInfo:#{inspect user}"
+                {:stop, {:shutdown, "user_left"}, socket}
             end
         
             def handle_info(:user_changed, socket) do

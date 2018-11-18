@@ -39,7 +39,7 @@ defmodule WebsocketWeb.UserSocket do
         :error
       _ ->
         uid = UUID.uuid4();
-        pid = Websocket.UserSupervisor.new_user(uid, userName, self())
+        {uid, pid} = Websocket.UserSupervisor.new_user(uid, userName, self())
         socket = socket |> assign(:uid, uid)
                         |> assign(:pid, pid)
                         |> assign(:userName, userName)

@@ -107,10 +107,38 @@ defmodule Websocket.ServerUser do
             {:ok, entity}
         end
 
-        def handle_event({:DOWN, _, _, _, reason} = msg, entity) do
-            Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-            user client disconnected #{inspect msg}. entity: #{inspect entity}"
-            {:stop_process, {:shutdown, "user client disconnected"}, entity}
+        def handle_event({:DOWN, _, _, terminated_pid, reason} = msg,
+        %Entity{attributes: %{User => user}} = entity) do
+
+            user_channel_pid = user.channelPid
+
+            case terminated_pid do
+                user_channel_pid ->
+                    Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    user client disconnected,
+                    user:#{inspect user}"
+
+                    if (is_nil(user.roomPid)) do
+                        Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                        not in room, so quit"
+                        {:stop_process, {:shutdown, "user client disconnected"}, entity}
+                    else
+                        Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                        in room #{inspect user.roomId}, so disconnected"
+                        {:ok, entity |> update_user(:channelPid, nil) |> update_user(:online, false)}
+                    end
+                unknow_pid ->
+                    Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    unknow process #{unknow_pid} terminated cause user terminated"
+                    {:stop_process, {:shutdown, "unknow process #{unknow_pid} terminated"}, entity}
+            end
+            # TODO user 断线重连 状态判断已经ok，还差 返回信息的定义。
+            # TODO 下面主要就是房间没人了退出，游戏结束了，断线的退出，
+            # TODO 断线了，判断 是掉线，还是直接退出 ok完成
+            # TODO 断线了，重连与不重连，
+            # TODO 房间 怎么处理，房主 掉了 怎么搞，
+            # TODO 用户的细节处理完了，房间的细节处理
+            
         end
 
         def handle_call({:update_info, key, value}, entity) do

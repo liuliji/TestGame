@@ -24,6 +24,19 @@ defmodule Websocket.ServerRoom.MainBehaviour do
         {:ok, entity}
     end
 
+    def terminate(:dissolveRoom,
+    %Entity{attributes: %{Room => room}} = entity) do
+        Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
+        room #{inspect room.roomId} terminate .
+        reason: dissolveRoom
+        roomInfo: #{inspect room}"
+        room.users |> Enum.each(fn
+            {pos, %{pid: pid}} -> send(pid, :leavedRoom)
+            {pos, nil} -> nil
+        end)
+        {:ok, entity}
+    end
+
     def terminate(reason,
     %Entity{attributes: %{Room => room}} = entity) do
         Logger.warn "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
