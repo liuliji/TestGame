@@ -222,6 +222,25 @@ function onGameResult(args) {
     App.UIManager.emit(Event.AGS_GAME_RESULT, args);
 }
 
+/**
+ * 退出房间
+ */
+function onLeaveRoom(){
+    debugger;
+}
+
+/**
+ * 退出房间成功
+ */
+function onLeaveRoomSuccess(){
+    debugger;
+    // 创建房间成功之后，切换channel，连接到房间channel
+    let selfData = App.UserManager.getSelf();
+    if (!selfData){
+        return
+    }
+    App.Socket.switchChannel('lobby');
+}
 
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
@@ -241,5 +260,7 @@ module.exports = {
     'onQiPai': onQiPai,// 自己弃牌
     'onOtherQiPai': onOtherQiPai,// 其他人弃牌
     'onGameResult': onGameResult,// 开牌
+    'onLeaveRoom': onLeaveRoom,// 退出房间
+    'onLeaveRoomSuccess': onLeaveRoomSuccess,// 退出房间成功
 }
 

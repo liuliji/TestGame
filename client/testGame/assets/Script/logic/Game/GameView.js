@@ -50,7 +50,11 @@ cc.Class({
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
         ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
-        this.roomStatus = ROOM_STATUS.FIRST_BEGIN;
+        var room = App.UserManager.getRoom();
+        if (!room){
+            return;
+        }
+        room.status = ROOM_STATUS.FIRST_BEGIN;
     },
 
     basicInit: function () {
@@ -215,7 +219,11 @@ cc.Class({
      * 发牌消息
      */
     onFaPai: function () {
-        this.roomStatus = ROOM_STATUS.GAMING;
+        var room = App.UserManager.getRoom();
+        if (!room){
+            return;
+        }
+        room.setRoomStatus(ROOM_STATUS.GAMING);
         this.btnStart.active = false;
         this.btnReady.active = false;
         App.UserManager.foreachAllUser(function (userData) {
@@ -351,17 +359,21 @@ cc.Class({
                 }
             }.bind(this));
         }
+        var room = App.UserManager.getRoom();
+        if (!room){
+            return;
+        }
         if (selfData && selfData.roomOwner) {// 自己如果是房主的话
-            if (this.roomStatus == ROOM_STATUS.FIRST_BEGIN){
+            if (room.status == ROOM_STATUS.FIRST_BEGIN){
                 if (allReady) {
                     this.btnStart.active = true;
                 } else {
                     this.btnStart.active = false;
                 }
-            } else if (this.roomStatus == ROOM_STATUS.GAMING){
+            } else if (room.status == ROOM_STATUS.GAMING){
                 this.btnStart.active = false;
                 this.btnReady.active = false;
-            } else if (this.roomStatus == ROOM_STATUS.READY){
+            } else if (room.status == ROOM_STATUS.READY){
                 this.btnStart.active = false;
                 if (!selfData.readyStatus){
                     this.btnReady.active = true;
@@ -371,7 +383,7 @@ cc.Class({
             }
             
         } else {// 自己不是房主的话
-            if (this.roomStatus == ROOM_STATUS.FIRST_BEGIN){
+            if (room.status == ROOM_STATUS.FIRST_BEGIN){
                 if (selfData.readyStatus == true) {// 自己已经准备了，就全都隐藏
                     this.btnStart.active = false;
                     this.btnReady.active = false;
@@ -379,10 +391,10 @@ cc.Class({
                     this.btnStart.active = false;
                     this.btnReady.active = true;
                 }
-            } else if (this.roomStatus == ROOM_STATUS.GAMING){
+            } else if (room.status == ROOM_STATUS.GAMING){
                 this.btnStart.active = false;
                 this.btnReady.active = false;
-            } else if (this.roomStatus == ROOM_STATUS.READY){
+            } else if (room.status == ROOM_STATUS.READY){
                 this.btnStart.active = false;
                 if (selfData.readyStatus){
                     this.btnReady.active = false;
@@ -622,7 +634,10 @@ cc.Class({
             ChipManager.getInstance().chipMove(this.playerMgr[winPosition].node.position);
 
             // 比牌结束后，变为准备装填
-            this.roomStatus = ROOM_STATUS.READY;
+            var room = App.UserManager.getRoom();
+            if (room){
+                room.setRoomStatus(ROOM_STATUS.READY);
+            }        
             this.isAllReady();
         }, this);
 

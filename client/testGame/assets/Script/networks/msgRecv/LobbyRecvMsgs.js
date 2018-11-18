@@ -61,7 +61,6 @@ function onCreateRoomFailed(args) {
 }
 
 
-
 module.exports = {
     'oncreateRoom': oncreateRoom,// 创建房间
     'onRoomInfoOnLobby': onRoomInfoOnLobby,// 加入房间

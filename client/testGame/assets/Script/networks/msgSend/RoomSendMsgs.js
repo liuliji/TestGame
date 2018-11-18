@@ -49,7 +49,7 @@ function onStartGame() {
 }
 
 /**
- * 
+ * 玩家操作
  */
 function onActionExecute(aId, count = 0) {
     var msg = {
@@ -59,12 +59,21 @@ function onActionExecute(aId, count = 0) {
     App.Socket.sendMsg('ID_C2S_ACTION_EXECUTE', msg);
 }
 
+/**
+ * 退出房间
+ */
+function onLeaveRoom(args){
+    var msg = {};
+    App.Socket.sendMsg('ID_C2S_LEAVE_ROOM', msg);
+}
+
 module.exports = {
     'onRoomTalk': onRoomTalk,// 说话、聊天
     'onDeleteRoom': onDeleteRoom,// 删除房间
     'onReady': onReady,// 准备
     'onStartGame': onStartGame,// 房主点击开始游戏
     'onActionExecute': onActionExecute,// 玩家进行了什么操作
+    'onLeaveRoom': onLeaveRoom,// 退出房间
 }
 
 

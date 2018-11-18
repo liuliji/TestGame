@@ -88,6 +88,11 @@ module.exports = {
                 'function': 'onRoomInfoOnLobby',
                 'desc': '加入房间成功，服务器给返回的房间信息',
             },
+            {
+                'id': 'ID_C2S_LEAVE_ROOM',
+                'function': 'onLeaveRoom',
+                'desc': '退出房间',
+            }
         ],
         'RoomRecvMsgs': [// 房间服务器回包
             {
@@ -170,6 +175,16 @@ module.exports = {
                 'function': 'onGameResult',
                 'desc': '开牌',
             },
+            {
+                'id': 'ID_S2C_LEAVE_ROOM',
+                'function': 'onLeaveRoom',
+                'desc': '退出房间',
+            },
+            {
+                'id': 'ID_S2C_LEAVE_ROOM_SUCCESS',
+                'function': 'onLeaveRoomSuccess',
+                'desc': '退出房间成功',
+            }
         ],
     }
 
