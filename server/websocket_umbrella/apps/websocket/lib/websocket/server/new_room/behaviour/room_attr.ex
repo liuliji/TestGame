@@ -35,5 +35,18 @@ defmodule Websocket.ServerRoom.RoomAttr do
         end)
     end
 
+    def action_next_map() do
+        %{
+            action_kaipai => [:inherit],         # inherit 继承，表示返回上一次的结果
+            action_yazhu => [action_kanpai, action_yazhu, action_qipai, action_kaipai],
+            
+        }
+    end
+
+    def action_kanpai, do: 1
+    def action_yazhu, do: 2
+    def action_qipai, do: 3
+    def action_kaipai, do: 4
+
 
 end

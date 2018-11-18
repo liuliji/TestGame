@@ -17,6 +17,7 @@ defmodule Websocket.ServerRoom do
             playingIndexList: [],  #当前还在参与游戏的玩家座位号
             currIndex: -1,   # 当前发言玩家列表中的index
             chips: [], # 筹码{pos, count} pos位置的玩家 加注 count
+            isActions: false
         )
     end
 

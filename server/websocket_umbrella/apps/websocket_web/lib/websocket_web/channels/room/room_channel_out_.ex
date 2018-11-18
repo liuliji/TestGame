@@ -26,16 +26,19 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 ]
             end
 
-            defp get_actions(tar_pos, self_pos) when tar_pos == self_pos do
+            defp get_actions(tar_pos, self_pos, true) when tar_pos == self_pos do
                 actions()
             end
 
-            defp get_actions(_, _) do
+            defp get_actions(tar_pos, self_pos, false) when tar_pos == self_pos do
                 actions()
-                |> Enum.filter(fn
-                    {:aId, 1} -> true
-                    _ -> false
-                end)
+                |> Enum.filter(fn item_map -> Map.get(item_map, :aId) != 4 end)
+            end
+
+            # 当不是自己说话的时候 只能看牌
+            defp get_actions(_, _, _) do
+                actions()
+                |> Enum.filter(fn item_map -> Map.get(item_map, :aId) == 1 end)
             end
             
             def handle_info({:joined, newUid}, socket) do
@@ -95,7 +98,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 room_info = socket |> get_user_roomPid |> Websocket.ServerRoom.room_info 
 
                 ret_actions = %{
-                    actions: get_actions(pos, uinfo.position),
+                    actions: get_actions(pos, uinfo.position, room_info.isActions),
                     actionPositions: Enum.at(room_info.playingIndexList, room_info.currIndex)
                 }
 
