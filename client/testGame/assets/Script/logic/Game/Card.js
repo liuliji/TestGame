@@ -15,7 +15,6 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad() {
-        this.spriteFrame = this.node.getComponent(cc.Sprite).spriteFrame;
     },
 
     start() {
@@ -30,7 +29,7 @@ cc.Class({
         } else {
             name = '' + value;
         }
-        this.spriteFrame = this.gameAtlas.getSpriteFrame(name);
+        this.node.getComponent(cc.Sprite).spriteFrame = this.gameAtlas.getSpriteFrame(name);
     },
 
     // 看牌特效

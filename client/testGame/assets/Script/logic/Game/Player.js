@@ -240,13 +240,17 @@ cc.Class({
         }
     },
     // 比牌结束，显示玩家的牌，并设置牌的显示
-    biPaiShowCard: function (pokers) {
+    biPaiShowCard: function (cards) {
         for (var i = 0; i < this.cards.length; i++) {
             let card = this.cards[i];
             if (card) {
                 card.active = true;
+                var value = cards[i];
+                var cardCom = card.getComponent('Card');
+                cardCom.setCard(value);
             }
         }
+
     },
 
     // called every frame, uncomment this function to activate update callback

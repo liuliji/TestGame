@@ -216,6 +216,7 @@ function onGameResult(args) {
         let userData = App.UserManager.getAllUserData(user.position);
         if (userData) {
             userData.onSettleData(user);// 结算设置玩家数据
+            userData.pokers = user.poker.pokers;
         }
     }
     App.UIManager.emit(Event.AGS_GAME_RESULT, args);
