@@ -6,6 +6,8 @@
  * Use      : 房间数据
  ************************************************************************/
 var BaseRoomData = require('BaseRoomData');
+var ROOM_STATUS = require('Consts').ROOM_STATUS;// 房间状态
+
 var RoomData = cc.Class({
     name:'RoomData',
     extends: BaseRoomData,
@@ -44,8 +46,19 @@ var RoomData = cc.Class({
         jdzTitlePosition: -1, //叫地主的人
         isFpData: false,//是否已经发牌
 
+
+        status: ROOM_STATUS.FIRST_BEGIN,// 房间状态，默认为第一次进入
+
     },
     ctor: function () {
+    },
+
+    setRoomStatus: function(status){
+        this.status = status;
+    },
+
+    getStatus: function(){
+        return this.status;
     },
 
     //< 开始游戏

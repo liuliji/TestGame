@@ -13,6 +13,7 @@ var enViewType = require('Consts').enViewType;
 var enWinShowType = require('UIWindowDef').enWinShowType;
 var RoomSendMsgs = require('RoomSendMsgs');
 var enMsgType = require('UIWindowDef').enMsgType;
+var ROOM_STATUS = require('Consts').ROOM_STATUS;// 房间状态
 
 cc.Class({
     extends: UIWindow,
@@ -44,12 +45,19 @@ cc.Class({
         if (!selfData){
             return;
         }
+        let room = App.UserManager.getRoom();
+        let status = room.status;
         if (selfData.roomOwner){// 是房主
             this.setUpgroupIsShow(true);
             this.setLeaveIsShow(false);
         } else {// 不是房主
-            this.setUpgroupIsShow(false);
-            this.setLeaveIsShow(true);
+            if (status == ROOM_STATUS.FIRST_BEGIN){
+                this.setUpgroupIsShow(false);
+                this.setLeaveIsShow(true);
+            } else {
+                this.setUpgroupIsShow(true);
+                this.setLeaveIsShow(false);
+            }
         }
     },
 
@@ -112,7 +120,23 @@ cc.Class({
             App.UIManager.hideWindow(this.windowID);
             return;
         }
-        RoomSendMsgs.onDeleteRoom(roomObj.roomId);
+        let status = roomObj.status;
+        let selfData = App.UserManager.getSelf();
+        if (!selfData){
+            return;
+        }
+        if (selfData.roomOwner){
+            if (status == ROOM_STATUS.FIRST_BEGIN){
+                RoomSendMsgs.onDeleteRoom(roomObj.roomId);
+            } else {
+                // 发起解散
+                return;
+            }
+        } else {
+            // 发起解散
+            return;
+        }
+        
     },
     // 取消解散
     onUpgroupCancel: function () {
@@ -163,7 +187,7 @@ cc.Class({
             Log.debug('菜单页面无法获取房间信息');
             return;
         }
-
+        RoomSendMsgs.onLeaveRoom();
 
     },
 
