@@ -14,6 +14,7 @@ var Consts = require('Consts');
 var RoomSendMsgs = require('RoomSendMsgs');
 var ChipManager = require('ChipManager');// 筹码管理器，
 var CARD_SCALE = Consts.CARD_SCALE;// 卡牌的缩放值
+var ROOM_STATUS = require('Consts').ROOM_STATUS;// 房间状态
 
 cc.Class({
     extends: BaseGameView,
@@ -49,6 +50,7 @@ cc.Class({
     initValue: function () {
         this.operateOffset = 100;// 操作面板的偏移量
         ChipManager.getInstance().setPrefab(this.chipPrefab);// 筹码管理器初始化管理的prefab
+        this.roomStatus = ROOM_STATUS.FIRST_BEGIN;
     },
 
     basicInit: function () {
@@ -145,6 +147,12 @@ cc.Class({
             // this.buttonOpen.interactable = false;
         }
 
+        this.pkNode = null;// PK节点，播放PK动画
+        var pkNode = sgm.MethodsUtils.getNodeChildObject(this.node,'pkNode',cc.Sprite);
+        if (pkNode){
+            this.pkNode = pkNode;
+        }
+
     },
 
     // 准备
@@ -207,6 +215,7 @@ cc.Class({
      * 发牌消息
      */
     onFaPai: function () {
+        this.roomStatus = ROOM_STATUS.GAMING;
         this.btnStart.active = false;
         this.btnReady.active = false;
         App.UserManager.foreachAllUser(function (userData) {
@@ -343,19 +352,45 @@ cc.Class({
             }.bind(this));
         }
         if (selfData && selfData.roomOwner) {// 自己如果是房主的话
-            if (allReady) {
-                this.btnStart.active = true;
-            } else {
-                this.btnStart.active = false;
-            }
-        } else {// 自己不是房主的话
-            if (selfData.readyStatus == true) {// 自己已经准备了，就全都隐藏
+            if (this.roomStatus == ROOM_STATUS.FIRST_BEGIN){
+                if (allReady) {
+                    this.btnStart.active = true;
+                } else {
+                    this.btnStart.active = false;
+                }
+            } else if (this.roomStatus == ROOM_STATUS.GAMING){
                 this.btnStart.active = false;
                 this.btnReady.active = false;
-            } else {// 自己还么准备就只显示准备按钮
+            } else if (this.roomStatus == ROOM_STATUS.READY){
                 this.btnStart.active = false;
-                this.btnReady.active = true;
+                if (!selfData.readyStatus){
+                    this.btnReady.active = true;
+                } else {
+                    this.btnReady.active = false;                    
+                }
             }
+            
+        } else {// 自己不是房主的话
+            if (this.roomStatus == ROOM_STATUS.FIRST_BEGIN){
+                if (selfData.readyStatus == true) {// 自己已经准备了，就全都隐藏
+                    this.btnStart.active = false;
+                    this.btnReady.active = false;
+                } else {// 自己还么准备就只显示准备按钮
+                    this.btnStart.active = false;
+                    this.btnReady.active = true;
+                }
+            } else if (this.roomStatus == ROOM_STATUS.GAMING){
+                this.btnStart.active = false;
+                this.btnReady.active = false;
+            } else if (this.roomStatus == ROOM_STATUS.READY){
+                this.btnStart.active = false;
+                if (selfData.readyStatus){
+                    this.btnReady.active = false;
+                } else {
+                    this.btnReady.active = true;
+                }
+            }
+            
 
         }
 
@@ -510,6 +545,9 @@ cc.Class({
                 winPosition = userData.position;
             }
         }.bind(this));
+        if (winPosition < 0){
+            return;
+        }
 
         // 开始做玩家比牌动画
         var calF1 = cc.callFunc(function () {
@@ -582,12 +620,32 @@ cc.Class({
 
         var calF_chip = cc.callFunc(function () {
             ChipManager.getInstance().chipMove(this.playerMgr[winPosition].node.position);
+
+            // 比牌结束后，变为准备装填
+            this.roomStatus = ROOM_STATUS.READY;
+            this.isAllReady();
         }, this);
 
         var seq = cc.sequence(calF1, spaw1, calF_final, calF_chip);
         this.node.runAction(seq);
 
+        // 播放PK动画
+        this.playPkAnimation();
+    },
 
+    // 播放PK动画
+    playPkAnimation: function(){
+        if (!this.pkNode){
+            return;
+        }
+        this.pkNode.node.active = true;
+        var anim = this.pkNode.getComponent(cc.Animation);
+        anim.play("pk");
+        anim.on('stop',() => {
+            if (this.pkNode && this.pkNode.node){
+                this.pkNode.node.active = false;
+            }
+        });
     },
 
     // 测试按钮

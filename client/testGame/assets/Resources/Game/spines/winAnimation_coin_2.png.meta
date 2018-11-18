@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "36b6c330-2ca8-45c1-8d89-3be6a42e72bb",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "winAnimation_coin_2": {
+      "ver": "1.0.3",
+      "uuid": "346656a7-d986-4cc0-b5c7-bf17fcf41993",
+      "rawTextureUuid": "36b6c330-2ca8-45c1-8d89-3be6a42e72bb",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -0.5,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 11,
+      "width": 79,
+      "height": 58,
+      "rawWidth": 80,
+      "rawHeight": 80,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

@@ -383,6 +383,12 @@ var CARD_SCALE = {// 卡牌缩放的大小
 
 }
 
+var ROOM_STATUS = {// 房间状态
+    'FIRST_BEGIN': 0,// 第一次开始
+    'GAMING': 1,// 游戏中
+    'READY': 2,// 游戏结束后的准备状态
+}
+
 /**
  * 导出对象
  */
@@ -412,4 +418,5 @@ module.exports = {
     'PyBgScale': PyBgScale,// 刨幺缩放比例
     'PyCreateRoomInfo': PyCreateRoomInfo,// 刨幺房间玩法信息
     'CARD_SCALE': CARD_SCALE,// 卡牌缩放的大小
+    'ROOM_STATUS': ROOM_STATUS,// 房间状态
 };

@@ -202,6 +202,13 @@ function onOtherQiPai(args) {
  * 开牌
  */
 function onGameResult(args) {
+    Log.debug('开牌结果' + JSON.stringify(args));
+    App.UserManager.foreachAllUser(function (userData) {
+        if (!userData) {
+            return;
+        }
+        userData.readyStatus = false;// 游戏开牌后，所有人的准备状态置为false
+    }.bind(this));
     // debugger;
     var users = args.users;
     for (var i = 0; i < users.length; i++) {
