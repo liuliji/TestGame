@@ -184,6 +184,11 @@ module.exports = {
                 'id': 'ID_S2C_LEAVE_ROOM_SUCCESS',
                 'function': 'onLeaveRoomSuccess',
                 'desc': '退出房间成功',
+            },
+            {
+                'id': 'ID_S2C_OTHERS_LEAVE_ROOM',
+                'function': 'onOtherLeaveRoom',
+                'desc': '别人退出房间'
             }
         ],
     }

@@ -242,6 +242,15 @@ function onLeaveRoomSuccess(){
     App.Socket.switchChannel('lobby');
 }
 
+/**
+ * 别人退出房间
+ */
+function onOtherLeaveRoom(args){
+    let position  = args.position;
+    debugger;
+    App.UIManager.emit(Event.AGS_OTHER_LEAVE,position);
+}
+
 module.exports = {
     // 'oncreateRoom': oncreateRoom,// 创建房间
     'onJoinRoom': onJoinRoom,// 加入房间
@@ -262,5 +271,6 @@ module.exports = {
     'onGameResult': onGameResult,// 开牌
     'onLeaveRoom': onLeaveRoom,// 退出房间
     'onLeaveRoomSuccess': onLeaveRoomSuccess,// 退出房间成功
+    'onOtherLeaveRoom': onOtherLeaveRoom,// 别人退出房间
 }
 

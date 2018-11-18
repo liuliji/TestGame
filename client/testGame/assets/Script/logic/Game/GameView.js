@@ -93,6 +93,7 @@ cc.Class({
         this.node.on(Event.AGS_QI_PAI, this.onQiPai.bind(this));
         this.node.on(Event.AGS_OTHER_QI_PAI, this.onOtherQiPai.bind(this));
         this.node.on(Event.AGS_GAME_RESULT, this.onGameResule.bind(this));
+        this.node.on(Event.AGS_OTHER_LEAVE, this.onOtherLeave.bind(this));
     },
 
     // 动态获取控件
@@ -191,6 +192,12 @@ cc.Class({
          * 等信息进行判断，直接对开始和准备按钮进行显示和隐藏
          */
         this.isAllReady();
+    },
+
+    // 别人离开房间
+    onOtherLeave: function(event){
+        let position = event.detail;
+        this.removePlayer(position);
     },
 
     // 玩家说话

@@ -257,6 +257,7 @@ var AgreementEvent = {
     AGS_QI_PAI: 'emitQiPai',// 弃牌
     AGS_OTHER_QI_PAI: 'emitOtherQiPai',// 其他人弃牌
     AGS_GAME_RESULT: 'emitGameResult',// 开牌
+    AGS_OTHER_LEAVE: 'emitOtherLeave',// 其他人离开方便
 }
 
 var PlayerBgScale = {

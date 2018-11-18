@@ -80,10 +80,11 @@ cc.Class({
         }.bind(this));
     },
 
-
-
-
-
+    // 删除玩家
+    removePlayer: function(position){
+        let player = this.playerMgr[position];
+        player.removePlayer();
+    }
 
     // called every frame, uncomment this function to activate update callback
     // update: function (dt) {
