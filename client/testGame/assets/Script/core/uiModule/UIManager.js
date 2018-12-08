@@ -522,7 +522,8 @@ module.exports = cc.Class({
                 revolveView.onInit();
             }
             revolveView.addTips(msg);
-            revolveView.node.setPositionY((cc.winSize.height * 0.5) * 0.67);
+            // revolveView.node.setPositionY((cc.winSize.height * 0.5) * 0.67);
+            revolveView.node.y = ((cc.winSize.height * 0.5) * 0.67);
             revolveView.showWindow();// this.showWindow(enCommonUI.RevolveUI);
             return revolveView;
         }

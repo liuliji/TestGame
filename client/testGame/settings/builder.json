@@ -3,7 +3,6 @@
   "appSecret": "",
   "encryptJs": true,
   "excludeScenes": [],
-  "fb-instant-games": {},
   "includeAnySDK": false,
   "includeSDKBox": false,
   "inlineSpriteFrames": true,
@@ -21,12 +20,8 @@
   },
   "packageName": "org.cocos2d.helloworld",
   "privateKey": "",
-  "qqplay": {
-    "REMOTE_SERVER_ROOT": "",
-    "orientation": "portrait"
-  },
   "renderMode": "0",
-  "startScene": "af475a27-f0a4-4ada-88e4-2403b121e67d",
+  "startScene": "95dc2578-3bbb-4767-98f4-1a6ff7dd0d3d",
   "title": "hello_world",
   "webOrientation": "auto",
   "wechatgame": {

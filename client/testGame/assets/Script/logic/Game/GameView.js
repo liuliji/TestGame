@@ -119,7 +119,7 @@ cc.Class({
             var winSize = cc.director.getWinSize();
             var winHeight = winSize.height;
             var height = this.operateLayer.height;
-            this.operateLayer.setPositionY(- winHeight / 2 - height / 2 - this.operateOffset);
+            this.operateLayer.y = - winHeight / 2 - height / 2 - this.operateOffset;
 
         }
         // 操作面板上的按钮
@@ -327,7 +327,8 @@ cc.Class({
         var height = this.operateLayer.height;
 
         this.operateLayer.stopAllActions();
-        this.operateLayer.setPositionY(- winHeight / 2 + height / 2);
+        // this.operateLayer.setPositionY(- winHeight / 2 + height / 2);
+        this.operateLayer.y = (- winHeight / 2 + height / 2);
 
         var mov1 = cc.moveTo(0.5, new cc.Vec2(0, - winHeight / 2 - height / 2 - this.operateOffset));
         var calF = cc.callFunc(function () {
