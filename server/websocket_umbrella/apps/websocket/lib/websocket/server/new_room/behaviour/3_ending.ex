@@ -22,6 +22,13 @@ defmodule Websocket.ServerRoom.EndingBehaviour do
         end)
         |> Enum.map(fn {pos, %{pid: pid}} -> Websocket.ServerUser.user_info(pid) end)
 
+        # 清除 user ready 状态
+        users
+        |> Enum.each(fn item -> 
+            Websocket.ServerUser.update_info(item.pid, :readyStatus, false)
+        end)
+
+
         max_user = users
         |> Enum.reduce(List.first(users), fn
             %User{poker: poker1} = item1, %User{poker: poker2} = acc ->
