@@ -175,6 +175,12 @@ cc.Class({
         if (this.btnReady) {
             this.btnReady.active = isShow;
         }
+        App.UserManager.foreachAllUser((userData)=> {
+            if (userData){
+                var position = userData.position;
+                this.playerMgr[position].rmCards();
+            }
+        });
     },
 
     // 玩家加入房间

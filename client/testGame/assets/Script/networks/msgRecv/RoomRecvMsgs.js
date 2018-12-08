@@ -93,7 +93,10 @@ function onDeleteRoom(args) {
  * @param args
  */
 function onReady(args) {
-    App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
+    let selfData = App.UserManager.getSelf();
+    if (selfData && selfData.position != args.position){
+        App.UIManager.addTips(' 有玩家准备 ', 1, cc.p(0, 0), cc.color(255, 255, 255), 26, true, 4, true);
+    }
     var userData = App.UserManager.getAllUserData(args.position);
     if (userData) {
         userData.readyStatus = true;
