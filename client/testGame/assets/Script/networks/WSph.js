@@ -14,6 +14,7 @@ module.exports = cc.Class({
         chan: null,// socket的channel
         events: null,// 消息回调
         type: 1,// 连接的channel类型，1为lobby，2为大厅
+        channel: "",// channel的名字
     },
 
     // use this for initialization
@@ -73,6 +74,8 @@ module.exports = cc.Class({
         }
         // socket类型
         this.type = type;
+        // channel的name保存起来，用来在socket链接成功之后，创建channel
+        this.channel = channel;
 
         /**
          * 创建socket连接，并发起连接请求
@@ -87,8 +90,8 @@ module.exports = cc.Class({
         this.socket.onClose(this.onSocketClose.bind(this));
         this.socket.connect();
 
-        // 连接到channel
-        this.switchChannel(channel);
+        // // 连接到channel
+        // this.switchChannel(channel);
 
 
     },
@@ -97,9 +100,9 @@ module.exports = cc.Class({
     /**
      * socket连接成功
      */
-    onSocketConnectSuccess: function () {
+    onSocketConnectSuccess: function (msg) {
         if (this.events['socket_success']) {
-            this.events['socket_success'](this.type);
+            this.events['socket_success'](this.channel,msg);
         }
     },
 

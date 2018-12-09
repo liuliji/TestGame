@@ -32,8 +32,13 @@ function registerHandler() {
 /**
  * 建立socket成功
  */
-function onConnectSuccess(type) {
+function onConnectSuccess(channel,msg) {
+    debugger;
+    if (msg){
 
+    } else {
+        App.Socket.switchChannel(channel);
+    }
 }
 
 /**
