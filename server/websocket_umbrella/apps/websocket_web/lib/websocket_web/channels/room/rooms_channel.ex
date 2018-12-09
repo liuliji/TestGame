@@ -15,10 +15,60 @@ defmodule WebsocketWeb.RoomsChannel do
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
     def join("room:" <> privateRoomId, msg, socket) do
-
         send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
         {:ok, socket}
     end
+
+    defp reconn() do
+        
+        userInfo = Websocket.ServerUser.user_info(pid)
+        roomInfo = Websocket.ServerRoom.room_info(userInfo.roomPid)
+        Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        userInfo:#{inspect userInfo}
+        roomInfo:#{inspect roomInfo}"
+        
+        currGameState = case roomInfo.currIndex do
+        -1 ->
+            case userInfo.readyStatus do
+            true ->
+                1 #玩家准备
+            false ->
+                3 # 玩家未准备
+            end
+        _ ->
+            2 # 表示游戏进行中
+        end
+
+        retUser = userInfo
+        |> Map.from_struct
+        |> Map.take([:uid, :userName, :curMoney, :online, :roomId, :roomOwner, :position, :readyStatus])
+
+        retRoom = roomInfo
+        |> Map.from_struct
+        |> Map.take([:roomId, :currIndex, :chips, :isFirstBegin, :users])
+        |> Enum.map(fn 
+            {:chips, list} ->
+            {:chips, list |> Enum.into(%{})}
+            {:users, list} ->
+            {:users, list |> Enum.map(fn 
+                {key, nil} -> {key, nil}
+                {key, u} ->
+                c_u = Websocket.ServerUser.user_info(u.pid)
+                {key, c_u |> Map.from_struct |> Map.take([:userName, :roomOwner, :position, :readyStatus])}
+            end)
+            |> Enum.into(%{})}
+            {key, value} -> {key, value}
+            end)
+        |> Enum.into(%{})
+
+        clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom}
+
+        # Phoenix.Channel.push(socket, "ID_S2C_RECONNECTED", clientRet)
+        
+        Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        clientRet:#{inspect clientRet}"
+    end
+
     ## -----------------Callbacks end -------------------
 
     ## ---------------Incoming Events start-------------------

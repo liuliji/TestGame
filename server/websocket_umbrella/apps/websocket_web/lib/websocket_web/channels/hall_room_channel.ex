@@ -19,9 +19,12 @@ defmodule WebsocketWeb.HallRoomChannel do
         # send(self(), {:afterJoin, msg})
         originUserInfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
 
+        Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+        originUserInfo:#{inspect originUserInfo} "
+
         socket = socket |> Socket.assign(:roomId, room_name)
         send(get_user_pid(socket), {:joinLobby, self()})
-        
+
         if (is_nil(originUserInfo.roomPid)) do
             {:ok, %{roomId: originUserInfo.roomId}, socket}
         else
