@@ -67,7 +67,7 @@ function onJoinSuccess(msg,channel) {
             cc.director.loadScene('lobby');
         }
     } else {
-        App.Socket.switchChannel('room:' + roomId);
+        App.Socket.switchChannel('room:' + msg.roomId);
     }
     // } else{
         
