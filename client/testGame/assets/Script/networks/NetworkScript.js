@@ -61,17 +61,17 @@ function onConnectClose() {
  */
 function onJoinSuccess(msg,channel) {
     // debugger;
-    if (msg.roomId){
-        if (msg.roomId == "lobby" || msg.roomId == "" || !msg.roomId){
-            if (channel == 'lobby'){
-                cc.director.loadScene('lobby');
-            }
-        } else {
-            App.Socket.switchChannel('room:' + roomId);
+    // if (msg.roomId){
+    if (msg.roomId == "lobby" || msg.roomId == "" || !msg.roomId){
+        if (channel == 'lobby'){
+            cc.director.loadScene('lobby');
         }
-    } else{
-        
+    } else {
+        App.Socket.switchChannel('room:' + roomId);
     }
+    // } else{
+        
+    // }
     
 }
 
