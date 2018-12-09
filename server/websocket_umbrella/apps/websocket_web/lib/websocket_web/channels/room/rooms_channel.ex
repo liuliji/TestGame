@@ -15,13 +15,17 @@ defmodule WebsocketWeb.RoomsChannel do
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
     def join("room:" <> privateRoomId, msg, socket) do
-        send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
+        originUserInfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
+        if (is_nil(originUserInfo.roomPid)) do
+            send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
+        else
+            send(self(), :reconn)
+        end
         {:ok, socket}
     end
 
-    defp reconn() do
-        
-        userInfo = Websocket.ServerUser.user_info(pid)
+    def handle_info(:reconn, socket) do
+        userInfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
         roomInfo = Websocket.ServerRoom.room_info(userInfo.roomPid)
         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         userInfo:#{inspect userInfo}
@@ -63,10 +67,11 @@ defmodule WebsocketWeb.RoomsChannel do
 
         clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom}
 
-        # Phoenix.Channel.push(socket, "ID_S2C_RECONNECTED", clientRet)
+        Phoenix.Channel.push(socket, "ID_S2C_RECONNECTED", clientRet)
         
         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         clientRet:#{inspect clientRet}"
+        {:noreply, socket}
     end
 
     ## -----------------Callbacks end -------------------
