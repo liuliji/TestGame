@@ -26,9 +26,9 @@ defmodule WebsocketWeb.HallRoomChannel do
         send(get_user_pid(socket), {:joinLobby, self()})
 
         if (is_nil(originUserInfo.roomPid)) do
-            {:ok, %{roomId: originUserInfo.roomId}, socket}
-        else
             {:ok, %{roomId: nil}, socket}
+        else
+            {:ok, %{roomId: originUserInfo.roomId}, socket}
         end
         # {:ok, socket}
     end
