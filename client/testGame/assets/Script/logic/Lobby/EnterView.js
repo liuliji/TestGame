@@ -104,6 +104,7 @@ cc.Class({
                 value = '9';
                 break;
             case cc.KEY.backspace:// 删除
+            case 8:// 删除
             case cc.KEY['10']:
                 value = '10';
 
@@ -112,7 +113,12 @@ cc.Class({
                         name: 'num_12'
                     }
                 }
+                
                 break;
+            case 13:
+            case cc.KEY.enter:
+            this.onEnterRoom();
+            return;
         }
         this.onClickNumber(data, value);
     },
@@ -134,7 +140,7 @@ cc.Class({
                         break;
                     case "num_12":
                         if (this.roomId && this.roomId.length > 0){
-                            this.roomId.substring(0, this.roomId.length - 1);
+                            this.roomId = this.roomId.substring(0, this.roomId.length - 1);
                             this.roomIdLabel.string = this.roomId;
                         }
                         break;

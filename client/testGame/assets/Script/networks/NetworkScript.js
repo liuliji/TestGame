@@ -33,7 +33,6 @@ function registerHandler() {
  * 建立socket成功
  */
 function onConnectSuccess(channel,msg) {
-    debugger;
     if (msg){
 
     } else {
