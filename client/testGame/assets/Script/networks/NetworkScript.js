@@ -62,11 +62,15 @@ function onConnectClose() {
 function onJoinSuccess(msg,channel) {
     // debugger;
     if (msg.roomId){
-
-    } else{
-        if (channel == 'lobby'){
-            cc.director.loadScene('lobby');
+        if (msg.roomId == "lobby" || msg.roomId == "" || !msg.roomId){
+            if (channel == 'lobby'){
+                cc.director.loadScene('lobby');
+            }
+        } else {
+            App.Socket.switchChannel('room:' + roomId);
         }
+    } else{
+        
     }
     
 }
