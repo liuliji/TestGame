@@ -61,9 +61,14 @@ function onConnectClose() {
  */
 function onJoinSuccess(msg,channel) {
     // debugger;
-    if (channel == 'lobby'){
-        cc.director.loadScene('lobby');
+    if (msg.roomId){
+
+    } else{
+        if (channel == 'lobby'){
+            cc.director.loadScene('lobby');
+        }
     }
+    
 }
 
 /**

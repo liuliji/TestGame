@@ -189,6 +189,11 @@ module.exports = {
                 'id': 'ID_S2C_OTHERS_LEAVE_ROOM',
                 'function': 'onOtherLeaveRoom',
                 'desc': '别人退出房间'
+            },
+            {
+                'id': 'ID_S2C_RECONNECTED',
+                'function': 'onReconnect',
+                'desc': '断线重连'
             }
         ],
     }

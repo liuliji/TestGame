@@ -229,14 +229,12 @@ function onGameResult(args) {
  * 退出房间
  */
 function onLeaveRoom(){
-    debugger;
 }
 
 /**
  * 退出房间成功
  */
 function onLeaveRoomSuccess(){
-    debugger;
     // 创建房间成功之后，切换channel，连接到房间channel
     let selfData = App.UserManager.getSelf();
     if (!selfData){
@@ -250,8 +248,27 @@ function onLeaveRoomSuccess(){
  */
 function onOtherLeaveRoom(args){
     let position  = args.position;
-    debugger;
     App.UIManager.emit(Event.AGS_OTHER_LEAVE,position);
+}
+
+/**
+ * 断线重连
+ */
+function onReconnect(args){
+    let sceneName = cc.director.getScene().name;
+    App.UserManager.setRoom(args.roomInfo);
+    let room = App.UserManager.getRoom();
+    if (!room){
+        return;
+    }
+    
+    if (sceneName != "game"){
+        room.isReconnect = 1;
+        cc.director.loadScene("game");
+    } else {
+        room.isReconnect = 2;
+        App.UIManager.emit("reconnect");
+    }
 }
 
 module.exports = {
@@ -275,5 +292,6 @@ module.exports = {
     'onLeaveRoom': onLeaveRoom,// 退出房间
     'onLeaveRoomSuccess': onLeaveRoomSuccess,// 退出房间成功
     'onOtherLeaveRoom': onOtherLeaveRoom,// 别人退出房间
+    'onReconnect': onReconnect,// 断线重连
 }
 

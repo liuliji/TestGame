@@ -43,7 +43,7 @@ cc.Class({
     },
 
     start: function () {
-        
+        this.onReconnect();
     },
 
     // 数据初始化
@@ -78,6 +78,8 @@ cc.Class({
 
     // 游戏时间注册
     gameEventRegist: function () {
+        this.node.on("reconnect",this.onReconnect.bind(this));
+
         this.node.on(Event.AGS_JOIN_ROOM, this.onPlayerJoin.bind(this));
         this.node.on(Event.AGS_TALK, this.onPlayerTalk.bind(this));
         this.node.on(Event.AGS_READY, this.onPlayerReady.bind(this));
@@ -156,6 +158,86 @@ cc.Class({
         var pkNode = sgm.MethodsUtils.getNodeChildObject(this.node,'pkNode',cc.Sprite);
         if (pkNode){
             this.pkNode = pkNode;
+        }
+
+    },
+
+    onTest: function(){
+        let room = App.UserManager.getRoom();
+        room.isReconnect = 2;
+        debugger;
+        this.onReconnect();
+    },
+
+    onReconnect: function(){
+        let room = App.UserManager.getRoom();
+        if (!room){
+            return;
+        }
+        if (!room.isReconnect){
+            return;
+        }
+        this.onReconnectInitPlayer();
+        switch (room.status){
+            case ROOM_STATUS.FIRST_BEGIN:
+                this.onReconnectFirstBegin();
+            break;
+            case ROOM_STATUS.GAMING:
+                this.onReconnectSetPokers();
+            break;
+            case ROOM_STATUS.READY:
+                this.onReconnectReady();
+            break;
+        }
+    },
+
+    onReconnectInitPlayer: function(){
+        for (var i = 0; i < this.playerMgr.length; i ++){
+            let player = this.playerMgr[i];
+            let userData = App.UserManager.getAllUserData(i);
+            if (userData){
+                player.setPlayerInfo(userData, true);;
+            } else {
+                player.removePlayer();
+            }
+        }
+        // App.UserManager.foreachAllUser((userData)=> {
+        //     this.playerMgr[userData.position].setPlayerInfo(userData, true);
+        // });
+    },
+
+    // 从firstBegin重连
+    onReconnectFirstBegin: function(){
+        let room = App.UserManager.getRoom();
+        this.isAllReady();
+    },
+
+    // 从gaming重连
+    onReconnectGaming: function(){
+        let room = App.UserManager.getRoom();
+        this.onReconnectSetPokers();
+
+        this.onActionInfo();
+    },
+
+    onReconnectSetPokers: function(){
+        App.UserManager.foreachAllUser((userData)=> {
+            this.playerMgr[userData.position].sendCard(userData.pokers);
+        });
+    },
+
+    // 从ready重连
+    onReconnectReady: function(){
+        let room = App.UserManager.getRoom();
+        this.isAllReady();
+        let selfData = App.UserManager.getSelf();
+        if (!selfData){
+            return;
+        }
+        if (!selfData.readyStatus){
+            this.onReconnectSetPokers();
+        } else {
+            this.setReadyIsShow(false);
         }
 
     },
@@ -363,6 +445,12 @@ cc.Class({
      */
     isAllReady: function () {
         var allReady = true;
+        let others = App.UserManager.getOtherUserAry();
+        if (others != {}){
+            allReady = true;
+        } else {
+            allReady = false;
+        }
         var selfData = App.UserManager.getSelf();
         if (selfData && selfData.roomOwner) {
             App.UserManager.foreachOtherUser(function (userData) {
