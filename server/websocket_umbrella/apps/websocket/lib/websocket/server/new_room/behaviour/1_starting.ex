@@ -23,13 +23,19 @@ defmodule Websocket.ServerRoom.StartingBehaviour do
             _, all_poker -> all_poker
         end)
 
-        playingIndexList = Enum.reduce(room.users, room.playingIndexList, fn
+        playingIndexList = Enum.reduce(room.users, [], fn
             {pos, %{pid: pid}}, list ->
                 [pos | list]
             _, list -> list
         end)
 
-        room = %{room | playingIndexList: :lists.sort(playingIndexList)}
+        # room = %{room | playingIndexList: :lists.sort(playingIndexList)}
+        # 初始化 并 清除 room 状态
+        room = %{room |
+            playingIndexList: :lists.sort(playingIndexList),
+            chips: [],
+            currIndex: -1
+        }
         
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         started game.

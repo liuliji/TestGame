@@ -42,7 +42,19 @@ defmodule Websocket.ServerRoom.UnreadyedBehaviour do
 
     def handle_event({:ready, uid},
     %Entity{attributes: %{Room => room}} = entity) do
-        send(self(), {:notify_all, {:readyed, uid}})
+        all_ready = room
+        |> ServerRoom.users
+        |> Enum.reduce(true, fn item, acc ->
+            item.readyStatus && acc
+        end)
+
+        if all_ready do
+            send(self(), :startGame)
+        else
+            send(self(), {:notify_all, {:readyed, uid}})
+
+        end
+        
         {:ok, entity}
     end
 
