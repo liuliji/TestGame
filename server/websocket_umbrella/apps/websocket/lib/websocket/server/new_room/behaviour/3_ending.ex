@@ -28,6 +28,11 @@ defmodule Websocket.ServerRoom.EndingBehaviour do
             Websocket.ServerUser.update_info(item.pid, :readyStatus, false)
         end)
 
+        # 清除 room 相关状态
+        room = %{room |
+            currIndex: -1
+        }
+
 
         max_user = users
         |> Enum.reduce(List.first(users), fn

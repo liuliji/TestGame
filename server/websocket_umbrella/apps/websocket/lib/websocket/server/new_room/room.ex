@@ -17,7 +17,8 @@ defmodule Websocket.ServerRoom do
             playingIndexList: [],  #当前还在参与游戏的玩家座位号
             currIndex: -1,   # 当前发言玩家列表中的index
             chips: [], # 筹码{pos, count} pos位置的玩家 加注 count
-            isActions: false
+            isActions: false, # 标识位，表示 是否有人发出了有效动作，防止一上来就开牌
+            isFirstBegin: true # 标志位，表示 是否是第一次开局，第一次开局才需要房主点击 开始游戏
         )
     end
 

@@ -54,7 +54,6 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
 
         {:become, Websocket.ServerRoom.EndingBehaviour, {:ok, msg}, entity}
 
-                    
         end
     end
 

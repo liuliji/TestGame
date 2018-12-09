@@ -34,7 +34,7 @@ defmodule Websocket.ServerRoom.StartingBehaviour do
         room = %{room |
             playingIndexList: :lists.sort(playingIndexList),
             chips: [],
-            currIndex: -1
+            isFirstBegin: false,
         }
         
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}

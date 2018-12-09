@@ -118,9 +118,18 @@ defmodule Websocket.ServerUser do
                     user client disconnected,
                     user:#{inspect user}"
 
-                    if (is_nil(user.roomPid)) do
+                    # 没有加入房间 或者是 加入了房间 但不是准备状态
+                    # 是真的退出了
+                    isRealDisconn = is_nil(user.roomPid) || !user.readyStatus
+
+                    if (isRealDisconn) do
                         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                         not in room, so quit"
+                        # 用户退出 删除用户保存在 ets 中的信息 
+                        :ets.delete(:ets_user, user.userName)
+                        send(user.roomPid, {:leaveRoom, user.uid})
+                        Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                        delete user in ets, user#{inspect user}"
                         {:stop_process, {:shutdown, "user client disconnected"}, entity}
                     else
                         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
@@ -130,6 +139,12 @@ defmodule Websocket.ServerUser do
                 unknow_pid ->
                     Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                     unknow process #{unknow_pid} terminated cause user terminated"
+                    # 不知名 用户退出 删除用户保存在 ets 中的信息 
+                    :ets.delete(:ets_user, user.userName)
+                    send(user.roomPid, {:leaveRoom, user.uid})
+                    
+                    Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                    delete user in ets, user#{inspect user}"
                     {:stop_process, {:shutdown, "unknow process #{unknow_pid} terminated"}, entity}
             end
             # TODO user 断线重连 状态判断已经ok，还差 返回信息的定义。

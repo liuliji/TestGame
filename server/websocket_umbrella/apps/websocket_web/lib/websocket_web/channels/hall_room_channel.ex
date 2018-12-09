@@ -19,7 +19,13 @@ defmodule WebsocketWeb.HallRoomChannel do
         # send(self(), {:afterJoin, msg})
         socket = socket |> Socket.assign(:roomId, room_name)
         send(get_user_pid(socket), {:joinLobby, self()})
-        {:ok, socket}
+        userInfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
+        if (is_nil(userInfo.roomPid)) do
+            {:ok, %{roomId: userInfo.roomId}, socket}
+        else
+            {:ok, %{roomId: nil}, socket}
+        end
+        # {:ok, socket}
     end
     
     def handle_in("ID_C2S_CREATE_ROOM", _msg, socket) do
