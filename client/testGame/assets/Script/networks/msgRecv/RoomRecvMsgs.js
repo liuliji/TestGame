@@ -9,6 +9,7 @@
 var App = require('App');
 var Event = require('Consts').AgreementEvent;
 var Consts = require('Consts');
+var ROOM_STATUS = require('Consts').ROOM_STATUS;// 房间状态
 
 /**
  * 创建房间
@@ -258,8 +259,28 @@ function onReconnect(args){
     let sceneName = cc.director.getScene().name;
     App.UserManager.setRoom(args.roomInfo);
     let room = App.UserManager.getRoom();
+    let roomInfo = args.roomInfo;
     if (!room){
         return;
+    }
+    if (roomInfo.isFirstBegin){
+        room.status = ROOM_STATUS.FIRST_BEGIN;// 房间状态，默认为第一次进入
+    } else {
+        room.status = ROOM_STATUS.GAMING;
+    }
+    // 设置自己的信息
+    var userInfo = args.userInfo;
+    var selfData = App.UserManager.setSelf(userInfo);
+    selfData.setPlayerInfo(userInfo);
+    // 其他人都数据
+    for (var i = 0; i < roomInfo.users.length; i ++){
+        let user = roomInfo.users[i];
+        if (user){
+            if (user.position != selfData.position) {
+                let userData = App.UserManager.setOtherUser(user);
+                userData.setPlayerInfo(user);
+            }
+        }
     }
     
     if (sceneName != "game"){

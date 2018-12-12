@@ -54,7 +54,7 @@ cc.Class({
         if (!room){
             return;
         }
-        room.status = ROOM_STATUS.FIRST_BEGIN;
+        // room.status = ROOM_STATUS.FIRST_BEGIN;
     },
 
     basicInit: function () {
@@ -184,8 +184,10 @@ cc.Class({
             break;
             case ROOM_STATUS.GAMING:
                 this.onReconnectSetPokers();
+                this.onReconnectGaming();
             break;
             case ROOM_STATUS.READY:
+                this.onReconnectReady();
                 this.onReconnectReady();
             break;
         }
@@ -217,7 +219,7 @@ cc.Class({
         let room = App.UserManager.getRoom();
         this.onReconnectSetPokers();
 
-        this.onActionInfo();
+        // this.onActionInfo();
     },
 
     onReconnectSetPokers: function(){

@@ -43,24 +43,35 @@ var UserData = cc.Class({
     //\ 设置玩家信息
     setPlayerInfo: function (info) {
         this._super(info);
-        this.winType = info.winType || 0;//\ 输赢结果
-        this.score = info.score || 0;
-        this.readyStatus = info.readyStatus || false;
-        // debugger;
-        this.roomOwner = info.roomOwner || false;
-        //玩家基础数据
-        if (info.image) {
-            this.image = info.image;
-        }
-        this.score = info.score || 0;
-        this.win = info.win || 0;//< 胜利次数
-        this.position = info.position;
+        // this.winType = info.winType || 0;//\ 输赢结果
+        // this.score = info.score || 0;
+        // this.readyStatus = info.readyStatus || false;
+        // // debugger;
+        // this.roomOwner = info.roomOwner || false;
+        // //玩家基础数据
+        // if (info.image) {
+        //     this.image = info.image;
+        // }
+        // this.score = info.score || 0;
+        // this.win = info.win || 0;//< 胜利次数
+        // this.position = info.position;
 
-        if (!(info.isOffline == null || typeof (info.isOffline) == 'undefined')) {
-            this.isOffline = info.isOffline;
-        } else {
-            this.isOffline = false;
-        }
+        // if (!(info.isOffline == null || typeof (info.isOffline) == 'undefined')) {
+        //     this.isOffline = info.isOffline;
+        // } else {
+        //     this.isOffline = false;
+        // }
+
+
+        this.curMoney = info.curMoney || 0;
+        this.online = info.online || false;
+        this.position = info.position || 0;
+        this.readyStatus = info.readyStatus || false;
+        this.roomId = info.roomId || "";
+        this.roomOwner = info.roomOwner || false;
+        this.uid = info.uid || "";
+        this.userName = info.userName || "";
+        this.pokers = info.pokers || [0,0,0];
 
     },
 
