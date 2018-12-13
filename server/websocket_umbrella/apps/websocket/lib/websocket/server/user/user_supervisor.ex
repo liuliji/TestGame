@@ -42,8 +42,7 @@ defmodule Websocket.UserSupervisor do
                 find disconnected user. #{inspect userName}, #{uId}, new socketPid:#{inspect socketPid}"
                 pid = find_user(uId)
                 Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                find user in ets userName:#{userName}, userId:#{uId}, socketPid:#{inspect 
-                pid}"
+                find user in ets userName:#{userName}, userId:#{uId}, socketPid:#{inspect pid}"
                 Websocket.ServerUser.update_info(pid, :socketPid, socketPid)
                 {uId, pid}
         end
