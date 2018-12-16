@@ -54,13 +54,17 @@ defmodule WebsocketWeb.RoomsChannel do
             {:chips, list} ->
             {:chips, list |> Enum.into(%{})}
             {:users, list} ->
-            {:users, list |> Enum.map(fn 
-                {key, nil} -> {key, nil}
-                {key, u} ->
-                c_u = Websocket.ServerUser.user_info(u.pid)
-                {key, c_u |> Map.from_struct |> Map.take([:userName, :roomOwner, :position, :readyStatus])}
-            end)
-            |> Enum.into(%{})}
+            {:users, list |>
+                Enum.filter(fn
+                    {key, nil} -> false
+                    _ -> true
+                end)
+                |> Enum.map(fn {key, u} ->
+                    c_u = Websocket.ServerUser.user_info(u.pid)
+                    c_u |> Map.from_struct |> Map.take([:userName, :roomOwner, :position, :readyStatus])
+                end)
+            }
+            # |> Enum.into(%{})}
             {key, value} -> {key, value}
             end)
         |> Enum.into(%{})
@@ -157,7 +161,7 @@ defmodule WebsocketWeb.RoomsChannel do
     ## ----------------- Terminate end ----------------
 
     defp get_client_user(%Websocket.ServerUser.User{} = user) do
-        user |> Map.from_struct |> Map.take([:uid, :userName, :curMoney, :online, :roomId, :roomOwner, :position, :readyStatus])
+        user |> Map.from_struct |> Map.take([:uid, :userName, :curMoney, :online, :roomId, :roomOwner, :position, :readyStatus, :deltaMoney])
     end
 
     defp get_client_room(%Websocket.ServerRoom.Room{} = room) do

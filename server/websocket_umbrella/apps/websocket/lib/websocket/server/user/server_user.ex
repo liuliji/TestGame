@@ -17,6 +17,7 @@ defmodule Websocket.ServerUser do
             online: boolean,
             curMoney: integer,
             originMoney: integer,
+            deltaMoney: integer,
 
             pid: pid,
             socketPid: pid,
@@ -38,8 +39,9 @@ defmodule Websocket.ServerUser do
         defstruct(
             uid: "",
             userName: "",
-            curMoney: 0,
-            originMoney: 100,
+            curMoney: 100,  # 牌局过程中，会一直更新该数据
+            originMoney: 100,   # 牌局过程中，他一直是开牌前的数据，牌局结束，结算的时候，会将该数据更新回curMoney
+            deltaMoney: 0, #上一具的输赢信息
             online: true,
             pid: nil,
             socketPid: nil,
@@ -60,6 +62,9 @@ defmodule Websocket.ServerUser do
         {:ok, pid} = Entity.start()
         Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
         start user uid:#{uid} uname:#{userName}"
+        # 原来是有一种启动方式 能在启动的时候自动注册 到Registry中，保证启动了 就肯定能注册了
+        # 后来不好使，但是代码必须写到这，因为 Registry 是注册当前进程到 注册表的
+        # 而且，注册进来的进程死了之后，会自动从registry中删除
         Registry.register(Websocket.Application.user_registry_name, uid, pid)
         Entity.put_behaviour(pid, DefaultBehaviour, %User{uid: uid, userName: userName, pid: pid, socketPid: socketPid})
         {:ok, pid}
@@ -134,7 +139,8 @@ defmodule Websocket.ServerUser do
                     else
                         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                         in room #{inspect user.roomId}, so disconnected"
-                        {:ok, entity |> update_user(:channelPid, nil) |> update_user(:online, false)}
+                        # 用户掉线了 更新相关状态
+                        {:ok, entity |> update_user(:channelPid, nil) |> update_user(:online, false) |> update_user(:socketPid, nil)}
                     end
                 unknow_pid ->
                     Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}

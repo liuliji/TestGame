@@ -57,6 +57,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 {:noreply, socket}
             end
         
+            # 客户端主动发起的离开房间，所以服务器只是发送消息给客户端，说服务器的数据处理好了，让客户端切换房间
             def handle_info(:leavedRoom, socket) do
                 roomId = get_user_roomId(socket)
                 socket = socket |> Socket.assign(:roomId, roomId)
@@ -179,7 +180,6 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                     user_item -> 
                         user_item
                         |> get_client_user
-                        |> Map.put(:deltaMoney, user_item.curMoney - user_item.originMoney)
                         |> Map.delete(:originMoney)
                         |> Map.put(:poker, user_item.poker |> Websocket.PokerAdapter.to_client)
                 end)

@@ -78,6 +78,7 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
+            # 相当于是 一局游戏的开始
             def handle_event({:fapai, %Poker{} = poker},
             %Entity{attributes: %{User => user}} = entity) do
                 user = %{user | poker: poker, curMoney: user.originMoney}
@@ -122,6 +123,7 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
+            # 简单点，服务器这边，弃牌算作是 游戏的一个流程，直到开牌才算结束
             def handle_event({:qipai, tar_user_pos},
             %Entity{attributes: %{User => user}} = entity) do
                 if (tar_user_pos == user.position) do
@@ -132,14 +134,23 @@ defmodule Websocket.ServerUser_Out do
                 {:ok, entity}
             end
 
+            # 开牌，相当于这句游戏的结束
             def handle_event({:kaipai, {success_user_pos, chips}},
             %Entity{attributes: %{User => user}} = entity) do
                 user = 
                 if (success_user_pos == user.position) do
-                    %{user | curMoney: user.curMoney + chips}
+                    %{user | curMoney: user.curMoney + chips,
+                        originMoney: user.curMoney + chips,
+                        deltaMoney: user.curMoney + chips - user.originMoney}
                 else
-                    user
+                    %{user | originMoney: user.curMoney, 
+                        deltaMoney: user.curMoney - user.originMoney}
+                        
                 end
+                
+                # 更新其他和胜利与否不相关的数据
+                user = %{user | readyStatus: false}
+
                 send(user.channelPid, :kaipai)
                 {:ok, entity |> put_attribute(user)}
             end

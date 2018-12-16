@@ -43,12 +43,12 @@ defmodule Websocket.UserSupervisor do
                 pid = find_user(uId)
                 Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 find user in ets userName:#{userName}, userId:#{uId}, socketPid:#{inspect pid}"
-                Websocket.ServerUser.update_info(pid, :socketPid, socketPid)
                 {uId, pid}
         end
 
     end
 
+    # 通过DynamicSupervisor 启动的 user_server，当user_server正常死了之后，不会重启
     defp start_new_user(userId, userName, socketPid) do
         c_spec = %{
             id: userId,
