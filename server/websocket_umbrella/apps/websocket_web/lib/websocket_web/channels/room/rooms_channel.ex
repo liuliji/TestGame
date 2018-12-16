@@ -69,7 +69,12 @@ defmodule WebsocketWeb.RoomsChannel do
             end)
         |> Enum.into(%{})
 
-        clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom}
+        ret_actions = %{
+            actions: get_actions(Enum.at(roomInfo.playingIndexList, roomInfo.currIndex), userInfo.position, roomInfo.isActions),
+            actionPositions: userInfo.position
+        }
+
+        clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom, actions: ret_actions}
 
         Phoenix.Channel.push(socket, "ID_S2C_RECONNECTED", clientRet)
         

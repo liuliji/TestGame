@@ -106,7 +106,8 @@ defmodule WebsocketWeb.RoomsChannel_Out do
 
                 ret_actions = %{
                     actions: get_actions(pos, uinfo.position, room_info.isActions),
-                    actionPositions: Enum.at(room_info.playingIndexList, room_info.currIndex)
+                    # actionPositions: Enum.at(room_info.playingIndexList, room_info.currIndex)
+                    actionPositions: uinfo.position
                 }
 
                 Phoenix.Channel.push(socket, "ID_S2C_ACTION_INFO", ret_actions)
