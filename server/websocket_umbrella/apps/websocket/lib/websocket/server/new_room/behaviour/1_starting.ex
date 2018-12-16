@@ -19,8 +19,6 @@ defmodule Websocket.ServerRoom.StartingBehaviour do
             {pos, %{pid: pid}}, all_poker ->
                 {poker, all_poker} = Poker.random_poker(all_poker)
                 send(pid, {:fapai, poker})
-                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
-                fapai, pid:#{inspect pid}."
                 all_poker
             _, all_poker -> all_poker
         end)

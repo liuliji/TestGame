@@ -19,6 +19,7 @@ defmodule WebsocketWeb.RoomsChannel do
         if (is_nil(originUserInfo.roomPid)) do
             send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
         else
+            Websocket.ServerUser.update_info(get_user_pid(socket), :channelPid, socket.channel_pid)
             send(self(), :reconn)
         end
         {:ok, socket}

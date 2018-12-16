@@ -95,6 +95,7 @@ defmodule WebsocketWeb.RoomsChannel_Out do
                 
                 Phoenix.Channel.push(socket, "ID_S2C_FAPAI", ret_poker)
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                
                 ID_S2C_FAPAI:#{inspect ret_poker}"
                 
                 {:noreply, socket}

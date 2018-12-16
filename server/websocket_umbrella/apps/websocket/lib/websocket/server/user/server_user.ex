@@ -123,9 +123,15 @@ defmodule Websocket.ServerUser do
                     user client disconnected,
                     user:#{inspect user}"
 
-                    # 没有加入房间 或者是 加入了房间 但不是准备状态
-                    # 是真的退出了
-                    isRealDisconn = is_nil(user.roomPid) || !user.readyStatus
+                    # 是否真的 断开了连接
+                    isRealDisconn = case user.roomPid do
+                        # 没在房间 不需要断线重连
+                        nil ->
+                            true
+                        _ ->
+                            # 如果在房间，如果是第一把，看是否准备，如果不是第一把，那么都需要重连
+                            if Websocket.ServerRoom.room_info(user.roomPid).isFirstBegin, do: !user.readyStatus, else: false
+                    end
 
                     if (isRealDisconn) do
                         Logger.info "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
