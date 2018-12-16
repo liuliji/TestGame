@@ -52,7 +52,7 @@ defmodule WebsocketWeb.RoomsChannel do
         |> Map.take([:roomId, :currIndex, :chips, :isFirstBegin, :users])
         |> Enum.map(fn 
             {:chips, list} ->
-                {:chips, list}
+                {:chips, list |> Enum.map(fn {pos, val}-> %{pos: pos, value: val} end)}
             {:users, list} ->
                 {:users, list |>
                     Enum.filter(fn

@@ -83,6 +83,8 @@ defmodule Websocket.ServerUser_Out do
             %Entity{attributes: %{User => user}} = entity) do
                 user = %{user | poker: poker, curMoney: user.originMoney}
                 send(user.channelPid, :fapai)
+                Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
+                fapai, pid:#{inspect user.pid}, channelpid:#{inspect user.channelPid}, username:#{user.userName}"
                 {:ok, entity |> put_attribute(user)}
             end
 
