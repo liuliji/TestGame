@@ -221,8 +221,8 @@ cc.Class({
 
         var chips = room.chips;
         var chipNumbers = [5, 2, 1];
-        for (var i = 0; i < chips.length; i ++){
-            let value = chips[i].value;
+        for (var k = 0; k < chips.length; k ++){
+            let value = chips[k].value;
             if (!value){
                 continue;
             }
