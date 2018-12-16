@@ -234,7 +234,7 @@ cc.Class({
                     var x = ChipManager.getInstance().seededRandom(-200, 200);
                     var y = ChipManager.getInstance().seededRandom(-100, 100);
                     var endP = new cc.Vec2(x, y);
-                    let chipNode = ChipManager.getInstance().createChipWithPosition(count, endP);
+                    let chipNode = ChipManager.getInstance().createChipWithPosition(cNumber, endP);
                     this.chipLayer.addChild(chipNode);
                 }
             }
