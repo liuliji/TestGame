@@ -52,27 +52,34 @@ defmodule WebsocketWeb.RoomsChannel do
         |> Map.take([:roomId, :currIndex, :chips, :isFirstBegin, :users])
         |> Enum.map(fn 
             {:chips, list} ->
-            {:chips, list |> Enum.into(%{})}
+                {:chips, list}
             {:users, list} ->
-            {:users, list |>
-                Enum.filter(fn
-                    {key, nil} -> false
-                    _ -> true
-                end)
-                |> Enum.map(fn {key, u} ->
-                    c_u = Websocket.ServerUser.user_info(u.pid)
-                    c_u |> Map.from_struct |> Map.take([:userName, :roomOwner, :position, :readyStatus])
-                end)
-            }
+                {:users, list |>
+                    Enum.filter(fn
+                        {key, nil} -> false
+                        _ -> true
+                    end)
+                    |> Enum.map(fn {key, u} ->
+                        c_u = Websocket.ServerUser.user_info(u.pid)
+                        c_u |> Map.from_struct |> Map.take([:userName, :roomOwner, :position, :readyStatus])
+                    end)
+                }
             # |> Enum.into(%{})}
             {key, value} -> {key, value}
             end)
         |> Enum.into(%{})
 
-        ret_actions = %{
-            actions: get_actions(Enum.at(roomInfo.playingIndexList, roomInfo.currIndex), userInfo.position, roomInfo.isActions),
-            actionPositions: userInfo.position
-        }
+        ret_actions = case currGameState do
+            2 ->
+                %{
+                    actions: get_actions(Enum.at(roomInfo.playingIndexList, roomInfo.currIndex), userInfo.position, roomInfo.isActions),
+                    actionPositions: userInfo.position
+                }
+            _ ->
+                {
+                    actions: [],
+                    actionPositions: userInfo.position
+                }
 
         clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom, actions: ret_actions}
 
