@@ -219,7 +219,29 @@ cc.Class({
         let room = App.UserManager.getRoom();
         this.onReconnectSetPokers();
 
-        // this.onActionInfo();
+        var chips = room.chips;
+        var chipNumbers = [5, 2, 1];
+        for (var i = 0; i < chips.length; i ++){
+            let value = chips[i].value;
+            if (!value){
+                continue;
+            }
+            for (var i = 0; i < chipNumbers.length; i++) {
+                var cNumber = chipNumbers[i];
+                var count = Math.floor(value / cNumber);
+                value = value % cNumber;
+                for (var j = 0; j < count; j++) {
+                    var x = ChipManager.getInstance().seededRandom(-200, 200);
+                    var y = ChipManager.getInstance().seededRandom(-100, 100);
+                    var endP = new cc.Vec2(x, y);
+                    let chipNode = ChipManager.getInstance().createChipWithPosition(count, endP);
+                    this.chipLayer.addChild(chipNode);
+                }
+            }
+        }
+        
+
+        this.onActionInfo({detail: room.actions});
     },
 
     onReconnectSetPokers: function(){

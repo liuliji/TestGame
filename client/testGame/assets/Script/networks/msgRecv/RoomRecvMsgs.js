@@ -263,10 +263,14 @@ function onReconnect(args){
     if (!room){
         return;
     }
-    if (roomInfo.isFirstBegin){
+    room.chips = roomInfo.chips;
+    if (args.gameStatus == 1){
         room.status = ROOM_STATUS.FIRST_BEGIN;// 房间状态，默认为第一次进入
-    } else {
+    } else if (args.gameStatus = 2) {
         room.status = ROOM_STATUS.GAMING;
+        room.actions = args.actions;
+    } else if (args.gameStatus == 3){
+        room.status = ROOM_STATUS.READY;
     }
     // 设置自己的信息
     var userInfo = args.userInfo;

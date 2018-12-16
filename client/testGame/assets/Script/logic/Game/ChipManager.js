@@ -77,8 +77,10 @@ var ChipManager = cc.Class({
     // 直接在某个位置创建筹码
     createChipWithPosition: function(value, p = new cc.Vec2(0, 0)) {
         var chipNode = this.createChip();
+        let chip = chipNode.getComponent("Chip");
+        chip.setValue(value);
         chipNode.stopAllActions();
-        chip.setPosition(p);
+        chipNode.setPosition(p);
         return chipNode;
     },
 

@@ -49,6 +49,9 @@ var RoomData = cc.Class({
 
         status: ROOM_STATUS.FIRST_BEGIN,// 房间状态，默认为第一次进入
 
+        actions: null,// 玩家操作
+        chips: [],// 玩家下注的筹码
+
     },
     ctor: function () {
     },
