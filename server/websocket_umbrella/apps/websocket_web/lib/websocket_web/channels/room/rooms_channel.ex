@@ -76,11 +76,11 @@ defmodule WebsocketWeb.RoomsChannel do
                     actionPositions: userInfo.position
                 }
             _ ->
-                {
+                %{
                     actions: [],
                     actionPositions: userInfo.position
                 }
-
+            end
         clientRet = %{gameStatus: currGameState, userInfo: retUser, roomInfo: retRoom, actions: ret_actions}
 
         Phoenix.Channel.push(socket, "ID_S2C_RECONNECTED", clientRet)
