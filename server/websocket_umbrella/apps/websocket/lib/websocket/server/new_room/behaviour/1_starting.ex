@@ -35,7 +35,6 @@ defmodule Websocket.ServerRoom.StartingBehaviour do
             playingIndexList: :lists.sort(playingIndexList),
             chips: [],
             isFirstBegin: false,
-            currIndex: -1,
             isActions: false
         }
         
