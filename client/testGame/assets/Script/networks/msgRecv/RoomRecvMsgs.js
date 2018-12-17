@@ -266,7 +266,7 @@ function onReconnect(args){
     room.chips = roomInfo.chips.reverse();
     if (args.gameStatus == 1){
         room.status = ROOM_STATUS.FIRST_BEGIN;// 房间状态，默认为第一次进入
-    } else if (args.gameStatus = 2) {
+    } else if (args.gameStatus == 2) {
         room.status = ROOM_STATUS.GAMING;
         room.actions = args.actions;
     } else if (args.gameStatus == 3){
