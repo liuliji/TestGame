@@ -13,7 +13,9 @@ defmodule Websocket.ServerRoom.PlayingBehaviour do
     @action_qipai 3
     @action_kaipai 4
 
-    def init(entity, :ok) do
+    def init(%Entity{attributes: %{Room => room}} = entity, :ok) do
+        room.playingIndexList
+            |> Enum.each(fn pos -> send(self(), {:notify_all, {:yazhu, pos, 1}}) end)
         send(self(), :next_talk)
         {:ok, entity}
     end
