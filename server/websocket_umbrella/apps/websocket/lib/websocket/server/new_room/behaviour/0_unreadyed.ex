@@ -6,8 +6,9 @@ defmodule Websocket.ServerRoom.UnreadyedBehaviour do
     use Entice.Entity.Behaviour
     alias Entice.Entity
 
-    def init(entity, :ok) do
-        {:ok, entity}
+    def init(%Entity{attributes: %{Room => room}} = entity, :ok) do
+        room = %{room | currIndex: -1}
+        {:ok, entity |> put_attribute(room)}
     end
 
     #-------------------- msg callback start-----------------------
