@@ -189,7 +189,7 @@ cc.Class({
             break;
             case ROOM_STATUS.READY:
                 this.onReconnectReady();
-                this.onReconnectReady();
+                this.onRemoveAllChips();
             break;
         }
     },
@@ -275,7 +275,6 @@ cc.Class({
         }
         if (!selfData.readyStatus){
             this.onReconnectSetPokers();
-            this.onReconnectSetChips();
         } else {
             this.setReadyIsShow(false);
         }
@@ -285,7 +284,12 @@ cc.Class({
     // 准备
     onReady: function () {
         this.setReadyIsShow(false);
+        this.onRemoveAllChips();
         RoomSendMsgs.onReady();
+    },
+
+    onRemoveAllChips: function(){
+        ChipManager.getInstance().clean();
     },
 
     // 开始
