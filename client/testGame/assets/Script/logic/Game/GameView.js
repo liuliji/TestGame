@@ -178,6 +178,7 @@ cc.Class({
             return;
         }
         this.onReconnectInitPlayer();
+        this.setPlayerReadyStatus();
         switch (room.status){
             case ROOM_STATUS.FIRST_BEGIN:
                 this.onReconnectFirstBegin();
@@ -212,12 +213,34 @@ cc.Class({
     onReconnectFirstBegin: function(){
         let room = App.UserManager.getRoom();
         this.isAllReady();
+        // this.setPlayerReadyStatus();
+    },
+
+    setPlayerReadyStatus: function(){
+        App.UserManager.foreachAllUser(function (userData) {
+            if (userData){
+                this.playerMgr[userData.position].setPlayerReady(userData.readyStatus);
+            }
+        }.bind(this));
     },
 
     // 从gaming重连
     onReconnectGaming: function(){
         let room = App.UserManager.getRoom();
         this.onReconnectSetPokers();
+        this.onReconnectSetChips();
+
+        this.onActionInfo({detail: room.actions});
+    },
+
+    onReconnectSetPokers: function(){
+        App.UserManager.foreachAllUser((userData)=> {
+            this.playerMgr[userData.position].sendCard(userData.pokers);
+        });
+    },
+
+    onReconnectSetChips: function(){
+        let room = App.UserManager.getRoom();
 
         var chips = room.chips;
         var chipNumbers = [5, 2, 1];
@@ -240,14 +263,6 @@ cc.Class({
             }
         }
         
-
-        this.onActionInfo({detail: room.actions});
-    },
-
-    onReconnectSetPokers: function(){
-        App.UserManager.foreachAllUser((userData)=> {
-            this.playerMgr[userData.position].sendCard(userData.pokers);
-        });
     },
 
     // 从ready重连
@@ -260,6 +275,7 @@ cc.Class({
         }
         if (!selfData.readyStatus){
             this.onReconnectSetPokers();
+            this.onReconnectSetChips();
         } else {
             this.setReadyIsShow(false);
         }
@@ -327,7 +343,7 @@ cc.Class({
         var userData = App.UserManager.getAllUserData(position);
         if (userData) {// 设置玩家已准备
 
-            this.playerAry[position].setPlayerReady(userData.readyStatus);
+            this.playerMgr[position].setPlayerReady(userData.readyStatus);
 
         }
         this.isAllReady();
