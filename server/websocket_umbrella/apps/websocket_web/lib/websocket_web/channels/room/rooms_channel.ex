@@ -2,6 +2,7 @@ defmodule WebsocketWeb.RoomsChannel do
     use Phoenix.Channel
     require Logger
     alias Websocket.RoomSupervisor
+    alias Phoenix.Socket
 
     use WebsocketWeb.RoomsChannel_In
     use WebsocketWeb.RoomsChannel_Out
@@ -15,11 +16,13 @@ defmodule WebsocketWeb.RoomsChannel do
     # channel 也可以通过message来认证 是否用户有权限加入该房间
     # 因为如果接收和发送这个channel Pubsub events，就必须加入该channel啊
     def join("room:" <> privateRoomId, msg, socket) do
+        socket = socket |> Socket.assign(:roomId, privateRoomId)
         originUserInfo = socket |> get_user_pid |> Websocket.ServerUser.user_info
         if (is_nil(originUserInfo.roomPid)) do
             send(get_user_pid(socket), {:join, privateRoomId, socket.channel_pid})
         else
             Websocket.ServerUser.update_info(get_user_pid(socket), :channelPid, socket.channel_pid)
+            Websocket.ServerUser.update_info(get_user_pid(socket), :roomId, privateRoomId)
             send(self(), :reconn)
         end
         {:ok, socket}
