@@ -91,7 +91,7 @@ defmodule Websocket.ServerRoom.UnreadyedBehaviour do
         {pos, %{pid: pid}} = get_seat_(room.users, uid)
         user = Websocket.ServerUser.user_info(pid)
         if user.roomOwner do
-            {:stop_process, :dissolveRoom, entity}
+            {:stop_process, {:shutdown, :dissolveRoom}, entity}
         else
             {:ok, entity}
         end

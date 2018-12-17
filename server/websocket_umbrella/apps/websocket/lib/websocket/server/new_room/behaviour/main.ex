@@ -24,7 +24,7 @@ defmodule Websocket.ServerRoom.MainBehaviour do
         {:ok, entity}
     end
 
-    def terminate(:dissolveRoom,
+    def terminate({:shutdown, :dissolveRoom},
     %Entity{attributes: %{Room => room}} = entity) do
         Logger.info "file: #{inspect Path.basename(__ENV__.file)}  line: #{__ENV__.line}
         room #{inspect room.roomId} terminate .
