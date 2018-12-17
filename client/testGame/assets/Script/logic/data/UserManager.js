@@ -19,7 +19,7 @@ var UserManager = cc.Class({
     ctor: function () {
         this.roomObj = null;    //< 房间数据
         this.selfData = null;   //< 自己数据
-        this.otherUserAry = {};
+        this.otherUserAry = [];
     },
     /**
      * 创建房间对象
@@ -177,7 +177,7 @@ var UserManager = cc.Class({
                 Log.warn('清理所有的其他玩家数据->没有[' + i + ']玩家');
             }
         }
-        this.otherUserAry = {};
+        this.otherUserAry = [];
     },
 
     /**

@@ -94,7 +94,7 @@ cc.Class({
         this.node.on(Event.AGS_YA_ZHU_FAILED, this.onYaZhuFailed.bind(this));
         this.node.on(Event.AGS_QI_PAI, this.onQiPai.bind(this));
         this.node.on(Event.AGS_OTHER_QI_PAI, this.onOtherQiPai.bind(this));
-        this.node.on(Event.AGS_GAME_RESULT, this.onGameResule.bind(this));
+        this.node.on(Event.AGS_GAME_RESULT, this.onGameResult.bind(this));
         this.node.on(Event.AGS_OTHER_LEAVE, this.onOtherLeave.bind(this));
     },
 
@@ -490,9 +490,7 @@ cc.Class({
     isAllReady: function () {
         var allReady = true;
         let others = App.UserManager.getOtherUserAry();
-        if (others != {}){
-            allReady = true;
-        } else {
+        if (others.length == 0){
             allReady = false;
         }
         var selfData = App.UserManager.getSelf();
@@ -696,7 +694,8 @@ cc.Class({
         player.onQiPai();
     },
     // 开牌
-    onGameResule: function (event) {
+    onGameResult: function (event) {
+        this.moveDownOperateLayer();
         var winPosition = -1;
         App.UserManager.foreachAllUser(function (userData) {
             if (userData.deltaMoney > 0) {
