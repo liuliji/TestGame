@@ -21,7 +21,7 @@ function onDeleteRoom(roomId) {
     var msg = {
         roomId: roomId,
     };
-    App.Socket.sendMsg('ID_C2S_DELETE_ROOM', msg);
+    App.Socket.sendMsg('ID_C2S_DISSOLVE_ROOM', msg);
 }
 
 /**

@@ -29,7 +29,7 @@ module.exports = {
         ],
         'RoomSendMsgs': [// 发给服务器的消息
             {
-                'id': 'ID_C2S_DELETE_ROOM',
+                'id': 'ID_C2S_DISSOLVE_ROOM',
                 'function': 'onDeleteRoom',
                 'desc': '删除房间',
             },
