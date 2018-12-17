@@ -20,7 +20,9 @@ defmodule Websocket.ServerUser_Out do
                 user = get_attribute(entity, User)
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 收到别人加入房间的消息 #{newUid}. entity:#{inspect entity}"
-                send(user.channelPid, {:joined, newUid})
+                if (!is_nil(user.channelPid)) do
+                    send(user.channelPid, {:joined, newUid})
+                end
                 {:ok, entity}
             end
 
