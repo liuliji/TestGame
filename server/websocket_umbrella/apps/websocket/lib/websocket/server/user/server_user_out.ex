@@ -20,9 +20,7 @@ defmodule Websocket.ServerUser_Out do
                 user = get_attribute(entity, User)
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 收到别人加入房间的消息 #{newUid}. entity:#{inspect entity}"
-                if (!is_nil(user.channelPid)) do
-                    send(user.channelPid, {:joined, newUid})
-                end
+                send2channel(user.channelPid, {:joined, newUid})
                 {:ok, entity}
             end
 
@@ -49,7 +47,7 @@ defmodule Websocket.ServerUser_Out do
 
             def handle_event({:othersLeavedRoom, pos},
             %Entity{attributes: %{User => user}} = entity) do
-                send(user.channelPid, {:othersLeavedRoom, pos})
+                send2channel(user.channelPid, {:othersLeavedRoom, pos})
                 {:ok, entity}
             end
 
@@ -68,7 +66,7 @@ defmodule Websocket.ServerUser_Out do
                 else
                     Websocket.ServerUser.user_info(Websocket.UserSupervisor.find_user(uid)).position
                 end
-                send(user.channelPid, {:readyed, position})
+                send2channel(user.channelPid, {:readyed, position})
                 Logger.debug "file:#{inspect Path.basename(__ENV__.file)} line:#{__ENV__.line}
                 #{inspect user.uid} send: position #{inspect position} ready"
                 {:ok, entity}
@@ -76,7 +74,7 @@ defmodule Websocket.ServerUser_Out do
         
             def handle_event({:canceledReady, uid},
             %Entity{attributes: %{User => user}} = entity) do
-                send(user.channelPid, :canceledReady)
+                send2channel(user.channelPid, :canceledReady)
                 {:ok, entity}
             end
 
@@ -84,13 +82,13 @@ defmodule Websocket.ServerUser_Out do
             def handle_event({:fapai, %Poker{} = poker},
             %Entity{attributes: %{User => user}} = entity) do
                 user = %{user | poker: poker, curMoney: user.originMoney}
-                send(user.channelPid, :fapai)
+                send2channel(user.channelPid, :fapai)
                 {:ok, entity |> put_attribute(user)}
             end
 
             def handle_event({:next_talk, pos} = msg,
             %Entity{attributes: %{User => user}} = entity) do
-                send(user.channelPid, msg)
+                send2channel(user.channelPid, msg)
                 {:ok, entity}
             end
 
@@ -99,7 +97,7 @@ defmodule Websocket.ServerUser_Out do
                 if (tar_user_pos == user.position) do
                     send(user.channelPid, {:self_kanpai, user.poker})
                 else
-                    send(user.channelPid, {:other_kanpai, tar_user_pos})
+                    send2channel(user.channelPid, {:other_kanpai, tar_user_pos})
                 end
                 
                 {:ok, entity}
@@ -113,7 +111,7 @@ defmodule Websocket.ServerUser_Out do
                     send(user.roomPid, :next_talk)
                     %{user | curMoney: curMoney-count}
                 else
-                    send(user.channelPid, {:other_yazhu, tar_user_pos, count})
+                    send2channel(user.channelPid, {:other_yazhu, tar_user_pos, count})
                     user
                 end
                 {:ok, entity |> put_attribute(user)}
@@ -131,7 +129,7 @@ defmodule Websocket.ServerUser_Out do
                 if (tar_user_pos == user.position) do
                     send(user.channelPid, :self_qipai)
                 else
-                    send(user.channelPid, {:other_qipai, tar_user_pos})
+                    send2channel(user.channelPid, {:other_qipai, tar_user_pos})
                 end
                 {:ok, entity}
             end
@@ -153,7 +151,7 @@ defmodule Websocket.ServerUser_Out do
                 # 更新其他和胜利与否不相关的数据
                 user = %{user | readyStatus: false}
 
-                send(user.channelPid, :kaipai)
+                send2channel(user.channelPid, :kaipai)
                 {:ok, entity |> put_attribute(user)}
             end
             #------------
@@ -165,6 +163,12 @@ defmodule Websocket.ServerUser_Out do
                 |> update_user(:position, -1)
                 |> update_user(:readyStatus, false)
                 |> update_user(:roomOwner, false)
+            end
+
+            defp send2channel(channelPid, msg) do
+                if (!is_nil(channelPid)) do
+                    send(channelPid, msg)
+                end
             end
         end
     end
